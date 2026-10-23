@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://ddryo575k8ti3"]
+
+[ext_resource type="Texture2D" uid="uid://c07lw8a4b3rmx" path="res://assets/Pocket GUI/Smartphone.png" id="1_phone"]
+
+[node name="Phone" type="Node2D" unique_id=559113876]
+
+[node name="Frame" type="Sprite2D" parent="." unique_id=257158968]
+scale = Vector2(6, 6)
+texture = ExtResource("1_phone")
+region_enabled = true
+region_rect = Rect2(144, 144, 47, 80)
+
+[node name="Screen" type="SubViewportContainer" parent="." unique_id=205632489]
+offset_left = -129.0
+offset_top = -180.0
+offset_right = 129.0
+offset_bottom = 198.0
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="Screen" unique_id=344123686]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(258, 378)
+render_target_update_mode = 4
