@@ -1,34 +1,32 @@
 class_name DemoChart
 extends RefCounted
 
-const ORDER := [
-	Modality.Kind.FOUR_D,
-	Modality.Kind.AIM_CLICK,
-	Modality.Kind.TYPING,
-	Modality.Kind.SLASH,
-	Modality.Kind.AIM_CLICK,
-	Modality.Kind.FOUR_D,
-	Modality.Kind.SLASH,
-	Modality.Kind.TYPING,
-]
+# placeholder split until the tutorial storyboard lands
+const TUTORIAL_ORDER := [Modality.Kind.AIM_CLICK, Modality.Kind.FOUR_D]
+const GAME_ORDER := [Modality.Kind.TYPING, Modality.Kind.SLASH]
 const PLAYFIELD := Rect2(176, 120, 800, 400)
 const MAX_JUMP := 260.0
 const LETTER_BEATS := 0.5
 
-static func build(rng_seed := GameConfig.chart_seed) -> Chart:
+static func build(with_tutorial := GameConfig.tutorial_enabled, rng_seed := GameConfig.chart_seed) -> Chart:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = rng_seed
 	var chart := Chart.new()
 	chart.bpm = GameConfig.bpm
-	var beat := 0.0
-	for kind: Modality.Kind in ORDER:
+	if with_tutorial: _append_segments(chart, TUTORIAL_ORDER, true, rng)
+	_append_segments(chart, GAME_ORDER, false, rng)
+	chart.bake()
+	return chart
+
+static func _append_segments(chart: Chart, kinds: Array, tutorial: bool, rng: RandomNumberGenerator) -> void:
+	var beat := chart.length_beats()
+	for kind: Modality.Kind in kinds:
 		beat += GameConfig.cooldown_bars * chart.beats_per_bar
 		var segment := ChartSegment.new(kind, beat, beat + GameConfig.segment_bars * chart.beats_per_bar)
+		segment.tutorial = tutorial
 		segment.notes = _notes(segment, rng)
 		chart.segments.append(segment)
 		beat = segment.end_beat
-	chart.bake()
-	return chart
 
 static func _notes(segment: ChartSegment, rng: RandomNumberGenerator) -> Array[Note]:
 	match segment.kind:

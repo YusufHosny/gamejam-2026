@@ -6,6 +6,8 @@ extends Resource
 @export var start_beat: float
 @export var end_beat: float
 @export var notes: Array[Note] = []
+@export var view: PackedScene # a ModeView scene, null falls back to the mode's default
+@export var tutorial := false # practice only, never scored
 
 var start_time: float
 var end_time: float

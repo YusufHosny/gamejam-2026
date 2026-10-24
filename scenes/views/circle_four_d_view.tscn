@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/views/circle_four_d_view.gd" id="1_view"]
+
+[node name="CircleFourDView" type="Node2D"]
+script = ExtResource("1_view")

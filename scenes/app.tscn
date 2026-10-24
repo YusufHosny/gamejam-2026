@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/core/app.gd" id="1_app"]
+[ext_resource type="PackedScene" path="res://scenes/menus/main_menu.tscn" id="2_main"]
+[ext_resource type="PackedScene" path="res://scenes/menus/settings_menu.tscn" id="3_settings"]
+[ext_resource type="PackedScene" path="res://scenes/menus/leaderboard_menu.tscn" id="4_leaderboard"]
+[ext_resource type="PackedScene" path="res://scenes/menus/score_screen.tscn" id="5_score"]
+
+[node name="App" type="Node"]
+script = ExtResource("1_app")
+
+[node name="MainMenu" parent="." instance=ExtResource("2_main")]
+
+[node name="SettingsMenu" parent="." instance=ExtResource("3_settings")]
+
+[node name="LeaderboardMenu" parent="." instance=ExtResource("4_leaderboard")]
+
+[node name="ScoreScreen" parent="." instance=ExtResource("5_score")]

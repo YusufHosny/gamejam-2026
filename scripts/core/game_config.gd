@@ -10,6 +10,10 @@ var hit_windows_ms := {
 var approach_time_s := 0.8
 var scroll_speed := 700.0 # px/s for 4d lanes
 
+# --- Run ---
+var difficulty := Difficulty.Level.STANDARD
+var tutorial_enabled := true
+
 # --- Chart ---
 var deadline_s := 300.0 # the whole run, counted down on the song clock
 var bpm := 120.0
@@ -23,18 +27,17 @@ var slash_min_speed := 1200.0 # px/s
 
 # --- Keybinds ---
 var keybinds: Dictionary[StringName, Array] = {
-	&"lane_0": [_key(KEY_Z)],
-	&"lane_1": [_key(KEY_X)],
-	&"lane_2": [_key(KEY_N)],
-	&"lane_3": [_key(KEY_M)],
-	&"click_0": [_key(KEY_Z), _mouse(MOUSE_BUTTON_LEFT)],
-	&"click_1": [_key(KEY_X), _mouse(MOUSE_BUTTON_RIGHT)],
-	&"release_cursor": [_key(KEY_ESCAPE)],
-	&"restart": [_key(KEY_F5)],
-	&"debug_four_d": [_key(KEY_F1)],
-	&"debug_aim_click": [_key(KEY_F2)],
-	&"debug_slash": [_key(KEY_F3)],
-	&"debug_typing": [_key(KEY_F4)],
+	&"lane_0": [key_event(KEY_Z)],
+	&"lane_1": [key_event(KEY_X)],
+	&"lane_2": [key_event(KEY_N)],
+	&"lane_3": [key_event(KEY_M)],
+	&"click_0": [key_event(KEY_Z), mouse_event(MOUSE_BUTTON_LEFT)],
+	&"click_1": [key_event(KEY_X), mouse_event(MOUSE_BUTTON_RIGHT)],
+	&"pause": [key_event(KEY_ESCAPE)],
+	&"debug_four_d": [key_event(KEY_F1)],
+	&"debug_aim_click": [key_event(KEY_F2)],
+	&"debug_slash": [key_event(KEY_F3)],
+	&"debug_typing": [key_event(KEY_F4)],
 }
 
 func _ready() -> void:
@@ -52,12 +55,12 @@ func _apply_keybind(action: StringName) -> void:
 	for event in keybinds[action]: InputMap.action_add_event(action, event)
 
 # physical keys so lanes stay put across keyboard layouts
-static func _key(physical_keycode: Key) -> InputEventKey:
+static func key_event(physical_keycode: Key) -> InputEventKey:
 	var event := InputEventKey.new()
 	event.physical_keycode = physical_keycode
 	return event
 
-static func _mouse(button: MouseButton) -> InputEventMouseButton:
+static func mouse_event(button: MouseButton) -> InputEventMouseButton:
 	var event := InputEventMouseButton.new()
 	event.button_index = button
 	return event

@@ -1,20 +1,21 @@
-@abstract
-class_name TargetMode
-extends ModeHandler
-
-# shared osu-style approach circle rendering for aim + click and slash
+class_name CircleAimView
+extends AimView
 
 const RADIUS := 48.0
 const APPROACH_SCALE := 2.0 # ring starts at RADIUS * (1 + APPROACH_SCALE)
 
 @export var color := Color.WHITE
-var cursor: VirtualCursor
+
+func is_hit(note: AimNote, from: Vector2, to: Vector2) -> bool:
+	var closest := Geometry2D.get_closest_point_to_segment(note.position, to_local(from), to_local(to))
+	return closest.distance_to(note.position) <= RADIUS
 
 func _draw() -> void:
-	var now := conductor.song_time()
+	var now := _now()
 	var approach := GameConfig.approach_time_s
-	for i in range(_pending.size() - 1, -1, -1): # reversed so the next note is on top
-		var note := _pending[i] as AimNote
+	var pending := mode.pending()
+	for i in range(pending.size() - 1, -1, -1): # reversed so the next note is on top
+		var note := pending[i] as AimNote
 		var until := note.time - now
 		if until > approach: continue
 		var alpha := 1.0 - clampf(until / approach, 0.0, 1.0)

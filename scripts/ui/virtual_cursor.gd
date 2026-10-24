@@ -9,21 +9,27 @@ var enabled := false:
 	set(value):
 		enabled = value
 		visible = value
-		_capture(value)
+		_apply_capture()
 
 func _ready() -> void:
 	position = get_viewport_rect().get_center()
 	enabled = false
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PAUSED or what == NOTIFICATION_UNPAUSED: _apply_capture()
+
+func _exit_tree() -> void: Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
 func _input(event: InputEvent) -> void:
 	if not enabled: return
-	if event.is_action_pressed(&"release_cursor"): _capture(false)
-	elif event is InputEventMouseButton and event.pressed: _capture(true)
+	if event is InputEventMouseButton and event.pressed: _apply_capture() # regain after alt tab
 	elif event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		var moved: Vector2 = position + event.relative * GameConfig.mouse_sensitivity
 		position = moved.clamp(Vector2.ZERO, get_viewport_rect().size)
 
-func _capture(captured: bool) -> void:
+# the os mouse is free whenever we're disabled or paused
+func _apply_capture() -> void:
+	var captured := enabled and is_inside_tree() and not get_tree().paused
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if captured else Input.MOUSE_MODE_VISIBLE
 
 func _draw() -> void:

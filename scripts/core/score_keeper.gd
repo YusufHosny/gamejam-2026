@@ -16,6 +16,17 @@ func add(result: HitResult) -> void:
 	combo += 1
 	max_combo = maxi(max_combo, combo)
 
+func count(grade: Judgement.Grade) -> int: return _counts.get(grade, 0)
+
+# checkpoints restore from a snapshot
+func copy() -> ScoreKeeper:
+	var snapshot := ScoreKeeper.new()
+	snapshot.score = score
+	snapshot.combo = combo
+	snapshot.max_combo = max_combo
+	snapshot._counts.assign(_counts)
+	return snapshot
+
 func accuracy() -> float:
 	var total := 0
 	var scored := 0

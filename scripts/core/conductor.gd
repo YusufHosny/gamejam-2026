@@ -10,9 +10,9 @@ func start(chart: Chart) -> void:
 	_latency_s = AudioServer.get_output_latency() # expensive, so cached
 	play()
 
-# audio clock, not frame time. holds the last value once the song stops
+# audio clock, not frame time. holds its last value while paused or stopped
 func song_time() -> float:
-	if playing:
+	if playing and can_process():
 		_time = (
 			get_playback_position()
 			+ AudioServer.get_time_since_last_mix()
