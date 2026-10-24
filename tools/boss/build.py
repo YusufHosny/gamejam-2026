@@ -5,12 +5,14 @@ import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from cutout import cut_out
 
 SHIELD_DARK = 90 # luminance below this is shield body, the rest is its rim
+WORK_SCALE = 4
+OUT_SCALE = 2
 STEEL_TOP = np.array([168, 180, 196])
 STEEL_BOTTOM = np.array([72, 84, 100])
 RIM = np.array([236, 242, 248])
@@ -77,14 +79,24 @@ def shields(sheet: Image.Image) -> list[Image.Image]:
     boxes.sort(key=lambda b: (b[1] // 100, b[0])) # rows then columns
     out = []
     for left, top, right, bottom in boxes:
-        piece = cut_out(sheet.crop((left - 4, top - 4, right + 4, bottom + 4)), tolerance=40)
-        rgba = np.asarray(piece).astype(float)
-        lum = rgba[..., :3].mean(axis=2)
-        t = np.linspace(0, 1, rgba.shape[0])[:, None, None]
-        steel = STEEL_TOP * (1 - t) + STEEL_BOTTOM * t
-        rgba[..., :3] = np.where((lum < SHIELD_DARK)[..., None], steel, RIM)
-        out.append(Image.fromarray(rgba.astype(np.uint8)))
+        out.append(_steel(sheet.crop((left - 4, top - 4, right + 4, bottom + 4))))
     return out
+
+
+# worked at 4x so the outline and rim come out smooth, saved at 2x the size it's drawn
+def _steel(crop: Image.Image) -> Image.Image:
+    big = cut_out(crop.resize((crop.width * WORK_SCALE, crop.height * WORK_SCALE), Image.LANCZOS), tolerance=40)
+    big = ImageOps.expand(big, border=WORK_SCALE * 2, fill=(0, 0, 0, 0)) # room for the feathered edge
+    rgba = np.asarray(big).astype(float)
+    soft = np.asarray(big.getchannel("A").filter(ImageFilter.GaussianBlur(WORK_SCALE * 0.6))).astype(float)
+    gray = rgba[..., :3].mean(axis=2)
+    t = np.linspace(0, 1, rgba.shape[0])[:, None, None]
+    steel = STEEL_TOP * (1 - t) + STEEL_BOTTOM * t
+    rim = np.clip((gray - 60) / 120, 0, 1)[..., None] # 0 shield body .. 1 white rim, smooth in between
+    rgba[..., :3] = steel * (1 - rim) + RIM * rim
+    rgba[..., 3] = soft
+    out = Image.fromarray(rgba.astype(np.uint8))
+    return out.resize((out.width * OUT_SCALE // WORK_SCALE, out.height * OUT_SCALE // WORK_SCALE), Image.LANCZOS)
 
 
 # white core with a slight blur over a heavy red blur

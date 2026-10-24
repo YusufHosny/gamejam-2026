@@ -7,13 +7,16 @@ const RADIUS := 64.0
 const HIT_GROW := 10.0 # a little forgiving around the button
 const DART := 4.0 # ease out power, it lands well before its beat
 const APPROACH_SCALE := 1.6 # ring starts at RADIUS * (1 + APPROACH_SCALE)
-const PREVIEWS := 4 # upcoming spots shown faintly
+const PREVIEWS := 4 # upcoming spots shown as ghost circles
+const GHOST_ALPHA := 0.4
+const RING_WIDTH := 5.0
 const FLASH_S := 0.15
 const ACCENT := Color(1.0, 0.85, 0.2)
 const MISS := Color(1.0, 0.25, 0.25)
 
 @export var button: Texture2D
 @export var final := false # last chase, ends with the button caught
+@export var skin: CircleSkin # null -> drawn rings
 
 var _flash_ms := -100000
 var _flash_miss := false
@@ -46,7 +49,8 @@ func _button_at(now: float) -> Vector2:
 func _draw() -> void:
 	var now := _now()
 	BossArena.draw(self, now)
-	_draw_targets(now)
+	var targets := _targets(now)
+	_draw_ghosts(targets, now)
 	var flash := clampf(1.0 - (Time.get_ticks_msec() - _flash_ms) / (FLASH_S * 1000), 0.0, 1.0)
 	var at := _button_at(now)
 	var done := final and mode.pending().is_empty()
@@ -54,22 +58,48 @@ func _draw() -> void:
 	if done: rect = _rect(at).grow(12)
 	draw_texture_rect(button, rect, false, Color.WHITE.lerp(MISS if _flash_miss else Color(2, 2, 2), flash * 0.6))
 	if done: _draw_caught(at)
+	_draw_rings(targets, now)
 
-# the next spot closes in like an approach circle, the ones after are faint previews
-func _draw_targets(now: float) -> void:
+# the next few spots, soonest first
+func _targets(now: float) -> Array[AimNote]:
+	var targets: Array[AimNote] = []
+	for note: AimNote in mode.pending():
+		if targets.size() == PREVIEWS or note.time - now > GameConfig.approach_time_s * 2: break
+		targets.append(note)
+	return targets
+
+# where the button is about to land, under it, faded in as each spot comes up
+func _draw_ghosts(targets: Array[AimNote], now: float) -> void:
+	for i in targets.size() - 1:
+		draw_dashed_line(targets[i].position, targets[i + 1].position, Color(ACCENT, 0.45), 3, 10)
+	for i in range(targets.size() - 1, -1, -1):
+		var note := targets[i]
+		var alpha := GHOST_ALPHA * _fade(note, now)
+		if skin == null:
+			draw_arc(note.position, RADIUS, 0, TAU, 64, Color(ACCENT, alpha), 3, true)
+			continue
+		CircleSkin.draw_centered(self, skin.hit_circle, note.position, RADIUS * 2 * skin.scale, Color(ACCENT, alpha))
+		CircleSkin.draw_centered(self, skin.overlay, note.position, RADIUS * 2 * skin.scale, Color(1, 1, 1, alpha))
+
+# over the button, one closing ring per approaching spot, like osu
+func _draw_rings(targets: Array[AimNote], now: float) -> void:
 	var approach := GameConfig.approach_time_s
-	var pending := mode.pending()
-	for i in range(mini(PREVIEWS, pending.size()) - 1, -1, -1):
-		var note := pending[i] as AimNote
+	for note in targets:
 		var until := note.time - now
-		if until > approach * 2: continue
-		if i == 0 and until < approach:
-			var closing := clampf(until / approach, 0.0, 1.0)
-			draw_arc(note.position, RADIUS * (1.0 + APPROACH_SCALE * closing), 0, TAU, 64, Color(ACCENT, 1.0 - closing * 0.5), 4, true)
+		if until <= 0.0 or until > approach: continue
+		var closing := until / approach
+		var radius := RADIUS * (1.0 + APPROACH_SCALE * closing)
+		var alpha := 1.0 - closing * 0.4
+		if skin != null:
+			CircleSkin.draw_centered(self, skin.approach_circle, note.position, radius * 2 * skin.scale, Color(1, 1, 1, alpha))
 		else:
-			draw_arc(note.position, RADIUS, 0, TAU, 64, Color(ACCENT, 0.18), 2, true)
-		if i + 1 < pending.size() and i + 1 < PREVIEWS:
-			draw_dashed_line(note.position, (pending[i + 1] as AimNote).position, Color(ACCENT, 0.25), 2, 8)
+			draw_arc(note.position, radius, 0, TAU, 64, Color(0, 0, 0, alpha * 0.6), RING_WIDTH + 3, true)
+			draw_arc(note.position, radius, 0, TAU, 64, Color(1, 1, 1, alpha), RING_WIDTH, true)
+
+# 0 two approaches out, 1 once it's approaching
+func _fade(note: AimNote, now: float) -> float:
+	var approach := GameConfig.approach_time_s
+	return 1.0 - clampf((note.time - now - approach) / approach, 0.0, 1.0)
 
 func _draw_caught(at: Vector2) -> void:
 	var font := ThemeDB.fallback_font

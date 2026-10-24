@@ -23,7 +23,7 @@ var _slash: Dictionary[AimNote, Vector2] = {} # slash direction of the hit, see 
 static func slot(index: int) -> Vector2: return CENTER + SLOTS[index % SLOTS.size()]
 
 func _ready() -> void:
-	texture_filter = TEXTURE_FILTER_LINEAR
+	texture_filter = TEXTURE_FILTER_LINEAR_WITH_MIPMAPS # shields are drawn well under their size
 	for i in mode.segment.notes.size():
 		_shield[mode.segment.notes[i] as AimNote] = shields[(i * 7) % shields.size()]
 	mode.judged.connect(_on_judged)

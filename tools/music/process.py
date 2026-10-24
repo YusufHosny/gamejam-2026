@@ -8,6 +8,7 @@ from pathlib import Path
 
 import librosa
 import numpy as np
+import pyloudnorm as pyln
 import soundfile as sf
 
 SR = 44100
@@ -16,6 +17,7 @@ HOP = 512
 SMOOTH_BEATS = 9
 DRUMS_GAIN = 0.8
 GLASS_GAIN = 0.9
+SCREAM_UNDER_LU = 1.0 # the scream sits this far under the drums
 
 
 @dataclass
@@ -88,15 +90,12 @@ def warp(y: np.ndarray, beats: np.ndarray) -> tuple[np.ndarray, float]:
     return np.stack(channels), 60 / period
 
 
-# loudness of the audible parts only, so gaps in sparse clips don't drag it down
-def active_rms_db(y: np.ndarray) -> float:
-    rms = librosa.feature.rms(y=librosa.to_mono(y))[0]
-    active = rms[rms > rms.max() * 0.1]
-    return float(20 * np.log10(np.sqrt(np.mean(active ** 2))))
+# perceived loudness (ITU-R BS.1770), a voice reads far louder than drums at the same rms
+def lufs(y: np.ndarray) -> float: return float(pyln.Meter(SR).integrated_loudness(np.atleast_2d(y).T))
 
 
-def gain_to(clip: np.ndarray, target_db: float) -> float:
-    return float(10 ** ((target_db - active_rms_db(clip)) / 20))
+def gain_to(clip: np.ndarray, target_lufs: float) -> float:
+    return float(10 ** ((target_lufs - lufs(clip)) / 20))
 
 
 def fade(y: np.ndarray, out_s: float = 2.0) -> np.ndarray:
@@ -149,9 +148,8 @@ def scream_mix(raw: Path, out: Path, length_s: float) -> Track:
     scream = scream[..., np.argmax(np.abs(librosa.to_mono(scream)) > 0.05):]
 
     mix = drums[..., : int(length_s * SR)] * DRUMS_GAIN
-    # the scream sits at the average level of the drums and glass instead of on top of them
-    target_db = (active_rms_db(mix) + active_rms_db(crash * GLASS_GAIN)) / 2
-    scream_gain = gain_to(scream, target_db)
+    target = lufs(mix) - SCREAM_UNDER_LU
+    scream_gain = gain_to(scream, target)
     def add(clip: np.ndarray, at_s: float, gain: float) -> None:
         start = int(at_s * SR)
         end = min(start + clip.shape[-1], mix.shape[-1])
@@ -163,7 +161,7 @@ def scream_mix(raw: Path, out: Path, length_s: float) -> Track:
     mix /= max(1.0, np.abs(mix).max())
     mix = fade(mix)
     export(mix, out / "scream_mix.ogg")
-    print(f"scream_mix: bpm={bpm} first={first:.3f}s length={length_s}s scream gain={scream_gain:.3f} ({target_db:.1f} dB)")
+    print(f"scream_mix: bpm={bpm} first={first:.3f}s length={length_s}s scream gain={scream_gain:.3f} ({target:.1f} LUFS)")
     return Track("scream_mix", bpm, round(first, 4), round(length_s, 2), False, 0.0)
 
 
