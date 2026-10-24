@@ -1,0 +1,49 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscenes/virus_cutscene.gd" id="1_cut"]
+[ext_resource type="Texture2D" path="res://assets/cutscenes/virus/submit_sticker.png" id="2_sticker"]
+[ext_resource type="Texture2D" path="res://assets/cutscenes/virus/sticker_back.png" id="3_back"]
+[ext_resource type="Texture2D" path="res://assets/cutscenes/virus/virus_button.png" id="4_virus"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Cursor/2X/Cursor_Arrow_Light.png" id="5_cursor"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Cursor/2X/Cursor_Arrow_Light_Click.png" id="6_click"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/airdrop_ad.png" id="w10"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/bongo_cat_ad.png" id="w11"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/bored_ad.png" id="w12"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/car_ad.png" id="w13"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/expensive_ad.png" id="w14"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/fih_ad.png" id="w15"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/free_robux_ad_1.png" id="w16"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/free_robux_ad_2.png" id="w17"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/hacker_cat_ad.png" id="w18"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/happy_time_ad.png" id="w19"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/i_love_internet_ad.png" id="w20"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/japanese_cat_ad.png" id="w21"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/japanese_grabdma_ad.png" id="w22"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/japanese_veggie_ad.png" id="w23"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/puter_sucks_ad.png" id="w24"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/satan_ad.png" id="w25"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/subway_surfer_ad.png" id="w26"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/virus_ad.png" id="w27"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/white_man_ad.png" id="w28"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Icons/2X/Icon_Computer.png" id="i29"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Icons/2X/Icon_Folder.png" id="i30"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Icons/2X/Icon_Globe.png" id="i31"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Icons/2X/Icon_Notepad.png" id="i32"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Icons/2X/Icon_Trash.png" id="i33"]
+
+[node name="VirusCutscene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_cut")
+sticker = ExtResource("2_sticker")
+sticker_back = ExtResource("3_back")
+virus = ExtResource("4_virus")
+cursor = ExtResource("5_cursor")
+cursor_click = ExtResource("6_click")
+ads = Array[Texture2D]([ExtResource("w10"), ExtResource("w11"), ExtResource("w12"), ExtResource("w13"), ExtResource("w14"), ExtResource("w15"), ExtResource("w16"), ExtResource("w17"), ExtResource("w18"), ExtResource("w19"), ExtResource("w20"), ExtResource("w21"), ExtResource("w22"), ExtResource("w23"), ExtResource("w24"), ExtResource("w25"), ExtResource("w26"), ExtResource("w27"), ExtResource("w28")])
+icons = Array[Texture2D]([ExtResource("i29"), ExtResource("i30"), ExtResource("i31"), ExtResource("i32"), ExtResource("i33")])

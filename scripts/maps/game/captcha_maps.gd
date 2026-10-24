@@ -4,11 +4,37 @@ extends RefCounted
 const DOG_VIEW := preload("res://scenes/views/captcha/dog_captcha_view.tscn")
 const ALIGN_VIEW := preload("res://scenes/views/captcha/align_captcha_view.tscn")
 const FRUIT_VIEW := preload("res://scenes/views/captcha/fruit_captcha_view.tscn")
+const SUBWAY_VIEW := preload("res://scenes/views/captcha/subway_captcha_view.tscn")
+const ADS_VIEW := preload("res://scenes/views/ads/ads_view.tscn")
+const ADS_AREA := Rect2(300, 150, 600, 330) # window centres, clear of the hud and desktop icons
+const ADS_SPACING := 180.0
+const ADS_DOUBLE_CHANCE := 0.2 # two ads on one beat, one swipe can get both
 const SELECTED_S := 0.4
 const COMBO_SIZE := 4
 const MAX_START := Vector2i(4, 3) # furthest the puzzle piece starts from its hole, in nudges
 const FRUIT_MARGIN := 60.0
 const FRUIT_SPACING := 100.0
+const SUBWAY_MOVES := [ # [beat, direction], from tools/subway/moves.py
+	[-0.75, Vector2.LEFT], # 0.10s
+	[0.75, Vector2.RIGHT], # 0.90s
+	[4.25, Vector2.DOWN], # 2.65s
+	[7.75, Vector2.LEFT], # 4.30s
+	[10.75, Vector2.DOWN], # 5.80s
+	[13.5, Vector2.RIGHT], # 7.27s
+	[15.75, Vector2.LEFT], # 8.37s
+	[16.75, Vector2.RIGHT], # 8.87s
+	[20.75, Vector2.RIGHT], # 10.90s
+	[24.5, Vector2.LEFT], # 12.70s
+	[29.25, Vector2.RIGHT], # 15.07s
+	[31.25, Vector2.LEFT], # 16.07s
+	[37.25, Vector2.UP], # 19.10s
+	[39.5, Vector2.RIGHT], # 20.20s
+	[40.25, Vector2.UP], # 20.60s
+	[43.75, Vector2.LEFT], # 22.40s
+	[52.75, Vector2.UP], # 26.90s
+	[53.5, Vector2.LEFT], # 27.20s
+	[57.25, Vector2.RIGHT], # 29.10s
+]
 
 # notes hop between tiles, never onto one still showing or ticking its last dog
 static func fill_dogs(segment: MapSegment, map: Map, rng_seed := GameConfig.map_seed) -> void:
@@ -67,6 +93,34 @@ static func fill_fruit(segment: MapSegment, map: Map, rng_seed := GameConfig.map
 		beat += step
 	segment.notes = notes
 	segment.view = FRUIT_VIEW
+
+# one slash per runner move that lands inside the segment, offset toward the move
+static func fill_subway(segment: MapSegment) -> void:
+	var notes: Array[Note] = []
+	for move in SUBWAY_MOVES:
+		var beat: float = move[0]
+		if beat < segment.start_beat or beat >= segment.end_beat: continue
+		notes.append(_aim_note(beat, SubwayCaptchaView.runner() + move[1] * SubwayCaptchaView.OFFSET, notes.size()))
+	segment.notes = notes
+	segment.view = SUBWAY_VIEW
+
+# an ad a beat, sometimes two, never right on top of the last
+static func fill_ads(segment: MapSegment, map: Map, rng_seed := GameConfig.map_seed) -> void:
+	var rng := _rng(rng_seed)
+	var step := _step(map)
+	var notes: Array[Note] = []
+	var last := ADS_AREA.get_center()
+	var beat := segment.start_beat
+	while beat < segment.end_beat:
+		for i in 2 if rng.randf() < ADS_DOUBLE_CHANCE else 1:
+			var at := last
+			while at.distance_to(last) < ADS_SPACING:
+				at = ADS_AREA.position + Vector2(rng.randf(), rng.randf()) * ADS_AREA.size
+			notes.append(_aim_note(beat, at, notes.size()))
+			last = at
+		beat += step
+	segment.notes = notes
+	segment.view = ADS_VIEW
 
 static func _aim_note(beat: float, position: Vector2, index: int) -> AimNote:
 	var note := AimNote.new(beat, position)

@@ -62,11 +62,18 @@ func _draw_head(note: AimNote, alpha: float) -> void:
 	if skin != null:
 		var diameter := RADIUS * 2 * skin.scale
 		CircleSkin.draw_centered(self, skin.hit_circle, note.position, diameter, Color(_tint(note), alpha))
-		skin.draw_number(self, note.position, _numbers[note], RADIUS * 0.8, Color(Color.WHITE, alpha))
+		_draw_label(note, alpha)
 		CircleSkin.draw_centered(self, skin.overlay, note.position, diameter, Color(Color.WHITE, alpha))
 		return
 	draw_circle(note.position, RADIUS - BORDER_WIDTH / 2, Color(color.darkened(0.25), 0.9 * alpha), true, -1, true)
 	draw_arc(note.position, RADIUS, 0, TAU, 64, Color(Color.WHITE, alpha), BORDER_WIDTH, true)
+	_draw_label(note, alpha)
+
+# the combo number inside a circle
+func _draw_label(note: AimNote, alpha: float) -> void:
+	if skin != null:
+		skin.draw_number(self, note.position, _numbers[note], RADIUS * 0.8, Color(Color.WHITE, alpha))
+		return
 	var font := ThemeDB.fallback_font
 	var text := str(_numbers[note])
 	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, NUMBER_SIZE).x

@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="Song" format=3]
+[gd_resource type="Resource" script_class="Song" format=3 uid="uid://d1una38a4h1w1"]
 
-[ext_resource type="Script" path="res://scripts/maps/song.gd" id="1_song"]
-[ext_resource type="AudioStream" path="res://assets/music/vivaldi_summer.ogg" id="2_stream"]
+[ext_resource type="Script" uid="uid://scc3x4nsgsy5" path="res://scripts/maps/song.gd" id="1_song"]
+[ext_resource type="AudioStream" uid="uid://b5r7jxw0w6rny" path="res://assets/music/vivaldi_summer.ogg" id="2_stream"]
 
 [resource]
 script = ExtResource("1_song")

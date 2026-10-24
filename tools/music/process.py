@@ -172,6 +172,7 @@ BUILDS = {
     "moonlight_3rd": lambda raw, out: process_music(raw, out, "moonlight_3rd", 120.0, do_warp=True),
     "ad_music": lambda raw, out: process_music(raw, out, "ad_music", None, do_warp=False),
     "scream_mix": lambda raw, out: scream_mix(raw, out, 90.0),
+    "subway_surfers": lambda raw, out: process_music(raw, out, "subway_surfers", None, do_warp=False),
 }
 
 

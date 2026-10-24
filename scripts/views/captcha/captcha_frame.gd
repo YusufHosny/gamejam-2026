@@ -9,8 +9,7 @@ const SCALE := 540.0 / 1144.0
 const ORIGIN := Vector2(576 - 788 * SCALE / 2, 30)
 const HEADER := Rect2(6, 9, 772, 228)
 const CONTENT := Rect2(6, 243, 772, 786) # the white area, inset to line up with the header
-const TOP_EDGE := Rect2(0, 0, 788, 241)
-const BOTTOM_EDGE := Rect2(0, 1031, 788, 113)
+const EDGES: Array[Rect2] = [Rect2(0, 0, 788, 243), Rect2(0, 1029, 788, 115), Rect2(0, 243, 6, 786), Rect2(778, 243, 10, 786)] # everything but CONTENT
 const ACCENT := Color(0.1, 0.45, 0.9)
 
 static func to_screen(source: Rect2) -> Rect2: return Rect2(ORIGIN + source.position * SCALE, source.size * SCALE)
@@ -19,9 +18,9 @@ static func content() -> Rect2: return to_screen(CONTENT)
 
 static func draw(item: CanvasItem) -> void: item.draw_texture_rect(TEXTURE, to_screen(Rect2(Vector2.ZERO, SIZE)), false)
 
-# header and footer again, over anything that flew past the content area
+# the frame around the content area, over anything that flew past it or plays inside it
 static func draw_edges(item: CanvasItem) -> void:
-	for edge in [TOP_EDGE, BOTTOM_EDGE]: item.draw_texture_rect_region(TEXTURE, to_screen(edge), edge)
+	for edge in EDGES: item.draw_texture_rect_region(TEXTURE, to_screen(edge), edge)
 
 static func draw_header(item: CanvasItem, line: String, target: String, note: String) -> void:
 	var header := to_screen(HEADER)
