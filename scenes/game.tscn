@@ -5,7 +5,6 @@
 [ext_resource type="Script" uid="uid://bfq7inssf32tg" path="res://scripts/modes/four_d_mode.gd" id="3_four_d"]
 [ext_resource type="Script" uid="uid://cahcgymdtv7tb" path="res://scripts/modes/aim_click_mode.gd" id="4_aim_click"]
 [ext_resource type="Script" uid="uid://c4r0bb5yehqug" path="res://scripts/modes/slash_mode.gd" id="5_slash"]
-[ext_resource type="Script" uid="uid://4s0ij1nlwbgl" path="res://scripts/modes/typing_mode.gd" id="6_typing"]
 [ext_resource type="Script" uid="uid://b148qq3alysdd" path="res://scripts/ui/virtual_cursor.gd" id="7_cursor"]
 [ext_resource type="Script" uid="uid://un4p11fgcamx" path="res://scripts/ui/hud.gd" id="8_hud"]
 [ext_resource type="Script" uid="uid://kooh7giiuax1" path="res://scripts/ui/hand_pos_icon.gd" id="9_hand_pos"]
@@ -31,9 +30,6 @@ script = ExtResource("4_aim_click")
 
 [node name="Slash" type="Node" parent="Modes" unique_id=1979987140]
 script = ExtResource("5_slash")
-
-[node name="Typing" type="Node" parent="Modes" unique_id=702949169]
-script = ExtResource("6_typing")
 
 [node name="Views" type="Node2D" parent="."]
 

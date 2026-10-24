@@ -3,7 +3,7 @@ extends AimMode
 
 var _last_cursor_pos: Vector2
 
-func begin(_segment: ChartSegment, _view: ModeView) -> void:
+func begin(_segment: MapSegment, _view: ModeView) -> void:
 	super(_segment, _view)
 	_last_cursor_pos = cursor.global_position
 

@@ -14,12 +14,12 @@ var scroll_speed := 700.0 # px/s for 4d lanes
 var difficulty := Difficulty.Level.STANDARD
 var tutorial_enabled := true
 
-# --- Chart ---
+# --- Map ---
 var deadline_s := 300.0 # the whole run, counted down on the song clock
 var bpm := 120.0
 var segment_bars := 8
 var cooldown_bars := 2
-var chart_seed := 41
+var map_seed := 41
 
 # --- Mouse ---
 var mouse_sensitivity := 1.0
@@ -37,7 +37,6 @@ var keybinds: Dictionary[StringName, Array] = {
 	&"debug_four_d": [key_event(KEY_F1)],
 	&"debug_aim_click": [key_event(KEY_F2)],
 	&"debug_slash": [key_event(KEY_F3)],
-	&"debug_typing": [key_event(KEY_F4)],
 }
 
 func _ready() -> void:

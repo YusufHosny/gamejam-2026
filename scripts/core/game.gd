@@ -8,13 +8,11 @@ const DEBUG_SEEKS: Dictionary[StringName, Modality.Kind] = {
 	&"debug_four_d": Modality.Kind.FOUR_D,
 	&"debug_aim_click": Modality.Kind.AIM_CLICK,
 	&"debug_slash": Modality.Kind.SLASH,
-	&"debug_typing": Modality.Kind.TYPING,
 }
 const DEFAULT_VIEWS := {
 	Modality.Kind.FOUR_D: preload("res://scenes/views/circle_four_d_view.tscn"),
 	Modality.Kind.AIM_CLICK: preload("res://scenes/views/circle_aim_click_view.tscn"),
 	Modality.Kind.SLASH: preload("res://scenes/views/circle_slash_view.tscn"),
-	Modality.Kind.TYPING: preload("res://scenes/views/text_typing_view.tscn"),
 }
 
 @onready var conductor: Conductor = $Conductor
@@ -26,22 +24,21 @@ const DEFAULT_VIEWS := {
 @onready var _four_d: FourDMode = $Modes/FourD
 @onready var _aim_click: AimClickMode = $Modes/AimClick
 @onready var _slash: SlashMode = $Modes/Slash
-@onready var _typing: TypingMode = $Modes/Typing
 
-var chart: Chart
+var map: Map
 var score := ScoreKeeper.new()
-var _segment: ChartSegment = null
+var _segment: MapSegment = null
 var _view: ModeView = null
-var _checkpoint := ScoreKeeper.new() # score as it was when the current segment began
+var _checkpoint := ScoreKeeper.new() # checkpointed score
 var _finished := false
 var _hitsound := SfxUtils.hitsound()
 var _started := false # false during the intro, before the song clock runs
 
 func _ready() -> void:
-	chart = DemoChart.build()
+	map = DemoMap.build()
 	_aim_click.cursor = cursor
 	_slash.cursor = cursor
-	for handler: ModeHandler in [_four_d, _aim_click, _slash, _typing]:
+	for handler: ModeHandler in [_four_d, _aim_click, _slash]:
 		handler.conductor = conductor
 		handler.judged.connect(_on_judged)
 	_pause_menu.resumed.connect(_set_paused.bind(false))
@@ -52,20 +49,20 @@ func _ready() -> void:
 	_hitsounds.play()
 	hud.set_time_left(GameConfig.deadline_s)
 	await hud.play_intro()
-	conductor.start(chart)
+	conductor.start(map)
 	_started = true
 
 func _process(_delta: float) -> void:
 	if not _started: return
 	var now := conductor.song_time()
 	hud.set_time_left(clampf(GameConfig.deadline_s - now, 0.0, GameConfig.deadline_s))
-	var segment := chart.segment_at(now)
+	var segment := map.segment_at(now)
 	if segment != _segment: _switch_to(segment)
 	if segment == null:
 		_finish()
 		return
 	if now < segment.start_time:
-		hud.show_banner(Modality.hand_pos(segment.kind), fmod(chart.time_beat(now), 1.0) < 0.5)
+		hud.show_banner(Modality.hand_pos(segment.kind), fmod(map.time_beat(now), 1.0) < 0.5)
 	else:
 		hud.hide_banner()
 
@@ -78,7 +75,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.is_action_pressed(action): _seek_to_segment(_first_segment(DEBUG_SEEKS[action]))
 
 # --- Segments ---
-func _switch_to(segment: ChartSegment) -> void:
+func _switch_to(segment: MapSegment) -> void:
 	if _segment != null:
 		_handler(_segment.kind).end()
 		_view.queue_free()
@@ -102,12 +99,11 @@ func _handler(kind: Modality.Kind) -> ModeHandler:
 		Modality.Kind.FOUR_D: return _four_d
 		Modality.Kind.AIM_CLICK: return _aim_click
 		Modality.Kind.SLASH: return _slash
-		Modality.Kind.TYPING: return _typing
 	assert(false, "unhandled modality %s" % kind)
 	return null
 
-func _first_segment(kind: Modality.Kind) -> ChartSegment:
-	return IterUtils.first(chart.segments, func(s: ChartSegment): return s.kind == kind)
+func _first_segment(kind: Modality.Kind) -> MapSegment:
+	return IterUtils.first(map.segments, func(s: MapSegment): return s.kind == kind)
 
 func _finish() -> void:
 	if _finished: return
@@ -138,8 +134,8 @@ func _seek(time: float) -> void:
 	_switch_to(null)
 	conductor.play(maxf(time, 0.0))
 
-func _seek_to_segment(segment: ChartSegment) -> void:
-	_seek(chart.beat_time(segment.start_beat - chart.beats_per_bar)) # one bar of lead in
+func _seek_to_segment(segment: MapSegment) -> void:
+	_seek(map.beat_time(segment.start_beat - map.beats_per_bar)) # one bar of lead in
 
 # --- Scoring ---
 func _set_score(keeper: ScoreKeeper) -> void:

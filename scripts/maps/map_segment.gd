@@ -1,4 +1,4 @@
-class_name ChartSegment
+class_name MapSegment
 extends Resource
 
 # the gap before start_beat is the switching cooldown
@@ -6,8 +6,8 @@ extends Resource
 @export var start_beat: float
 @export var end_beat: float
 @export var notes: Array[Note] = []
-@export var view: PackedScene # a ModeView scene, null falls back to the mode's default
-@export var tutorial := false # practice only, never scored
+@export var view: PackedScene # ModeView scene, null -> default for mode
+@export var tutorial := false
 
 var start_time: float
 var end_time: float

@@ -1,7 +1,7 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dey3olmxa2fou"]
 
-[ext_resource type="Script" path="res://scripts/views/circle_aim_view.gd" id="1_view"]
+[ext_resource type="Script" uid="uid://d1d7c72cd4p2e" path="res://scripts/views/circle_aim_view.gd" id="1_view"]
 
-[node name="CircleAimClickView" type="Node2D"]
+[node name="CircleAimClickView" type="Node2D" unique_id=1666288923]
 script = ExtResource("1_view")
 color = Color(1, 0.6, 0.2, 1)
