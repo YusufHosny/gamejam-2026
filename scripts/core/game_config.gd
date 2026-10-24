@@ -11,6 +11,7 @@ var approach_time_s := 0.8
 var scroll_speed := 700.0 # px/s for 4d lanes
 
 # --- Chart ---
+var deadline_s := 300.0 # the whole run, counted down on the song clock
 var bpm := 120.0
 var segment_bars := 8
 var cooldown_bars := 2

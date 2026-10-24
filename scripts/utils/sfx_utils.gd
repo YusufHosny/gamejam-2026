@@ -22,6 +22,20 @@ static func metronome(bpm: float, beats: int, beats_per_bar := 4) -> AudioStream
 		data.append_array(gap)
 	return _wav(data)
 
+# one beep of a two tone square warble
+static func alarm(duration := 0.3, volume := 0.25) -> AudioStreamWAV:
+	var samples := int(duration * MIX_RATE)
+	var data := PackedByteArray()
+	data.resize(samples * 2)
+	var phase := 0.0
+	for i in samples:
+		var freq := 1400.0 if fmod(float(i) / MIX_RATE, 0.1) < 0.05 else 1050.0
+		phase = fmod(phase + freq / MIX_RATE, 1.0) # accumulated so tone switches don't click
+		var envelope := minf(1.0, (samples - i) / (0.01 * MIX_RATE)) # short fade out
+		var sample := (1.0 if phase < 0.5 else -1.0) * envelope * volume
+		data.encode_s16(i * 2, int(sample * 32767))
+	return _wav(data)
+
 # decaying sine, 16 bit mono
 static func _blip(freq: float, duration: float, volume: float) -> PackedByteArray:
 	var samples := int(duration * MIX_RATE)

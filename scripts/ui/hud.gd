@@ -12,6 +12,7 @@ const BANNER_DIM_ALPHA := 0.15
 @onready var _hand_pos: HandPosIcon = $HandPos
 @onready var _banner: Control = $Banner
 @onready var _banner_icon: HandPosIcon = $Banner/Icon
+@onready var _deadline_clock: DeadlineClock = $DeadlineClock
 
 func _ready() -> void:
 	reset()
@@ -30,6 +31,10 @@ func show_judgement(result: HitResult, score: ScoreKeeper) -> void:
 	_judgement.text = Judgement.label(result.grade)
 	_judgement.modulate = Judgement.color(result.grade)
 	if not result.is_miss(): _timing_bar.add(result.error_s)
+
+func set_time_left(seconds: float) -> void: _deadline_clock.set_time_left(seconds)
+
+func play_intro() -> void: await _deadline_clock.play_intro()
 
 func set_hand_pos(hand_pos: Modality.HandPos) -> void: _hand_pos.hand_pos = hand_pos
 

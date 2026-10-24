@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://un4p11fgcamx" path="res://scripts/ui/hud.gd" id="8_hud"]
 [ext_resource type="Script" uid="uid://kooh7giiuax1" path="res://scripts/ui/hand_pos_icon.gd" id="9_hand_pos"]
 [ext_resource type="Script" uid="uid://ddynmd14ga7oo" path="res://scripts/ui/timing_bar.gd" id="10_timing_bar"]
+[ext_resource type="Script" uid="uid://hy2wh4ry7j08" path="res://scripts/ui/deadline_clock.gd" id="11_deadline_clock"]
 
 [node name="Game" type="Node2D" unique_id=964997430]
 script = ExtResource("1_game")
@@ -105,9 +106,9 @@ anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -96.0
-offset_top = 16.0
+offset_top = 64.0
 offset_right = -16.0
-offset_bottom = 96.0
+offset_bottom = 144.0
 grow_horizontal = 0
 script = ExtResource("9_hand_pos")
 
@@ -142,3 +143,15 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 72
 text = "<<"
 vertical_alignment = 1
+
+[node name="DeadlineClock" type="Control" parent="Hud" unique_id=1417743806]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("11_deadline_clock")
+
+[node name="Alarm" type="AudioStreamPlayer" parent="Hud/DeadlineClock" unique_id=446649108]

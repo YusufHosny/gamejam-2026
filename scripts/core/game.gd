@@ -21,6 +21,7 @@ var chart: Chart
 var score := ScoreKeeper.new()
 var _segment: ChartSegment = null
 var _hitsound := SfxUtils.hitsound()
+var _started := false # false during the intro, before the song clock runs
 
 func _ready() -> void:
 	chart = DemoChart.build()
@@ -31,10 +32,15 @@ func _ready() -> void:
 		handler.judged.connect(_on_judged)
 	_hitsounds.stream = AudioStreamPolyphonic.new()
 	_hitsounds.play()
+	hud.set_time_left(GameConfig.deadline_s)
+	await hud.play_intro()
 	conductor.start(chart)
+	_started = true
 
 func _process(_delta: float) -> void:
+	if not _started: return
 	var now := conductor.song_time()
+	hud.set_time_left(clampf(GameConfig.deadline_s - now, 0.0, GameConfig.deadline_s))
 	var segment := chart.segment_at(now)
 	if segment != _segment: _switch_to(segment)
 	if segment != null and now < segment.start_time:
@@ -43,6 +49,7 @@ func _process(_delta: float) -> void:
 		hud.hide_banner()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not _started: return
 	if event.is_action_pressed(&"restart"): _restart()
 	for action in DEBUG_SEEKS:
 		if event.is_action_pressed(action): _seek_to_kind(DEBUG_SEEKS[action])
