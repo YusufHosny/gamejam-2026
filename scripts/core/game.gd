@@ -25,16 +25,16 @@ const DEFAULT_VIEWS := {
 @onready var _aim_click: AimClickMode = $Modes/AimClick
 @onready var _slash: SlashMode = $Modes/Slash
 
-var chart: Chart
+var map: Map
 var score := ScoreKeeper.new()
-var _segment: ChartSegment = null
+var _segment: MapSegment = null
 var _view: ModeView = null
-var _checkpoint := ScoreKeeper.new() # score as it was when the current segment began
+var _checkpoint := ScoreKeeper.new() # checkpointed score
 var _finished := false
 var _hitsound := SfxUtils.hitsound()
 
 func _ready() -> void:
-	chart = DemoChart.build()
+	map = DemoMap.build()
 	_aim_click.cursor = cursor
 	_slash.cursor = cursor
 	for handler: ModeHandler in [_four_d, _aim_click, _slash]:
@@ -46,17 +46,17 @@ func _ready() -> void:
 	_pause_menu.exited.connect(_unpause_then.bind(exited.emit))
 	_hitsounds.stream = AudioStreamPolyphonic.new()
 	_hitsounds.play()
-	conductor.start(chart)
+	conductor.start(map)
 
 func _process(_delta: float) -> void:
 	var now := conductor.song_time()
-	var segment := chart.segment_at(now)
+	var segment := map.segment_at(now)
 	if segment != _segment: _switch_to(segment)
 	if segment == null:
 		_finish()
 		return
 	if now < segment.start_time:
-		hud.show_banner(Modality.hand_pos(segment.kind), fmod(chart.time_beat(now), 1.0) < 0.5)
+		hud.show_banner(Modality.hand_pos(segment.kind), fmod(map.time_beat(now), 1.0) < 0.5)
 	else:
 		hud.hide_banner()
 
@@ -68,7 +68,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.is_action_pressed(action): _seek_to_segment(_first_segment(DEBUG_SEEKS[action]))
 
 # --- Segments ---
-func _switch_to(segment: ChartSegment) -> void:
+func _switch_to(segment: MapSegment) -> void:
 	if _segment != null:
 		_handler(_segment.kind).end()
 		_view.queue_free()
@@ -95,8 +95,8 @@ func _handler(kind: Modality.Kind) -> ModeHandler:
 	assert(false, "unhandled modality %s" % kind)
 	return null
 
-func _first_segment(kind: Modality.Kind) -> ChartSegment:
-	return IterUtils.first(chart.segments, func(s: ChartSegment): return s.kind == kind)
+func _first_segment(kind: Modality.Kind) -> MapSegment:
+	return IterUtils.first(map.segments, func(s: MapSegment): return s.kind == kind)
 
 func _finish() -> void:
 	if _finished: return
@@ -127,8 +127,8 @@ func _seek(time: float) -> void:
 	_switch_to(null)
 	conductor.play(maxf(time, 0.0))
 
-func _seek_to_segment(segment: ChartSegment) -> void:
-	_seek(chart.beat_time(segment.start_beat - chart.beats_per_bar)) # one bar of lead in
+func _seek_to_segment(segment: MapSegment) -> void:
+	_seek(map.beat_time(segment.start_beat - map.beats_per_bar)) # one bar of lead in
 
 # --- Scoring ---
 func _set_score(keeper: ScoreKeeper) -> void:

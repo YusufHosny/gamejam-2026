@@ -1,4 +1,4 @@
-class_name DemoChart
+class_name DemoMap
 extends RefCounted
 
 # placeholder split until the tutorial storyboard lands
@@ -13,34 +13,34 @@ const MAX_REPEATS := 2
 const COMBO_SIZE := 4
 const MAX_BEND := 120.0
 
-static func build(with_tutorial := GameConfig.tutorial_enabled, rng_seed := GameConfig.chart_seed) -> Chart:
+static func build(with_tutorial := GameConfig.tutorial_enabled, rng_seed := GameConfig.map_seed) -> Map:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = rng_seed
-	var chart := Chart.new()
-	chart.bpm = GameConfig.bpm
-	if with_tutorial: _append_segments(chart, TUTORIAL_ORDER, true, rng)
-	_append_segments(chart, GAME_ORDER, false, rng)
-	chart.bake()
-	return chart
+	var map := Map.new()
+	map.bpm = GameConfig.bpm
+	if with_tutorial: _append_segments(map, TUTORIAL_ORDER, true, rng)
+	_append_segments(map, GAME_ORDER, false, rng)
+	map.bake()
+	return map
 
-static func _append_segments(chart: Chart, kinds: Array, tutorial: bool, rng: RandomNumberGenerator) -> void:
-	var beat := chart.length_beats()
+static func _append_segments(map: Map, kinds: Array, tutorial: bool, rng: RandomNumberGenerator) -> void:
+	var beat := map.length_beats()
 	for kind: Modality.Kind in kinds:
-		beat += GameConfig.cooldown_bars * chart.beats_per_bar
-		var segment := ChartSegment.new(kind, beat, beat + GameConfig.segment_bars * chart.beats_per_bar)
+		beat += GameConfig.cooldown_bars * map.beats_per_bar
+		var segment := MapSegment.new(kind, beat, beat + GameConfig.segment_bars * map.beats_per_bar)
 		segment.tutorial = tutorial
 		segment.notes = _notes(segment, rng)
-		chart.segments.append(segment)
+		map.segments.append(segment)
 		beat = segment.end_beat
 
-static func _notes(segment: ChartSegment, rng: RandomNumberGenerator) -> Array[Note]:
+static func _notes(segment: MapSegment, rng: RandomNumberGenerator) -> Array[Note]:
 	match segment.kind:
 		Modality.Kind.FOUR_D: return _lane_notes(segment, rng)
 		Modality.Kind.AIM_CLICK, Modality.Kind.SLASH: return _aim_notes(segment, rng)
 	assert(false, "unhandled modality %s" % segment.kind)
 	return []
 
-static func _lane_notes(segment: ChartSegment, rng: RandomNumberGenerator) -> Array[Note]:
+static func _lane_notes(segment: MapSegment, rng: RandomNumberGenerator) -> Array[Note]:
 	var notes: Array[Note] = []
 	var beat := segment.start_beat
 	while beat < segment.end_beat:
@@ -48,7 +48,7 @@ static func _lane_notes(segment: ChartSegment, rng: RandomNumberGenerator) -> Ar
 		beat += 0.5 if rng.randf() < 0.3 else 1.0
 	return notes
 
-static func _aim_notes(segment: ChartSegment, rng: RandomNumberGenerator) -> Array[Note]:
+static func _aim_notes(segment: MapSegment, rng: RandomNumberGenerator) -> Array[Note]:
 	var with_sliders := segment.kind == Modality.Kind.AIM_CLICK
 	var notes: Array[Note] = []
 	var position := PLAYFIELD.get_center()
@@ -68,7 +68,7 @@ static func _aim_notes(segment: ChartSegment, rng: RandomNumberGenerator) -> Arr
 	return notes
 
 # null when it would run past the segment
-static func _slider(segment: ChartSegment, beat: float, position: Vector2, rng: RandomNumberGenerator) -> SliderNote:
+static func _slider(segment: MapSegment, beat: float, position: Vector2, rng: RandomNumberGenerator) -> SliderNote:
 	var length: float = SLIDER_BEATS[rng.randi() % SLIDER_BEATS.size()]
 	var repeats := rng.randi_range(0, MAX_REPEATS) if length <= 1.0 else 0
 	var slider := SliderNote.new(beat, position, _curve(position, rng), length, repeats)

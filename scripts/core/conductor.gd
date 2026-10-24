@@ -4,13 +4,13 @@ extends AudioStreamPlayer
 var _latency_s := 0.0
 var _time := 0.0
 
-func start(chart: Chart) -> void:
-	var beats := ceili(chart.length_beats()) + chart.beats_per_bar
-	stream = SfxUtils.metronome(chart.bpm, beats, chart.beats_per_bar)
+func start(map: Map) -> void:
+	var beats := ceili(map.length_beats()) + map.beats_per_bar
+	stream = SfxUtils.metronome(map.bpm, beats, map.beats_per_bar)
 	_latency_s = AudioServer.get_output_latency() # expensive, so cached
 	play()
 
-# audio clock, not frame time. holds its last value while paused or stopped
+# audio clock not frame time
 func song_time() -> float:
 	if playing and can_process():
 		_time = (

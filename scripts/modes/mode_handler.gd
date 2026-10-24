@@ -7,14 +7,14 @@ extends Node
 signal judged(result: HitResult)
 
 var conductor: Conductor
-var segment: ChartSegment
+var segment: MapSegment
 var view: ModeView
 var _pending: Array[Note] = [] # unjudged, sorted by time
 
 func _ready() -> void: end()
 
 # binds before the view enters the tree so its _ready can read the mode
-func begin(_segment: ChartSegment, _view: ModeView) -> void:
+func begin(_segment: MapSegment, _view: ModeView) -> void:
 	segment = _segment
 	view = _view
 	view.mode = self

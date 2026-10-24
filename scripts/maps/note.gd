@@ -7,4 +7,4 @@ var time: float # seconds, baked from beat
 func _init(_beat := 0.0) -> void:
 	beat = _beat
 
-func bake(chart: Chart) -> void: time = chart.beat_time(beat)
+func bake(map: Map) -> void: time = map.beat_time(beat)

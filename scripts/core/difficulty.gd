@@ -12,5 +12,5 @@ static func label(level: Level) -> String:
 	assert(false, "unhandled difficulty %s" % level)
 	return ""
 
-# only standard is implemented so far
+# TODO: impl judge mode and hard maps
 static func is_available(level: Level) -> bool: return level == Level.STANDARD

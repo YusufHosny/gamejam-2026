@@ -14,11 +14,11 @@ var scroll_speed := 700.0 # px/s for 4d lanes
 var difficulty := Difficulty.Level.STANDARD
 var tutorial_enabled := true
 
-# --- Chart ---
+# --- Map ---
 var bpm := 120.0
 var segment_bars := 8
 var cooldown_bars := 2
-var chart_seed := 41
+var map_seed := 41
 
 # --- Mouse ---
 var mouse_sensitivity := 1.0
