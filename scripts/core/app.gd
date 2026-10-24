@@ -9,8 +9,6 @@ const RUN_SCENE := preload("res://scenes/run.tscn")
 @onready var _settings: SettingsMenu = $SettingsMenu
 @onready var _leaderboard: LeaderboardMenu = $LeaderboardMenu
 @onready var _score_screen: ScoreScreen = $ScoreScreen
-@onready var _computer: Node2D = $Computer
-@onready var _computer_screen: SubViewport = $Computer/Screen/SubViewport # the run plays inside the laptop
 
 var _results: Array[RunResult] = [] # session only until we persist the leaderboard
 var _run: RunPlayer = null
@@ -42,8 +40,7 @@ func _play() -> void:
 	_run.run = Run.new(steps)
 	_run.finished.connect(_on_finished)
 	_run.exited.connect(_close_run.bind(_main_menu))
-	_computer_screen.add_child(_run)
-	_computer.show()
+	add_child(_run)
 
 func _on_finished(result: RunResult) -> void:
 	_results.append(result)
@@ -54,5 +51,4 @@ func _close_run(next_screen: Control) -> void:
 	get_tree().paused = false
 	_run.queue_free()
 	_run = null
-	_computer.hide()
 	_show(next_screen)

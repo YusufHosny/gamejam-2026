@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://b4qhlfc13b7p"]
+[gd_scene format=3 uid="uid://b6cm40s3ldi8d"]
 
 [ext_resource type="Script" uid="uid://cspk7mookd2ge" path="res://scripts/core/map_player.gd" id="1_game"]
 [ext_resource type="Script" uid="uid://b62mkbix30ac7" path="res://scripts/core/conductor.gd" id="2_conductor"]

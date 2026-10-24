@@ -11,6 +11,7 @@ const MAP_PLAYER_SCENE := preload("res://scenes/map_player.tscn")
 @onready var _pause_menu: PauseMenu = $PauseMenu
 
 var run: Run # set before entering the tree
+var start_step := 0 # set before entering the tree, the stage sandbox starts mid run
 var score := ScoreKeeper.new()
 var _index := -1
 var _cutscene: Cutscene = null
@@ -23,7 +24,8 @@ func _ready() -> void:
 	_pause_menu.checkpointed.connect(_unpause_then.bind(_load_checkpoint))
 	_pause_menu.exited.connect(_unpause_then.bind(exited.emit))
 	_deadline.hide()
-	_play_step(0)
+	_intro_played = start_step > run.first_timed() # starting past it goes straight to the corner clock
+	_play_step(start_step)
 
 func _process(_delta: float) -> void:
 	if _index >= run.steps.size(): return

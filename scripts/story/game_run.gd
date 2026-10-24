@@ -11,6 +11,7 @@ const SCREAM_MIX := preload("res://assets/music/scream_mix.tres")
 const MOONLIGHT := preload("res://assets/music/moonlight_3rd.tres")
 const SUBWAY := preload("res://assets/music/subway_surfers.tres")
 const VIRUS_CUTSCENE := preload("res://scenes/cutscenes/virus_cutscene.tscn")
+const BLUE_SCREEN_CUTSCENE := preload("res://scenes/cutscenes/blue_screen_cutscene.tscn")
 
 # TODO: placeholder circle views until each situation has its own
 static func steps() -> Array[RunStep]:
@@ -20,7 +21,7 @@ static func steps() -> Array[RunStep]:
 		_subway(),
 		CutsceneStep.new("", CUTSCENE_S, true, VIRUS_CUTSCENE),
 		_ads(),
-		CutsceneStep.new("cutscene: the ads overflow, blue screen", CUTSCENE_S),
+		CutsceneStep.new("", CUTSCENE_S, true, BLUE_SCREEN_CUTSCENE),
 		# b1 usb, b2 password
 		_section(SCREAM_MIX, [Modality.Kind.AIM_CLICK, Modality.Kind.FOUR_D], [26.0, 26.0]),
 		# f1 chase, f2 armor, f3 lasers, f1 crescendo

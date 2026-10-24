@@ -5,13 +5,9 @@
 [ext_resource type="PackedScene" path="res://scenes/menus/settings_menu.tscn" id="3_settings"]
 [ext_resource type="PackedScene" path="res://scenes/menus/leaderboard_menu.tscn" id="4_leaderboard"]
 [ext_resource type="PackedScene" path="res://scenes/menus/score_screen.tscn" id="5_score"]
-[ext_resource type="PackedScene" uid="uid://0m70eeqqvlvm" path="res://scenes/devices/computer.tscn" id="6_computer"]
 
 [node name="App" type="Node" unique_id=2018735]
 script = ExtResource("1_app")
-
-[node name="Computer" parent="." unique_id=722410862 instance=ExtResource("6_computer")]
-position = Vector2(572, 316)
 
 [node name="MainMenu" parent="." unique_id=70711417 instance=ExtResource("2_main")]
 
