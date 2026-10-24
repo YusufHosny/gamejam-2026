@@ -7,10 +7,17 @@ const DEBUG_SEEKS: Dictionary[StringName, Modality.Kind] = {
 	&"debug_slash": Modality.Kind.SLASH,
 	&"debug_typing": Modality.Kind.TYPING,
 }
+const DEFAULT_VIEWS := {
+	Modality.Kind.FOUR_D: preload("res://scenes/views/circle_four_d_view.tscn"),
+	Modality.Kind.AIM_CLICK: preload("res://scenes/views/circle_aim_click_view.tscn"),
+	Modality.Kind.SLASH: preload("res://scenes/views/circle_slash_view.tscn"),
+	Modality.Kind.TYPING: preload("res://scenes/views/text_typing_view.tscn"),
+}
 
 @onready var conductor: Conductor = $Conductor
 @onready var hud: Hud = $Hud
 @onready var cursor: VirtualCursor = $Cursor
+@onready var _views: Node2D = $Views
 @onready var _hitsounds: AudioStreamPlayer = $Hitsounds
 @onready var _four_d: FourDMode = $Modes/FourD
 @onready var _aim_click: AimClickMode = $Modes/AimClick
@@ -20,6 +27,7 @@ const DEBUG_SEEKS: Dictionary[StringName, Modality.Kind] = {
 var chart: Chart
 var score := ScoreKeeper.new()
 var _segment: ChartSegment = null
+var _view: ModeView = null
 var _hitsound := SfxUtils.hitsound()
 
 func _ready() -> void:
@@ -49,12 +57,18 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # --- Segments ---
 func _switch_to(segment: ChartSegment) -> void:
-	if _segment != null: _handler(_segment.kind).end()
+	if _segment != null:
+		_handler(_segment.kind).end()
+		_view.queue_free()
+		_view = null
 	_segment = segment
 	if segment == null:
 		cursor.enabled = false
 		return
-	_handler(segment.kind).begin(segment)
+	var view_scene: PackedScene = segment.view if segment.view != null else DEFAULT_VIEWS[segment.kind]
+	_view = view_scene.instantiate()
+	_handler(segment.kind).begin(segment, _view)
+	_views.add_child(_view)
 	var hand_pos := Modality.hand_pos(segment.kind)
 	cursor.enabled = hand_pos == Modality.HandPos.A
 	hud.set_hand_pos(hand_pos)

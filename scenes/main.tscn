@@ -19,21 +19,21 @@ script = ExtResource("2_conductor")
 
 [node name="Hitsounds" type="AudioStreamPlayer" parent="." unique_id=1928498663]
 
-[node name="Modes" type="Node2D" parent="." unique_id=1333085878]
+[node name="Modes" type="Node" parent="." unique_id=1333085878]
 
-[node name="FourD" type="Node2D" parent="Modes" unique_id=1565515270]
+[node name="FourD" type="Node" parent="Modes" unique_id=1565515270]
 script = ExtResource("3_four_d")
 
-[node name="AimClick" type="Node2D" parent="Modes" unique_id=839076915]
+[node name="AimClick" type="Node" parent="Modes" unique_id=839076915]
 script = ExtResource("4_aim_click")
-color = Color(1, 0.6, 0.2, 1)
 
-[node name="Slash" type="Node2D" parent="Modes" unique_id=1979987140]
+[node name="Slash" type="Node" parent="Modes" unique_id=1979987140]
 script = ExtResource("5_slash")
-color = Color(1, 0.35, 0.55, 1)
 
-[node name="Typing" type="Node2D" parent="Modes" unique_id=702949169]
+[node name="Typing" type="Node" parent="Modes" unique_id=702949169]
 script = ExtResource("6_typing")
+
+[node name="Views" type="Node2D" parent="."]
 
 [node name="Cursor" type="Node2D" parent="." unique_id=88448355]
 script = ExtResource("7_cursor")
