@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/views/captcha/subway_captcha_view.gd" id="1_view"]
+[ext_resource type="Resource" path="res://assets/skin/mobamba.tres" id="2_skin"]
+[ext_resource type="VideoStream" path="res://assets/captcha/subway/subway.ogv" id="3_clip"]
+
+[node name="SubwayCaptchaView" type="Node2D"]
+script = ExtResource("1_view")
+color = Color(1, 0.6, 0.2, 1)
+skin = ExtResource("2_skin")
+
+[node name="Video" type="VideoStreamPlayer" parent="."]
+show_behind_parent = true
+mouse_filter = 2
+stream = ExtResource("3_clip")
+expand = true

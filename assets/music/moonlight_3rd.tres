@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Song" format=3 uid="uid://8op5usxiyshd"]
+
+[ext_resource type="Script" uid="uid://scc3x4nsgsy5" path="res://scripts/maps/song.gd" id="1_song"]
+[ext_resource type="AudioStream" uid="uid://cvbfbfhxswjb3" path="res://assets/music/moonlight_3rd.ogg" id="2_stream"]
+
+[resource]
+script = ExtResource("1_song")
+stream = ExtResource("2_stream")
+bpm = 176.85
+first_beat_s = 0.3109

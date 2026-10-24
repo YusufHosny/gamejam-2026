@@ -9,6 +9,10 @@ const COLOR := Color(1.0, 0.85, 0.6)
 const TRAIL_LIFETIME_MS := 120
 const TRAIL_WIDTH := 7.0
 
+@export var texture: Texture2D # null -> drawn dot
+@export var texture_size := 56.0
+@export var trail_color := COLOR
+
 class TrailPoint:
 	var position: Vector2 # global
 	var born_ms: int
@@ -27,6 +31,7 @@ var enabled := false:
 var _trail: Array[TrailPoint] = []
 
 func _ready() -> void:
+	if texture != null: texture_filter = TEXTURE_FILTER_LINEAR
 	position = get_viewport_rect().get_center()
 	enabled = false
 
@@ -60,7 +65,10 @@ func _draw() -> void:
 		var fade := 1.0 - float(now - _trail[i].born_ms) / TRAIL_LIFETIME_MS
 		var from := to_local(_trail[i - 1].position)
 		var to := to_local(_trail[i].position)
-		draw_line(from, to, Color(COLOR, 0.5 * fade), TRAIL_WIDTH * fade, true)
+		draw_line(from, to, Color(trail_color, 0.5 * fade), TRAIL_WIDTH * fade, true)
+	if texture != null:
+		CircleSkin.draw_centered(self, texture, Vector2.ZERO, texture_size)
+		return
 	draw_circle(Vector2.ZERO, GLOW_RADIUS, Color(COLOR, 0.2), true, -1, true)
 	draw_circle(Vector2.ZERO, RADIUS, COLOR, true, -1, true)
 	draw_arc(Vector2.ZERO, RADIUS, 0, TAU, 32, Color.WHITE, 2, true)

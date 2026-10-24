@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="CircleSkin" format=3 uid="uid://bci1kwatoubmq"]
+
+[ext_resource type="Texture2D" uid="uid://diy0o3mq6x8f8" path="res://assets/skin/mobamba/approachcircle.png" id="approach_circle"]
+[ext_resource type="Texture2D" uid="uid://bdw1q5b3qv2dp" path="res://assets/skin/mobamba/default-0.png" id="digit_0"]
+[ext_resource type="Texture2D" uid="uid://yuehgsbn2fan" path="res://assets/skin/mobamba/default-1.png" id="digit_1"]
+[ext_resource type="Texture2D" uid="uid://d4iw5urvcoll3" path="res://assets/skin/mobamba/default-2.png" id="digit_2"]
+[ext_resource type="Texture2D" uid="uid://dq3kwsnymfpg7" path="res://assets/skin/mobamba/default-3.png" id="digit_3"]
+[ext_resource type="Texture2D" uid="uid://dpf1hl56jmd0e" path="res://assets/skin/mobamba/default-4.png" id="digit_4"]
+[ext_resource type="Texture2D" uid="uid://c4ka00y01fgf4" path="res://assets/skin/mobamba/default-5.png" id="digit_5"]
+[ext_resource type="Texture2D" uid="uid://cttehrsk5tupg" path="res://assets/skin/mobamba/default-6.png" id="digit_6"]
+[ext_resource type="Texture2D" uid="uid://biuqlepb13lsa" path="res://assets/skin/mobamba/default-7.png" id="digit_7"]
+[ext_resource type="Texture2D" uid="uid://bo86a8rh8hkoc" path="res://assets/skin/mobamba/default-8.png" id="digit_8"]
+[ext_resource type="Texture2D" uid="uid://jg3gcxetef3" path="res://assets/skin/mobamba/default-9.png" id="digit_9"]
+[ext_resource type="Texture2D" uid="uid://ct2xlu4bfpj4u" path="res://assets/skin/mobamba/sliderfollowcircle.png" id="follow_circle"]
+[ext_resource type="Texture2D" uid="uid://s8vnoq7r41qh" path="res://assets/skin/mobamba/hitcircle.png" id="hit_circle"]
+[ext_resource type="Texture2D" uid="uid://45qxkbybpw2h" path="res://assets/skin/mobamba/hitcircleoverlay.png" id="overlay"]
+[ext_resource type="Texture2D" uid="uid://dtu1tjsj1fqc4" path="res://assets/skin/mobamba/reversearrow.png" id="reverse_arrow"]
+[ext_resource type="Script" uid="uid://ckxte2b42vmle" path="res://scripts/views/circle_skin.gd" id="script"]
+[ext_resource type="Texture2D" uid="uid://caeoieayjy5xt" path="res://assets/skin/mobamba/sliderb0.png" id="slider_ball"]
+
+[resource]
+script = ExtResource("script")
+hit_circle = ExtResource("hit_circle")
+overlay = ExtResource("overlay")
+approach_circle = ExtResource("approach_circle")
+digits = Array[Texture2D]([ExtResource("digit_0"), ExtResource("digit_1"), ExtResource("digit_2"), ExtResource("digit_3"), ExtResource("digit_4"), ExtResource("digit_5"), ExtResource("digit_6"), ExtResource("digit_7"), ExtResource("digit_8"), ExtResource("digit_9")])
+slider_ball = ExtResource("slider_ball")
+follow_circle = ExtResource("follow_circle")
+reverse_arrow = ExtResource("reverse_arrow")
+combo_colors = Array[Color]([Color(0.102, 0.4549, 0.949, 1), Color(0.6431, 0.1255, 0.9412, 1), Color(0.1451, 0.7255, 0.9373, 1), Color(0.0902, 0.8196, 0.4549, 1), Color(1, 0.2941, 1, 1)])
+slider_track = Color(0.0118, 0.0118, 0.0471, 1)
+slider_border = Color(0.4706, 0.4706, 0.4706, 1)

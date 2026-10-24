@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Song" format=3 uid="uid://dxgjlu4awfi0i"]
+
+[ext_resource type="Script" uid="uid://scc3x4nsgsy5" path="res://scripts/maps/song.gd" id="1_song"]
+[ext_resource type="AudioStream" uid="uid://lpd2bc1ubuov" path="res://assets/music/ad_music.ogg" id="2_stream"]
+
+[resource]
+script = ExtResource("1_song")
+stream = ExtResource("2_stream")
+bpm = 126.0
+first_beat_s = 0.1877
