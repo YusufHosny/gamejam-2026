@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Fruit" format=3]
+
+[ext_resource type="Script" path="res://scripts/views/captcha/fruit.gd" id="1_fruit"]
+[ext_resource type="Texture2D" path="res://assets/captcha/fruit/apple_green.svg" id="2_whole"]
+[ext_resource type="Texture2D" path="res://assets/captcha/fruit/apple_green_left.svg" id="3_left"]
+[ext_resource type="Texture2D" path="res://assets/captcha/fruit/apple_green_right.svg" id="4_right"]
+
+[resource]
+script = ExtResource("1_fruit")
+whole = ExtResource("2_whole")
+left = ExtResource("3_left")
+right = ExtResource("4_right")
+juice_color = Color(0.55, 0.85, 0.25, 0.85)

@@ -17,7 +17,7 @@ func _handle_input(event: InputEvent, now: float) -> void:
 	if not _in_window(note, now): return
 	var point := cursor.global_position
 	if _is_hit(note, point, point): _hit(note, now)
-	else: _resolve(HitResult.miss(note))
+	elif not segment.wait_for_input: _resolve(HitResult.miss(note))
 
 # letting go or straying from the ball breaks the slider early
 func _process(delta: float) -> void:

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="256" height="256">
+  <defs><clipPath id="half"><rect x="0" y="0" width="64" height="128"/></clipPath></defs>
+  <g clip-path="url(#half)">
+    <path d="M64 36 C46 22 14 28 14 62 C14 96 38 118 56 116 C60 115 62 112 64 112 C66 112 68 115 72 116 C90 118 114 96 114 62 C114 28 82 22 64 36 Z" fill="#d7263d" stroke="#7a1020" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M64 36 C46 22 14 28 14 62 C14 96 38 118 56 116 C60 115 62 112 64 112 C66 112 68 115 72 116 C90 118 114 96 114 62 C114 28 82 22 64 36 Z" fill="#fbefc8" transform="translate(64 72) scale(0.84) translate(-64 -72)"/>
+    <ellipse cx="64" cy="74" rx="15" ry="22" fill="#f3dc9a"/>
+    <ellipse cx="57" cy="70" rx="3" ry="6" fill="#4a2c14"/>
+    <ellipse cx="57" cy="84" rx="3" ry="6" fill="#4a2c14"/>
+  </g>
+  <line x1="64" y1="34" x2="64" y2="113" stroke="#fff6dc" stroke-width="3" stroke-linecap="round"/>
+</svg>

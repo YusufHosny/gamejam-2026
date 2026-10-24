@@ -15,7 +15,6 @@ var difficulty := Difficulty.Level.STANDARD
 var tutorial_enabled := true
 
 # --- Map ---
-var deadline_s := 300.0 # the whole run, counted down on the song clock
 var bpm := 120.0
 var segment_bars := 8
 var cooldown_bars := 2
@@ -34,6 +33,7 @@ var keybinds: Dictionary[StringName, Array] = {
 	&"click_0": [key_event(KEY_Z), mouse_event(MOUSE_BUTTON_LEFT)],
 	&"click_1": [key_event(KEY_X), mouse_event(MOUSE_BUTTON_RIGHT)],
 	&"pause": [key_event(KEY_ESCAPE)],
+	&"skip_cutscene": [key_event(KEY_SPACE), key_event(KEY_ENTER)],
 	&"debug_four_d": [key_event(KEY_F1)],
 	&"debug_aim_click": [key_event(KEY_F2)],
 	&"debug_slash": [key_event(KEY_F3)],

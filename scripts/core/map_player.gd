@@ -1,8 +1,7 @@
-class_name Game
+class_name MapPlayer
 extends Node2D
 
-signal finished(result: RunResult)
-signal exited
+signal finished
 
 const DEBUG_SEEKS: Dictionary[StringName, Modality.Kind] = {
 	&"debug_four_d": Modality.Kind.FOUR_D,
@@ -15,47 +14,42 @@ const DEFAULT_VIEWS := {
 	Modality.Kind.SLASH: preload("res://scenes/views/circle_slash_view.tscn"),
 }
 
+const COMBO_BREAK_MIN := 10
+
+@export var hitsound: AudioStream # null -> synthesized blip
+@export var combo_break: AudioStream
+
 @onready var conductor: Conductor = $Conductor
 @onready var hud: Hud = $Hud
 @onready var cursor: VirtualCursor = $Cursor
-@onready var _pause_menu: PauseMenu = $PauseMenu
 @onready var _views: Node2D = $Views
 @onready var _hitsounds: AudioStreamPlayer = $Hitsounds
 @onready var _four_d: FourDMode = $Modes/FourD
 @onready var _aim_click: AimClickMode = $Modes/AimClick
 @onready var _slash: SlashMode = $Modes/Slash
 
-var map: Map
-var score := ScoreKeeper.new()
+var map: Map # set before entering the tree
+var score := ScoreKeeper.new() # the run's score, handed back on finish
 var _segment: MapSegment = null
 var _view: ModeView = null
 var _checkpoint := ScoreKeeper.new() # checkpointed score
 var _finished := false
-var _hitsound := SfxUtils.hitsound()
-var _started := false # false during the intro, before the song clock runs
 
 func _ready() -> void:
-	map = DemoMap.build()
 	_aim_click.cursor = cursor
 	_slash.cursor = cursor
 	for handler: ModeHandler in [_four_d, _aim_click, _slash]:
 		handler.conductor = conductor
 		handler.judged.connect(_on_judged)
-	_pause_menu.resumed.connect(_set_paused.bind(false))
-	_pause_menu.restarted.connect(_unpause_then.bind(_restart))
-	_pause_menu.checkpointed.connect(_unpause_then.bind(_load_checkpoint))
-	_pause_menu.exited.connect(_unpause_then.bind(exited.emit))
+	if hitsound == null: hitsound = SfxUtils.hitsound()
 	_hitsounds.stream = AudioStreamPolyphonic.new()
 	_hitsounds.play()
-	hud.set_time_left(GameConfig.deadline_s)
-	await hud.play_intro()
+	hud.show_score(score)
 	conductor.start(map)
-	_started = true
 
 func _process(_delta: float) -> void:
-	if not _started: return
+	_hold_for_next_note()
 	var now := conductor.song_time()
-	hud.set_time_left(clampf(GameConfig.deadline_s - now, 0.0, GameConfig.deadline_s))
 	var segment := map.segment_at(now)
 	if segment != _segment: _switch_to(segment)
 	if segment == null:
@@ -67,17 +61,21 @@ func _process(_delta: float) -> void:
 		hud.hide_banner()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _started: return
-	if event.is_action_pressed(&"pause"):
-		_set_paused(true)
-		get_viewport().set_input_as_handled()
 	for action in DEBUG_SEEKS:
 		if event.is_action_pressed(action): _seek_to_segment(_first_segment(DEBUG_SEEKS[action]))
+
+func time() -> float: return conductor.song_time()
+
+func load_checkpoint() -> void:
+	var segment := _segment
+	_set_score(_checkpoint.copy())
+	_seek_to_segment(segment)
 
 # --- Segments ---
 func _switch_to(segment: MapSegment) -> void:
 	if _segment != null:
 		_handler(_segment.kind).end()
+		_views.remove_child(_view) # out of the tree now so it can't draw an ended segment
 		_view.queue_free()
 		_view = null
 	_segment = segment
@@ -92,7 +90,13 @@ func _switch_to(segment: MapSegment) -> void:
 	var hand_pos := Modality.hand_pos(segment.kind)
 	cursor.enabled = hand_pos == Modality.HandPos.A
 	hud.set_hand_pos(hand_pos)
-	hud.set_practice(segment.tutorial)
+	hud.set_tutorial(segment.tutorial)
+
+# wait segments freeze the clock on each note until it's hit
+func _hold_for_next_note() -> void:
+	var pending: Array[Note] = []
+	if _segment != null and _segment.wait_for_input: pending = _handler(_segment.kind).pending()
+	conductor.hold_at(INF if pending.is_empty() else pending[0].time)
 
 func _handler(kind: Modality.Kind) -> ModeHandler:
 	match kind:
@@ -108,31 +112,12 @@ func _first_segment(kind: Modality.Kind) -> MapSegment:
 func _finish() -> void:
 	if _finished: return
 	_finished = true
-	finished.emit(RunResult.from_score(score))
-
-# --- Pause Menu ---
-func _set_paused(paused: bool) -> void:
-	get_tree().paused = paused
-	_pause_menu.visible = paused
-
-func _unpause_then(action: Callable) -> void:
-	_set_paused(false)
-	action.call()
-
-func _restart() -> void:
-	_set_score(ScoreKeeper.new())
-	hud.reset()
-	_seek(0.0)
-
-func _load_checkpoint() -> void:
-	var segment := _segment
-	_set_score(_checkpoint.copy())
-	_seek_to_segment(segment)
+	finished.emit()
 
 # --- Seeking ---
 func _seek(time: float) -> void:
 	_switch_to(null)
-	conductor.play(maxf(time, 0.0))
+	conductor.seek_to(time)
 
 func _seek_to_segment(segment: MapSegment) -> void:
 	_seek(map.beat_time(segment.start_beat - map.beats_per_bar)) # one bar of lead in
@@ -144,8 +129,11 @@ func _set_score(keeper: ScoreKeeper) -> void:
 
 func _on_judged(result: HitResult) -> void:
 	hud.show_judgement(result)
-	if not result.is_miss():
-		(_hitsounds.get_stream_playback() as AudioStreamPlaybackPolyphonic).play_stream(_hitsound)
+	if not result.is_miss(): _play(hitsound)
 	if _segment.tutorial: return
+	if result.is_miss() and score.combo >= COMBO_BREAK_MIN: _play(combo_break)
 	score.add(result)
 	hud.show_score(score)
+
+func _play(sound: AudioStream) -> void:
+	if sound != null: (_hitsounds.get_stream_playback() as AudioStreamPlaybackPolyphonic).play_stream(sound)

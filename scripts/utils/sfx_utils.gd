@@ -7,7 +7,7 @@ const MIX_RATE := 22050
 static func hitsound() -> AudioStreamWAV:
 	return _wav(_blip(1320.0, 0.05, 0.35))
 
-static func metronome(bpm: float, beats: int, beats_per_bar := 4) -> AudioStreamWAV:
+static func metronome(bpm: float, beats: int, beats_per_bar := 4, loop := false) -> AudioStreamWAV:
 	var accent := _blip(1760.0, 0.04, 0.5)
 	var tick := _blip(880.0, 0.04, 0.35)
 	var data := PackedByteArray()
@@ -20,7 +20,11 @@ static func metronome(bpm: float, beats: int, beats_per_bar := 4) -> AudioStream
 		gap.fill(0)
 		data.append_array(click)
 		data.append_array(gap)
-	return _wav(data)
+	var wav := _wav(data)
+	if loop:
+		wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		wav.loop_end = data.size() / 2
+	return wav
 
 # one beep of a two tone square warble
 static func alarm(duration := 0.3, volume := 0.25) -> AudioStreamWAV:

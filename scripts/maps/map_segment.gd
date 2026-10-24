@@ -8,6 +8,7 @@ extends Resource
 @export var notes: Array[Note] = []
 @export var view: PackedScene # ModeView scene, null -> default for mode
 @export var tutorial := false
+@export var wait_for_input := false # clock holds on each note, stray clicks ignored
 
 var start_time: float
 var end_time: float
