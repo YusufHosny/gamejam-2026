@@ -1,5 +1,5 @@
 class_name SlashMode
-extends TargetMode
+extends AimMode
 
 var _last_cursor_pos: Vector2
 

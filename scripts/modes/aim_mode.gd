@@ -1,5 +1,5 @@
 @abstract
-class_name TargetMode
+class_name AimMode
 extends ModeHandler
 
 # shared osu-style approach circle rendering for aim + click and slash

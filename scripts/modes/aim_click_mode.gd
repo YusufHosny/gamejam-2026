@@ -1,5 +1,5 @@
 class_name AimClickMode
-extends TargetMode
+extends AimMode
 
 const CLICKS: Array[StringName] = [&"click_0", &"click_1"]
 
