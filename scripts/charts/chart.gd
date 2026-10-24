@@ -16,7 +16,7 @@ func bake() -> void:
 	for segment in segments:
 		segment.start_time = beat_time(segment.start_beat)
 		segment.end_time = beat_time(segment.end_beat)
-		for note in segment.notes: note.time = beat_time(note.beat)
+		for note in segment.notes: note.bake(self)
 
 # the segment being played, or prepared for during its cooldown. null once the chart is over
 func segment_at(time: float) -> ChartSegment:

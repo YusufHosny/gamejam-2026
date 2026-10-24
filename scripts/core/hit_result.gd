@@ -3,7 +3,7 @@ extends RefCounted
 
 var note: Note
 var grade: Judgement.Grade
-var error_s: float # negative is early, NAN on a miss
+var error_s: float # negative is early, NAN when untimed (misses, slider tails)
 
 func _init(_note: Note, _grade: Judgement.Grade, _error_s := NAN) -> void:
 	note = _note
@@ -17,3 +17,4 @@ static func miss(_note: Note) -> HitResult:
 	return HitResult.new(_note, Judgement.Grade.MISS)
 
 func is_miss() -> bool: return grade == Judgement.Grade.MISS
+func is_timed() -> bool: return not is_nan(error_s)

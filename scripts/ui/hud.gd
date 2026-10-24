@@ -35,7 +35,7 @@ func show_score(score: ScoreKeeper) -> void:
 func show_judgement(result: HitResult) -> void:
 	_judgement.text = Judgement.label(result.grade)
 	_judgement.modulate = Judgement.color(result.grade)
-	if not result.is_miss(): _timing_bar.add(result.error_s)
+	if result.is_timed(): _timing_bar.add(result.error_s)
 
 func set_hand_pos(hand_pos: Modality.HandPos) -> void: _hand_pos.hand_pos = hand_pos
 

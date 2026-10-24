@@ -8,13 +8,11 @@ const DEBUG_SEEKS: Dictionary[StringName, Modality.Kind] = {
 	&"debug_four_d": Modality.Kind.FOUR_D,
 	&"debug_aim_click": Modality.Kind.AIM_CLICK,
 	&"debug_slash": Modality.Kind.SLASH,
-	&"debug_typing": Modality.Kind.TYPING,
 }
 const DEFAULT_VIEWS := {
 	Modality.Kind.FOUR_D: preload("res://scenes/views/circle_four_d_view.tscn"),
 	Modality.Kind.AIM_CLICK: preload("res://scenes/views/circle_aim_click_view.tscn"),
 	Modality.Kind.SLASH: preload("res://scenes/views/circle_slash_view.tscn"),
-	Modality.Kind.TYPING: preload("res://scenes/views/text_typing_view.tscn"),
 }
 
 @onready var conductor: Conductor = $Conductor
@@ -26,7 +24,6 @@ const DEFAULT_VIEWS := {
 @onready var _four_d: FourDMode = $Modes/FourD
 @onready var _aim_click: AimClickMode = $Modes/AimClick
 @onready var _slash: SlashMode = $Modes/Slash
-@onready var _typing: TypingMode = $Modes/Typing
 
 var chart: Chart
 var score := ScoreKeeper.new()
@@ -40,7 +37,7 @@ func _ready() -> void:
 	chart = DemoChart.build()
 	_aim_click.cursor = cursor
 	_slash.cursor = cursor
-	for handler: ModeHandler in [_four_d, _aim_click, _slash, _typing]:
+	for handler: ModeHandler in [_four_d, _aim_click, _slash]:
 		handler.conductor = conductor
 		handler.judged.connect(_on_judged)
 	_pause_menu.resumed.connect(_set_paused.bind(false))
@@ -95,7 +92,6 @@ func _handler(kind: Modality.Kind) -> ModeHandler:
 		Modality.Kind.FOUR_D: return _four_d
 		Modality.Kind.AIM_CLICK: return _aim_click
 		Modality.Kind.SLASH: return _slash
-		Modality.Kind.TYPING: return _typing
 	assert(false, "unhandled modality %s" % kind)
 	return null
 

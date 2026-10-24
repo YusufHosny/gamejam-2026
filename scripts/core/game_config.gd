@@ -36,7 +36,6 @@ var keybinds: Dictionary[StringName, Array] = {
 	&"debug_four_d": [key_event(KEY_F1)],
 	&"debug_aim_click": [key_event(KEY_F2)],
 	&"debug_slash": [key_event(KEY_F3)],
-	&"debug_typing": [key_event(KEY_F4)],
 }
 
 func _ready() -> void:

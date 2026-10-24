@@ -6,5 +6,11 @@ extends ModeHandler
 
 var cursor: VirtualCursor
 
+# the slider currently being held, for views to draw
+func sliding() -> SliderNote: return null
+
 func _is_hit(note: AimNote, from: Vector2, to: Vector2) -> bool:
 	return (view as AimView).is_hit(note, from, to)
+
+func _is_following(slider: SliderNote, point: Vector2, progress: float) -> bool:
+	return (view as AimView).is_following(slider, point, progress)
