@@ -9,6 +9,8 @@ const GAME_SCENE := preload("res://scenes/game.tscn")
 @onready var _settings: SettingsMenu = $SettingsMenu
 @onready var _leaderboard: LeaderboardMenu = $LeaderboardMenu
 @onready var _score_screen: ScoreScreen = $ScoreScreen
+@onready var _computer: Node2D = $Computer
+@onready var _computer_screen: SubViewport = $Computer/Screen/SubViewport # the game runs inside the laptop
 
 var _results: Array[RunResult] = [] # session only until we persist the leaderboard
 var _game: Game = null
@@ -36,7 +38,8 @@ func _play() -> void:
 	_game = GAME_SCENE.instantiate()
 	_game.finished.connect(_on_finished)
 	_game.exited.connect(_close_game.bind(_main_menu))
-	add_child(_game)
+	_computer_screen.add_child(_game)
+	_computer.show()
 
 func _on_finished(result: RunResult) -> void:
 	_results.append(result)
@@ -47,4 +50,5 @@ func _close_game(next_screen: Control) -> void:
 	get_tree().paused = false
 	_game.queue_free()
 	_game = null
+	_computer.hide()
 	_show(next_screen)
