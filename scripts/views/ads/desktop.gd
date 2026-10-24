@@ -11,8 +11,8 @@ const TASKBAR_H := 30.0
 const TASKBAR := Color(0.72, 0.71, 0.73)
 const LABELS: Array[String] = ["my computer", "game_FINAL", "internet", "notes.txt", "trash"]
 
-static func draw(item: CanvasItem, icons: Array[Texture2D]) -> void:
-	var screen := item.get_viewport_rect().size
+static func draw(item: CanvasItem, icons: Array[Texture2D], screen := Vector2.ZERO) -> void: # zero -> item's viewport
+	if screen == Vector2.ZERO: screen = item.get_viewport_rect().size
 	item.draw_rect(Rect2(Vector2.ZERO, screen), WALLPAPER)
 	var font := ThemeDB.fallback_font
 	for i in icons.size():

@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://tum8o3sapckr" path="res://assets/full_laptop.png" id="1_laptop"]
+[ext_resource type="Script" path="res://scripts/backgrounds/laptop_desk.gd" id="2_desk"]
+
+[node name="LaptopDesk" type="Sprite2D"]
+texture_filter = 4
+scale = Vector2(0.32, 0.32)
+texture = ExtResource("1_laptop")
+centered = false
+script = ExtResource("2_desk")

@@ -14,6 +14,7 @@ func _ready() -> void:
 	var length := _animation.get_animation(ANIMATION).length
 	assert(waits() or is_equal_approx(length, length_s), "%s animation is %.2f s but its step is %.2f s" % [name, length, length_s])
 	_animation.play(ANIMATION)
+	_animation.seek(time, true) # apply the first frame now, the scene may be saved scrubbed to any point
 
 func _process(delta: float) -> void:
 	super(delta)

@@ -11,7 +11,6 @@ const FRAME_SIZE := Vector2(500, 300) # usb_sheet.png frames, spots below are in
 const PLUG := Vector2(127, 200)
 const PORT := Vector2(400, 108)
 const FLIP_RADIUS := 70.0
-const MESSAGE := Rect2(326, 34, 500, 58)
 # [beat in the cycle, move, usb phases its head plays], one cycle walks the whole animation once
 const CYCLE := [
 	[0.0, Move.PUSH, 2], [2.0, Move.BUMP, 1], [2.5, Move.BUMP, 1], [3.5, Move.BUMP, 1], [4.0, Move.BUMP, 1],
@@ -50,9 +49,3 @@ func _on_judged(result: HitResult) -> void:
 	_started[note] = true
 	var index := mode.segment.notes.find(note)
 	for i in CYCLE[index % CYCLE.size()][2]: _usb.advance()
-
-func _draw() -> void:
-	TutorialUi.box(self, MESSAGE, Color(0.0, 0.33, 0.72), 6)
-	TutorialUi.label(self, MESSAGE.get_center() - Vector2(0, 11), "your files are corrupted :(", 18, Color.WHITE)
-	TutorialUi.label(self, MESSAGE.get_center() + Vector2(0, 13), "plug in your backup drive to continue", 14, Color(1, 1, 1, 0.8))
-	super()

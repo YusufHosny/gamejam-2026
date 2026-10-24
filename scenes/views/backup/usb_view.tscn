@@ -1,23 +1,26 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b1qxowobjkylc"]
 
-[ext_resource type="Script" path="res://scripts/views/backup/usb_view.gd" id="1_view"]
-[ext_resource type="Resource" path="res://assets/skin/mobamba.tres" id="2_skin"]
-[ext_resource type="Script" path="res://scripts/ui/usb_animation.gd" id="3_usb"]
-[ext_resource type="Texture2D" path="res://assets/usb_sheet.png" id="4_sheet"]
+[ext_resource type="Script" uid="uid://cmd1vmuy3scnx" path="res://scripts/views/backup/usb_view.gd" id="1_view"]
+[ext_resource type="Resource" uid="uid://bci1kwatoubmq" path="res://assets/skin/mobamba.tres" id="2_skin"]
+[ext_resource type="Texture2D" uid="uid://bbfn4ev7kicdv" path="res://assets/backdrop.png" id="3_mh3rr"]
+[ext_resource type="Script" uid="uid://e5dkqycrwl30" path="res://scripts/ui/usb_animation.gd" id="3_usb"]
+[ext_resource type="Texture2D" uid="uid://cs3c5xgq57qf6" path="res://assets/usb_sheet.png" id="4_sheet"]
+[ext_resource type="Script" path="res://scripts/ui/cover_sprite.gd" id="5_cover"]
 
-[node name="UsbView" type="Node2D"]
+[node name="UsbView" type="Node2D" unique_id=1218336594]
 script = ExtResource("1_view")
 color = Color(0.18, 0.44, 0.87, 1)
 skin = ExtResource("2_skin")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="Sprite2D" parent="." unique_id=2074328236]
 show_behind_parent = true
-offset_right = 1152.0
-offset_bottom = 648.0
-mouse_filter = 2
-color = Color(0.04, 0.12, 0.32, 1)
+texture_filter = 2
+scale = Vector2(0.32, 0.32)
+texture = ExtResource("3_mh3rr")
+centered = false
+script = ExtResource("5_cover")
 
-[node name="Usb" type="Sprite2D" parent="."]
+[node name="Usb" type="Sprite2D" parent="." unique_id=106625470]
 show_behind_parent = true
 texture_filter = 2
 texture = ExtResource("4_sheet")

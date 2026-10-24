@@ -1,11 +1,11 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://hcr364bdtwx3"]
 
-[ext_resource type="Script" path="res://scripts/sandbox/stage_sandbox.gd" id="1_sandbox"]
+[ext_resource type="Script" uid="uid://s2rl3tqfovmr" path="res://scripts/sandbox/stage_sandbox.gd" id="1_sandbox"]
 
-[node name="StageSandbox" type="Node"]
+[node name="StageSandbox" type="Node" unique_id=1992325474]
 script = ExtResource("1_sandbox")
 
-[node name="Menu" type="VBoxContainer" parent="."]
+[node name="Menu" type="VBoxContainer" parent="." unique_id=1288564141]
 unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,12 +17,12 @@ offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Title" type="Label" parent="Menu"]
+[node name="Title" type="Label" parent="Menu" unique_id=1221505849]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "pick a stage: enter / double click to play, the run carries on from there"
 
-[node name="Picker" type="ItemList" parent="Menu"]
+[node name="Picker" type="ItemList" parent="Menu" unique_id=1591258183]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3

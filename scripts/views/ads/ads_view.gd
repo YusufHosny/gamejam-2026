@@ -10,6 +10,8 @@ const ACCENT := Color(1.0, 0.85, 0.2)
 @export var windows: Array[Texture2D] = []
 @export var icons: Array[Texture2D] = []
 
+static var left_open: Array[Dictionary] = [] # {texture, rect} of the ads still open when the stage ended, the blue screen flood carries on from them
+
 var _window: Dictionary[AimNote, Texture2D] = {}
 var _missed: Array[AimNote] = []
 var _cuts: Array[PolygonCut] = []
@@ -20,6 +22,9 @@ func _ready() -> void:
 	for i in mode.segment.notes.size():
 		_window[mode.segment.notes[i] as AimNote] = windows[(i * 7) % windows.size()]
 	mode.judged.connect(_on_judged)
+
+func _exit_tree() -> void:
+	left_open.assign(_missed.map(func(note: AimNote): return {"texture": _window[note], "rect": _rect(note)}))
 
 func _rect(note: AimNote) -> Rect2:
 	var size := _window[note].get_size()

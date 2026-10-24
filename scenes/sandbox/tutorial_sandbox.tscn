@@ -4,4 +4,4 @@
 
 [node name="TutorialSandbox" type="Node" unique_id=1087229441]
 script = ExtResource("1_sandbox")
-map_name = "email"
+map_name = "phone"
