@@ -10,7 +10,6 @@ const ADS_AREA := Rect2(300, 150, 600, 330) # window centres, clear of the hud a
 const ADS_SPACING := 180.0
 const ADS_DOUBLE_CHANCE := 0.2 # two ads on one beat, one swipe can get both
 const SELECTED_S := 0.4
-const COMBO_SIZE := 4
 const MAX_START := Vector2i(4, 3) # furthest the puzzle piece starts from its hole, in nudges
 const FRUIT_MARGIN := 60.0
 const FRUIT_SPACING := 100.0
@@ -38,8 +37,8 @@ const SUBWAY_MOVES := [ # [beat, direction], from tools/subway/moves.py
 
 # notes hop between tiles, never onto one still showing or ticking its last dog
 static func fill_dogs(segment: MapSegment, map: Map, rng_seed := GameConfig.map_seed) -> void:
-	var rng := _rng(rng_seed)
-	var step := _step(map)
+	var rng := FillUtils.rng(rng_seed)
+	var step := FillUtils.step(map)
 	var busy_beats := map.time_beat(GameConfig.approach_time_s + SELECTED_S)
 	var free_from: Array[float] = []
 	free_from.resize(9)
@@ -50,17 +49,17 @@ static func fill_dogs(segment: MapSegment, map: Map, rng_seed := GameConfig.map_
 		var free := range(9).filter(func(t: int): return free_from[t] <= beat)
 		var tile: int = free[rng.randi() % free.size()]
 		free_from[tile] = beat + busy_beats
-		notes.append(_aim_note(beat, DogCaptchaView.tile_rect(tile).get_center(), notes.size()))
+		notes.append(FillUtils.aim_note(beat, DogCaptchaView.tile_rect(tile).get_center(), notes.size()))
 		beat += step
 	segment.notes = notes
 	segment.view = DOG_VIEW
 
 # the moves that undo a random start offset, padded with opposite pairs and shuffled
 static func fill_align(segment: MapSegment, map: Map, rng_seed := GameConfig.map_seed) -> void:
-	var rng := _rng(rng_seed)
-	var step := _step(map)
+	var rng := FillUtils.rng(rng_seed)
+	var step := FillUtils.step(map)
 	var count := int((segment.end_beat - segment.start_beat) / step)
-	var net := Vector2i(rng.randi_range(2, MAX_START.x) * _sign(rng), rng.randi_range(1, MAX_START.y) * _sign(rng))
+	var net := Vector2i(rng.randi_range(2, MAX_START.x) * FillUtils.flip(rng), rng.randi_range(1, MAX_START.y) * FillUtils.flip(rng))
 	var lanes: Array[int] = []
 	for i in absi(net.x): lanes.append(3 if net.x > 0 else 0)
 	for i in absi(net.y): lanes.append(1 if net.y > 0 else 2)
@@ -78,8 +77,8 @@ static func fill_align(segment: MapSegment, map: Map, rng_seed := GameConfig.map
 
 # apex points spread over the board, never right on top of the last one
 static func fill_fruit(segment: MapSegment, map: Map, rng_seed := GameConfig.map_seed) -> void:
-	var rng := _rng(rng_seed)
-	var step := _step(map)
+	var rng := FillUtils.rng(rng_seed)
+	var step := FillUtils.step(map)
 	var board := CaptchaFrame.content().grow(-FRUIT_MARGIN)
 	var notes: Array[Note] = []
 	var last := board.get_center()
@@ -88,7 +87,7 @@ static func fill_fruit(segment: MapSegment, map: Map, rng_seed := GameConfig.map
 		var at := last
 		while at.distance_to(last) < FRUIT_SPACING:
 			at = board.position + Vector2(rng.randf(), rng.randf()) * board.size
-		notes.append(_aim_note(beat, at, notes.size()))
+		notes.append(FillUtils.aim_note(beat, at, notes.size()))
 		last = at
 		beat += step
 	segment.notes = notes
@@ -100,14 +99,14 @@ static func fill_subway(segment: MapSegment) -> void:
 	for move in SUBWAY_MOVES:
 		var beat: float = move[0]
 		if beat < segment.start_beat or beat >= segment.end_beat: continue
-		notes.append(_aim_note(beat, SubwayCaptchaView.runner() + move[1] * SubwayCaptchaView.OFFSET, notes.size()))
+		notes.append(FillUtils.aim_note(beat, SubwayCaptchaView.runner() + move[1] * SubwayCaptchaView.OFFSET, notes.size()))
 	segment.notes = notes
 	segment.view = SUBWAY_VIEW
 
 # an ad a beat, sometimes two, never right on top of the last
 static func fill_ads(segment: MapSegment, map: Map, rng_seed := GameConfig.map_seed) -> void:
-	var rng := _rng(rng_seed)
-	var step := _step(map)
+	var rng := FillUtils.rng(rng_seed)
+	var step := FillUtils.step(map)
 	var notes: Array[Note] = []
 	var last := ADS_AREA.get_center()
 	var beat := segment.start_beat
@@ -116,22 +115,8 @@ static func fill_ads(segment: MapSegment, map: Map, rng_seed := GameConfig.map_s
 			var at := last
 			while at.distance_to(last) < ADS_SPACING:
 				at = ADS_AREA.position + Vector2(rng.randf(), rng.randf()) * ADS_AREA.size
-			notes.append(_aim_note(beat, at, notes.size()))
+			notes.append(FillUtils.aim_note(beat, at, notes.size()))
 			last = at
 		beat += step
 	segment.notes = notes
 	segment.view = ADS_VIEW
-
-static func _aim_note(beat: float, position: Vector2, index: int) -> AimNote:
-	var note := AimNote.new(beat, position)
-	note.new_combo = index % COMBO_SIZE == 0
-	return note
-
-static func _rng(rng_seed: int) -> RandomNumberGenerator:
-	var rng := RandomNumberGenerator.new()
-	rng.seed = rng_seed
-	return rng
-
-static func _step(map: Map) -> float: return 2.0 if map.bpm > DemoMap.FAST_BPM else 1.0
-
-static func _sign(rng: RandomNumberGenerator) -> int: return 1 if rng.randf() < 0.5 else -1

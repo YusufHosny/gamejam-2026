@@ -5,16 +5,11 @@ extends ModeView
 
 const DIRECTIONS: Array[Vector2i] = [Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP, Vector2i.RIGHT] # lanes ← ↓ ↑ →
 const ARROW_ANGLES: Array[float] = [-PI / 2, PI, 0.0, PI / 2]
-const LANE_COLORS: Array[Color] = [Color(0.69, 0.29, 0.88), Color(0.18, 0.56, 0.88), Color(0.18, 0.72, 0.42), Color(0.88, 0.28, 0.28)]
 const STEP := 14.0 # px per nudge
 const PICTURE_SIZE := 300.0
 const PIECE_SIZE := 72.0
 const KNOB := 13.0
 const TARGET := Vector2(0.64, 0.46) # piece centre within the picture
-const LANE_WIDTH := 62.0
-const LANES_X := 205.0
-const LANES_TOP := 100.0 # below the score
-const HIT_Y := 480.0
 const ARROW := 22.0
 const EASE := 14.0
 
@@ -90,20 +85,14 @@ static func _moved(points: PackedVector2Array, by: Vector2) -> PackedVector2Arra
 
 # --- Lanes ---
 func _draw_lanes(now: float) -> void:
-	var left := LANES_X - 2 * LANE_WIDTH
-	TutorialUi.box(self, Rect2(left - 8, LANES_TOP, LANE_WIDTH * 4 + 16, HIT_Y + 64 - LANES_TOP), Color(0.11, 0.13, 0.19, 0.92), 10)
-	var ms := Time.get_ticks_msec()
+	LaneColumn.draw_panel(self)
 	for lane in DIRECTIONS.size():
-		var receptor := Vector2(_lane_x(lane), HIT_Y)
-		var lit := clampf(1.0 - (ms - _pressed_ms[lane]) / 150.0, 0.0, 1.0)
-		if Input.is_action_pressed(FourDMode.LANES[lane]): lit = maxf(lit, 0.35)
-		_draw_arrow(receptor, lane, Color(LANE_COLORS[lane], lit), Color(0.8, 0.82, 0.88))
-		var key: InputEvent = GameConfig.keybinds[FourDMode.LANES[lane]][0]
-		TutorialUi.label(self, receptor + Vector2(0, 38), OS.get_keycode_string(key.physical_keycode) if key is InputEventKey else "?", 14, Color(0.55, 0.58, 0.66))
+		_draw_arrow(LaneColumn.receptor(lane), lane, Color(LaneColumn.COLORS[lane], LaneColumn.lit(lane, _pressed_ms[lane])), Color(0.8, 0.82, 0.88))
+		LaneColumn.draw_key(self, lane)
 	for note: LaneNote in mode.pending():
-		var y := HIT_Y - (note.time - now) * GameConfig.scroll_speed
-		if y < LANES_TOP + ARROW: break
-		_draw_arrow(Vector2(_lane_x(note.lane), y), note.lane, LANE_COLORS[note.lane], Color.WHITE)
+		var y := LaneColumn.y(note, now)
+		if y < LaneColumn.TOP + ARROW: break
+		_draw_arrow(Vector2(LaneColumn.x(note.lane), y), note.lane, LaneColumn.COLORS[note.lane], Color.WHITE)
 
 func _draw_arrow(center: Vector2, lane: int, fill: Color, outline: Color) -> void:
 	var s := ARROW
@@ -113,5 +102,3 @@ func _draw_arrow(center: Vector2, lane: int, fill: Color, outline: Color) -> voi
 	if fill.a > 0.0: draw_colored_polygon(points, fill)
 	points.append(points[0])
 	draw_polyline(points, outline, 2.5, true)
-
-func _lane_x(lane: int) -> float: return LANES_X + (lane - 1.5) * LANE_WIDTH

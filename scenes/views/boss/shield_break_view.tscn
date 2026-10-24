@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/views/boss/shield_break_view.gd" id="1_view"]
+[ext_resource type="Texture2D" path="res://assets/boss/submit_round_angry.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_1.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_2.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_3.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_4.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_5.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_6.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_7.png" id="9"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_8.png" id="10"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_9.png" id="11"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_10.png" id="12"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_11.png" id="13"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_12.png" id="14"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_13.png" id="15"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_14.png" id="16"]
+[ext_resource type="Texture2D" path="res://assets/boss/shields/shield_15.png" id="17"]
+
+[node name="ShieldBreakView" type="Node2D"]
+script = ExtResource("1_view")
+button = ExtResource("2")
+shields = Array[Texture2D]([ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9"), ExtResource("10"), ExtResource("11"), ExtResource("12"), ExtResource("13"), ExtResource("14"), ExtResource("15"), ExtResource("16"), ExtResource("17")])

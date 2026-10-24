@@ -2,11 +2,12 @@
 # ABOUTME: Usage: build.py REPO_DIR STICKER_SRC_DIR   (STICKER_SRC_DIR holds submit-fake.jpg and "virus button.jpg")
 import re
 import sys
-from collections import deque
 from pathlib import Path
 
-import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from cutout import cut_out
 
 WINDOW = "assets/Retro Dekstop/UI/2X/Windows_Med_Active.png"
 TITLE_H = 34 # title bar plus the rule under it, in window texture pixels
@@ -15,7 +16,6 @@ BORDER = 4
 MAX_AD = (220, 160)
 PAD = 4
 PAPER = (241, 238, 230)
-WHITE_TOLERANCE = 60 # also takes the soft floor shadow under the stock photos
 VIRUS_FOOTER = 26 # shutterstock strip along the bottom
 
 
@@ -55,23 +55,6 @@ def popup(ad: Image.Image, title: str, src: Image.Image) -> Image.Image:
 
 
 def slug(name: str) -> str: return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
-
-
-# flood fill near-white from the borders to transparent, so white inside the button survives
-def cut_out(img: Image.Image) -> Image.Image:
-    rgba = np.asarray(img.convert("RGBA")).copy()
-    h, w = rgba.shape[:2]
-    white = (255 - rgba[..., :3].astype(int)).max(axis=2) <= WHITE_TOLERANCE
-    seen = np.zeros((h, w), bool)
-    queue = deque((y, x) for y in range(h) for x in (0, w - 1)) + deque((y, x) for x in range(w) for y in (0, h - 1))
-    while queue:
-        y, x = queue.popleft()
-        if seen[y, x] or not white[y, x]: continue
-        seen[y, x] = True
-        queue.extend(p for p in ((y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)) if 0 <= p[0] < h and 0 <= p[1] < w)
-    rgba[seen, 3] = 0
-    out = Image.fromarray(rgba)
-    return out.crop(out.getbbox())
 
 
 def paper_back(sticker: Image.Image) -> Image.Image:

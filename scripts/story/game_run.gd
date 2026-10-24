@@ -22,10 +22,8 @@ static func steps() -> Array[RunStep]:
 		CutsceneStep.new("", CUTSCENE_S, true, VIRUS_CUTSCENE),
 		_ads(),
 		CutsceneStep.new("", CUTSCENE_S, true, BLUE_SCREEN_CUTSCENE),
-		# b1 usb, b2 password
-		_section(SCREAM_MIX, [Modality.Kind.AIM_CLICK, Modality.Kind.FOUR_D], [26.0, 26.0]),
-		# f1 chase, f2 armor, f3 lasers, f1 crescendo
-		_section(MOONLIGHT, [Modality.Kind.AIM_CLICK, Modality.Kind.SLASH, Modality.Kind.FOUR_D, Modality.Kind.AIM_CLICK], [14.0, 14.0, 14.0, 14.0]),
+		_backup(),
+		_boss(),
 	]
 	# the dodge cutscene takes up the slack so the deadline is exactly DEADLINE_S
 	var dodge_s := DEADLINE_S - Run.new(steps).deadline_s()
@@ -54,6 +52,24 @@ static func _subway() -> MapStep:
 static func _ads() -> MapStep:
 	var map := DemoMap.section(AD_MUSIC, [Modality.Kind.SLASH], [26.0])
 	CaptchaMaps.fill_ads(map.segments[0], map)
+	map.bake()
+	return MapStep.new(map)
+
+# f1 chase, f2 shields, f3 lasers, f4 final chase with streams
+static func _boss() -> MapStep:
+	var map := DemoMap.section(MOONLIGHT, [Modality.Kind.AIM_CLICK, Modality.Kind.SLASH, Modality.Kind.FOUR_D, Modality.Kind.AIM_CLICK], [14.0, 14.0, 14.0, 14.0])
+	BossMaps.fill_chase(map.segments[0], map)
+	BossMaps.fill_shields(map.segments[1], map)
+	BossMaps.fill_lasers(map.segments[2], map)
+	BossMaps.fill_chase(map.segments[3], map, true, GameConfig.map_seed + 1)
+	map.bake()
+	return MapStep.new(map)
+
+# b1 plug in the usb, b2 type the backup password
+static func _backup() -> MapStep:
+	var map := DemoMap.section(SCREAM_MIX, [Modality.Kind.AIM_CLICK, Modality.Kind.FOUR_D], [26.0, 26.0])
+	BackupMaps.fill_usb(map.segments[0])
+	BackupMaps.fill_password(map.segments[1], map)
 	map.bake()
 	return MapStep.new(map)
 
