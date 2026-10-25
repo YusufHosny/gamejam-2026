@@ -107,45 +107,57 @@ func _draw_slash(stage: Vector2, lit: bool) -> void:
 	_draw_cursor(from.lerp(to, swipe))
 	_draw_mouse(stage + Vector2(0, 85), false, true, lit)
 
-func _draw_target(at: Vector2) -> void:
-	var until := HIT_S - _t
+func _draw_target(at: Vector2) -> void: draw_target(self, at, HIT_S - _t)
+
+# a circle with its approach ring, `until` its hit (negative after, it fades out)
+static func draw_target(item: CanvasItem, at: Vector2, until: float) -> void:
 	if until < -LIT_S: return
 	var alpha := clampf(1.0 - (until - APPROACH_S) / 0.2, 0.0, 1.0) if until > 0.0 else 1.0 + until / LIT_S
-	draw_circle(at, CIRCLE_RADIUS, Color(LANE_COLORS[1], 0.8 * alpha), true, -1, true)
-	draw_arc(at, CIRCLE_RADIUS, 0, TAU, 48, Color(1, 1, 1, alpha), 4, true)
+	item.draw_circle(at, CIRCLE_RADIUS, Color(LANE_COLORS[1], 0.8 * alpha), true, -1, true)
+	item.draw_arc(at, CIRCLE_RADIUS, 0, TAU, 48, Color(1, 1, 1, alpha), 4, true)
 	if until > 0.0 and until < APPROACH_S:
 		var ring := CIRCLE_RADIUS * (1.0 + 2.0 * until / APPROACH_S)
-		draw_arc(at, ring, 0, TAU, 48, Color(0, 0, 0, 0.5 * alpha), 7, true)
-		draw_arc(at, ring, 0, TAU, 48, Color(1, 1, 1, alpha), 3, true)
+		item.draw_arc(at, ring, 0, TAU, 48, Color(0, 0, 0, 0.5 * alpha), 7, true)
+		item.draw_arc(at, ring, 0, TAU, 48, Color(1, 1, 1, alpha), 3, true)
 
-func _draw_cursor(at: Vector2) -> void:
-	draw_circle(at, 9, Color(0.4, 0.9, 1.0), true, -1, true)
-	draw_arc(at, 9, 0, TAU, 24, Color.WHITE, 2, true)
+func _draw_cursor(at: Vector2) -> void: draw_cursor(self, at)
 
-func _draw_key(at: Vector2, label: String, lit: bool) -> void:
+static func draw_cursor(item: CanvasItem, at: Vector2) -> void:
+	item.draw_circle(at, 9, Color(0.4, 0.9, 1.0), true, -1, true)
+	item.draw_arc(at, 9, 0, TAU, 24, Color.WHITE, 2, true)
+
+func _draw_key(at: Vector2, label: String, lit: bool) -> void: draw_key(self, at, label, lit)
+
+static func draw_key(item: CanvasItem, at: Vector2, label: String, lit: bool) -> void:
 	var rect := Rect2(at - KEY_SIZE / 2, KEY_SIZE)
-	draw_rect(rect, Color(ACCENT, 0.9) if lit else Color(1, 1, 1, 0.1))
-	draw_rect(rect, Color.WHITE if lit else DIM, false, 2)
-	_text(ThemeDB.fallback_font, label, at + Vector2(0, 7), 20, Color.BLACK if lit else Color.WHITE)
+	item.draw_rect(rect, Color(ACCENT, 0.9) if lit else Color(1, 1, 1, 0.1))
+	item.draw_rect(rect, Color.WHITE if lit else DIM, false, 2)
+	text(item, label, at + Vector2(0, 7), 20, Color.BLACK if lit else Color.WHITE)
+
+func _draw_mouse(at: Vector2, click: bool, swipe: bool, lit := false) -> void: draw_mouse(self, at, click, swipe, lit)
 
 # a mouse, its left button lit on a click or arrows either side for a swipe
-func _draw_mouse(at: Vector2, click: bool, swipe: bool, lit := false) -> void:
+static func draw_mouse(item: CanvasItem, at: Vector2, click: bool, swipe: bool, lit := false) -> void:
 	var body := Rect2(at - Vector2(18, 24), Vector2(36, 48))
-	draw_rect(body, Color(1, 1, 1, 0.1))
-	draw_rect(body, DIM, false, 2)
-	draw_line(at - Vector2(0, 24), at - Vector2(0, 6), DIM, 2)
-	draw_line(at - Vector2(18, 6), at + Vector2(18, -6), DIM, 2)
-	if click: draw_rect(Rect2(at - Vector2(17, 23), Vector2(17, 17)), Color(ACCENT, 0.9))
+	item.draw_rect(body, Color(1, 1, 1, 0.1))
+	item.draw_rect(body, DIM, false, 2)
+	item.draw_line(at - Vector2(0, 24), at - Vector2(0, 6), DIM, 2)
+	item.draw_line(at - Vector2(18, 6), at + Vector2(18, -6), DIM, 2)
+	if click: item.draw_rect(Rect2(at - Vector2(17, 23), Vector2(17, 17)), Color(ACCENT, 0.9))
 	if not swipe: return
 	var color := ACCENT if lit else DIM
 	for side in [-1, 1]:
 		var tip := at + Vector2(side * 46, 0)
-		draw_line(at + Vector2(side * 26, 0), tip, color, 3, true)
-		draw_colored_polygon(PackedVector2Array([tip + Vector2(side * 8, 0), tip + Vector2(0, -7), tip + Vector2(0, 7)]), color)
+		item.draw_line(at + Vector2(side * 26, 0), tip, color, 3, true)
+		item.draw_colored_polygon(PackedVector2Array([tip + Vector2(side * 8, 0), tip + Vector2(0, -7), tip + Vector2(0, 7)]), color)
 
-func _text(font: Font, text: String, at: Vector2, font_size: int, color: Color) -> void:
-	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
-	draw_string(font, at - Vector2(width / 2, 0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
+func _text(_font: Font, string: String, at: Vector2, font_size: int, color: Color) -> void: text(self, string, at, font_size, color)
+
+# centred on `at`'s x, `at` is the baseline
+static func text(item: CanvasItem, string: String, at: Vector2, font_size: int, color: Color) -> void:
+	var font := ThemeDB.fallback_font
+	var width := font.get_string_size(string, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	item.draw_string(font, at - Vector2(width / 2, 0), string, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, color)
 
 static func key_label(action: StringName) -> String:
 	for event: InputEvent in GameConfig.keybinds[action]:

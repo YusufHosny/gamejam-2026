@@ -76,10 +76,11 @@ func _draw() -> void:
 	if not over: draw_texture_rect(button, rect, false, tint)
 	super()
 	if over: draw_texture_rect(button, rect, false, tint)
-	if done: _draw_caught(at)
+	if done: draw_caught(self, at)
 
-func _draw_caught(at: Vector2) -> void:
+# under the caught button, the win cutscene starts on it
+static func draw_caught(item: CanvasItem, at: Vector2, alpha := 1.0) -> void:
 	var font := ThemeDB.fallback_font
 	var text := "submitted"
 	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 40).x
-	draw_string(font, at + Vector2(-width / 2, BUTTON_RADIUS + 60), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 40, Color(0.4, 1.0, 0.5))
+	item.draw_string(font, at + Vector2(-width / 2, BUTTON_RADIUS + 60), text, HORIZONTAL_ALIGNMENT_LEFT, -1, 40, Color(0.4, 1.0, 0.5, alpha))

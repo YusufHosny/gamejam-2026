@@ -14,6 +14,7 @@ var scroll_speed := 700.0 # px/s for 4d lanes
 # --- Run ---
 var difficulty := Difficulty.Level.STANDARD
 var tutorial_enabled := true
+var language := "en" # voice lines and their captions, VoiceLines.LANGUAGES
 
 # --- Map ---
 var bpm := 120.0
@@ -27,7 +28,7 @@ var slash_min_speed := 1200.0 # px/s
 
 # --- Saved ---
 const SETTINGS_FILE := "user://settings.cfg"
-const SAVED: Array[StringName] = [&"audio_offset_ms", &"hitsound_volume", &"mouse_sensitivity", &"approach_time_s", &"scroll_speed", &"slash_min_speed"]
+const SAVED: Array[StringName] = [&"audio_offset_ms", &"hitsound_volume", &"mouse_sensitivity", &"approach_time_s", &"scroll_speed", &"slash_min_speed", &"language"]
 
 # --- Keybinds ---
 var keybinds: Dictionary[StringName, Array] = {

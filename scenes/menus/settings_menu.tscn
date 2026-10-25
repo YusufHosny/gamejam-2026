@@ -78,6 +78,18 @@ text = "mode"
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="LanguageRow" type="HBoxContainer" parent="Margin/Layout/Tabs/Game"]
+layout_mode = 2
+
+[node name="LanguageLabel" type="Label" parent="Margin/Layout/Tabs/Game/LanguageRow"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+text = "voice language"
+
+[node name="Language" type="OptionButton" parent="Margin/Layout/Tabs/Game/LanguageRow"]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="Tutorial" type="CheckBox" parent="Margin/Layout/Tabs/Game"]
 unique_name_in_owner = true
 layout_mode = 2

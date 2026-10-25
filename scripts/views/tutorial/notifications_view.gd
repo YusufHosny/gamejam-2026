@@ -9,7 +9,7 @@ const FLING_DISTANCE := 360.0
 const APP_COLORS: Array[Color] = [Color(0.9, 0.3, 0.3), Color(0.3, 0.6, 0.95), Color(0.35, 0.8, 0.45), Color(0.95, 0.7, 0.25)]
 
 @export var phone: Texture2D
-@export var hint := "Press the key when a notification overlaps the line"
+const HINT := &"tutorial_3" # the voice line, its text is the hint
 
 class Fling:
 	var lane: int
@@ -23,6 +23,12 @@ var _flings: Array[Fling] = []
 
 func _ready() -> void:
 	mode.judged.connect(_on_judged)
+	var voice := VoiceTrack.new()
+	add_child(voice)
+	voice.say(HINT, false)
+	var guide := InputGuide.new()
+	guide.move = InputGuide.Move.LANE
+	add_child(guide)
 
 func _on_judged(result: HitResult) -> void:
 	if not result.is_miss(): _flings.append(Fling.new((result.note as LaneNote).lane, Time.get_ticks_msec()))
@@ -46,7 +52,7 @@ func _draw() -> void:
 	for fling in _flings:
 		var t := (ms - fling.born_ms) / (FLING_S * 1000)
 		_draw_card(Vector2(_lane_x(fling.lane) + FLING_DISTANCE * t * t, hit_y), fling.lane, 1.0 - t)
-	TutorialUi.hint(self, hint)
+	TutorialUi.hint(self, VoiceLines.text(HINT))
 
 # the screen without its notifications, the email cutscene starts on it
 static func draw_screen(item: CanvasItem, alpha := 1.0) -> void:

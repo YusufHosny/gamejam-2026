@@ -21,7 +21,7 @@ const GUIDE_CYCLE_S := 0.9
 @export var inbox_empty: Texture2D
 @export var inbox_one: Texture2D
 @export var spinner: Texture2D
-@export var hint := "Swipe down through the circle to refresh"
+const HINT := &"tutorial_4" # the voice line, its text is the hint
 
 var _refreshes := 0
 var _refreshed_ms := -100000
@@ -29,6 +29,12 @@ var _refreshed_ms := -100000
 func _ready() -> void:
 	super()
 	mode.judged.connect(_on_judged)
+	var voice := VoiceTrack.new()
+	add_child(voice)
+	voice.say(HINT, false)
+	var guide := InputGuide.new()
+	guide.move = InputGuide.Move.SWIPE_DOWN
+	add_child(guide)
 
 func _on_judged(_result: HitResult) -> void:
 	_refreshes += 1
@@ -42,7 +48,7 @@ func _draw() -> void:
 	if since < SPIN_S and spinner != null: _draw_spinner(since)
 	if arrived: draw_code(self)
 	super()
-	TutorialUi.hint(self, hint)
+	TutorialUi.hint(self, VoiceLines.text(HINT))
 
 func slash_direction(_note: AimNote) -> Vector2: return Vector2.DOWN
 

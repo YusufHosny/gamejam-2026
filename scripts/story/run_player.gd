@@ -61,6 +61,7 @@ func _start_cutscene(step: CutsceneStep) -> void:
 	_cutscene = step.scene.instantiate()
 	_cutscene.caption = step.caption
 	_cutscene.length_s = step.duration_s
+	_cutscene.voice_line = step.voice
 	_cutscene.finished.connect(_advance)
 	_stage.add_child(_cutscene)
 

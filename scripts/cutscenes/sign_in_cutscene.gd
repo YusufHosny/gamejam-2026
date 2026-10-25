@@ -9,7 +9,7 @@ const CROSSFADE_S := 2.0
 const WAIT_S := 1.0 # a beat on the desktop before the code goes in
 const TYPE_AT := CROSSFADE_S + WAIT_S
 const SUBMIT_AT := TYPE_AT + 1.8 # the code's in, a second later the cursor goes for verify. the rest counts from here
-const LENGTH_S := SUBMIT_AT + 13.3
+const LENGTH_S := SUBMIT_AT + 17.0
 const CODE := EmailRefreshView.CODE
 const TYPE_STEP_S := 0.15 # per character
 const CURSOR_REST := Vector2(820, 560)
@@ -23,25 +23,19 @@ const AWAY_S := 0.6
 const CURSOR_AWAY := Vector2(900, 430)
 const SIGNED_IN_AT := SUBMIT_AT + 0.9
 const ONE_MORE_AT := SUBMIT_AT + 2.1
-const CAPTCHA_AT := SUBMIT_AT + 3.9
+const CAPTCHA_AT := SUBMIT_AT + 5.4 # once "let's see..." is said
 const POP_S := 0.15
-const CLOCK_AT := SUBMIT_AT + 6.1 # the taskbar clock catches their eye
+const CLOCK_AT := SUBMIT_AT + 7.9 # the taskbar clock catches their eye
 const CLOCK := "23:55"
-const DARK_AT := SUBMIT_AT + 9.5 # into the countdown's background
+const DARK_AT := SUBMIT_AT + 13.2 # into the countdown's background
 const DARK_S := 0.6
-const COMPLETE_AT := SUBMIT_AT + 10.1
-const STARTS_AT := SUBMIT_AT + 10.7
-const TEXT_OUT_AT := SUBMIT_AT + 12.8
+const COMPLETE_AT := SUBMIT_AT + 13.8
+const STARTS_AT := SUBMIT_AT + 14.4
+const TEXT_OUT_AT := SUBMIT_AT + 16.5
 const DARK := Color(0.08, 0.08, 0.1) # CountdownCutscene's background
 const SUCCESS := Color(0.3, 0.85, 0.45)
-# [from, until, line] the player's narration, typed out like the intro's
-const LINES := [
-	[SUBMIT_AT + 4.7, SUBMIT_AT + 6.1, "Ugh."],
-	[SUBMIT_AT + 6.3, SUBMIT_AT + 9.3, "Holy shit, there's five minutes left?! How?!"],
-]
-const TYPE_CPS := 40.0
-const NARRATION_SIZE := 24
-const NARRATION_LIFT := 40.0
+# the player's voice lines, VoiceLines ids
+const VOICE := [[SIGNED_IN_AT, &"sign_in_1"], [CAPTCHA_AT + 0.2, &"seriously"], [CLOCK_AT + 0.2, &"sign_in_2"]]
 
 @export var page: Texture2D # login page.png
 @export var inbox: Texture2D # mail interface one.png, how the email map leaves the phone
@@ -53,6 +47,8 @@ const NARRATION_LIFT := 40.0
 func _ready() -> void:
 	texture_filter = TEXTURE_FILTER_LINEAR
 	_phone.draw.connect(_draw_phone)
+
+func voice_cues() -> Array: return VOICE
 
 func _process(delta: float) -> void:
 	super(delta)
@@ -71,7 +67,6 @@ func _draw() -> void:
 	LoginView.draw_window(self, func(): LoginView.draw_filled_page(self, page))
 	_draw_modal()
 	if time >= CAPTCHA_AT: _draw_captcha()
-	_draw_narration()
 	if time < DARK_AT and cursor != null: _draw_cursor()
 	var dark := clampf((time - DARK_AT) / DARK_S, 0.0, 1.0)
 	if dark > 0.0: draw_rect(get_viewport_rect(), Color(DARK, dark))
@@ -118,19 +113,6 @@ func _draw_clock() -> void:
 	var flash := fmod(time - CLOCK_AT, 0.5) < 0.25
 	var width := font.get_string_size(CLOCK, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
 	draw_string(font, Vector2(screen.x - width - 14, screen.y - 9), CLOCK, HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.9, 0.1, 0.1) if flash else Color(0.1, 0.1, 0.12))
-
-func _draw_narration() -> void:
-	for line: Array in LINES:
-		if time < line[0] or time >= line[1]: continue
-		var text: String = line[2]
-		var font := ThemeDB.fallback_font
-		var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, NARRATION_SIZE).x
-		var screen := get_viewport_rect().size
-		var center := Vector2(screen.x / 2, screen.y - Desktop.TASKBAR_H - NARRATION_LIFT)
-		TutorialUi.box(self, Rect2(center - Vector2(width / 2 + 24, 26), Vector2(width + 48, 52)), Color(0, 0, 0, 0.7), 14)
-		var typed := text.left(floori((time - line[0]) * TYPE_CPS))
-		var lift := (font.get_ascent(NARRATION_SIZE) - font.get_descent(NARRATION_SIZE)) / 2
-		draw_string(font, center + Vector2(-width / 2, lift), typed, HORIZONTAL_ALIGNMENT_LEFT, -1, NARRATION_SIZE, Color.WHITE)
 
 func _draw_cursor() -> void:
 	var tip := CURSOR_REST.lerp(_verify_rect().get_center(), smoothstep(0.0, 1.0, clampf((time - TO_VERIFY_AT) / TO_VERIFY_S, 0.0, 1.0)))

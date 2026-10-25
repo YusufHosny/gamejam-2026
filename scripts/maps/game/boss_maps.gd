@@ -124,6 +124,9 @@ static func _puppets_route() -> Curve2D:
 # f1's first spot, the dodge cutscene leaves the button there
 static func chase_start() -> Vector2: return CHASE_MAP[0][4][0]
 
+# where f4's last note leaves the caught button, the win cutscene starts there
+static func final_spot() -> Vector2: return FINAL_MAP.back()[4][0]
+
 static func fill_chase_mapped(segment: MapSegment, rows := CHASE_MAP, view := CHASE_VIEW) -> void:
 	var notes: Array[Note] = []
 	for row: Array in rows:

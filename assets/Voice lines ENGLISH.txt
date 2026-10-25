@@ -1,0 +1,45 @@
+Voice lines ENGLISH
+Initial cutscene
+
+"Okay. The game is done."
+"Well... it runs. That counts as done."
+"The jam closes in a few minutes. Let's submit it before anything goes wrong."
+"Sign in first? ...Sure. Easy."
+"Seriously?"
+"Ugh"
+
+
+Email app opens
+- Alright, where is that dumb email?
+
+You sign in
+- Okay, I'm in! Let's see...
+- Holy shit, there's five minutes left?! Howw?!
+
+The shady submit button is a virus
+- Gotta submit this fast now! Please work...
+- You've gotta be fucking kidding me...
+
+The ads overflow, blue screen
+- Who even makes these? What's happening? Noooo! Shit!
+- Why is this happening to me...
+
+The submit button dodges
+- There it is! Now I've just gotta... Huh?
+- Okay, who designed this bullshit?
+
+Submitted as the clock hits 0, you win
+- Phew, that was close! No way I can do this again next year...
+
+Additional lines
+- Awesome job!
+- Great work!
+- Nicely done!
+- You made it!
+- Maybe you can try again...
+
+Tutorial
+- Click the circle when the approach circle hits it
+- Click and hold the slider, then follow the ball
+- Press the key when a notification hits the line
+- Slash through the circle when the approach circle hits it

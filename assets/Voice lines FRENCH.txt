@@ -1,0 +1,39 @@
+Voice lines FRENCH
+Initial cutscene
+- Je suis tellement impatient! Enfin je vais pouvoir partager mon jeu pour mon premier Game Jam!
+- Argh, où est-ce que j'ai noté mon mot de passe...
+
+Email app opens
+- Bien, il est où ce putain de mail?
+
+You sign in
+- Okay, j'y suis! Voyons voir...
+- Putain de merde, y'a que 5 minutes qui restent? Comment?!
+
+The shady submit button is a virus
+- Faut vite que je l'envoie maintenant! Pitié, que ça marche...
+- Tu te fous de ma gueule...
+
+The ads overflow, blue screen
+- Qui fabrique ces trucs aussi? Qu'est-ce qui se passe? Noooon! Merde!
+- Pourquoi ça n'arrive qu'à moi...
+
+The submit button dodges
+- Le voilà! J'ai plus qu'à... Hein?
+- Ok, qui a conçu cette merde?
+
+Submitted as the clock hits 0, you win
+- Ouf, c'était pas loin! Pas une chance de refaire ça l'année prochaine…
+
+Additional lines
+- Excellent travail!
+- Super boulot!
+- Bien joué!
+- Tu as réussi!
+- Peut-être que tu peux réessayer...
+
+Tutorial
+- Clique le cercle lorsque le cercle en approche le touche
+- Clique et garde le slider, puis suis la balle
+- Appuye sur la touche lorsqu'une notif touche la ligne
+- Tranche le cercle quand le cercle en approche le touche

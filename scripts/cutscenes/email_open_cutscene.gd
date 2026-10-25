@@ -4,7 +4,7 @@ extends Cutscene
 # picks up on the emptied notification screen: it's swiped closed, the mail app is tapped and opens onto the inbox
 # the refresh map starts on
 
-const LENGTH_S := 3.0
+const LENGTH_S := 3.2
 const CLOSE_AT := 0.4
 const CLOSE_S := 0.45 # the notification screen rolls up
 const TAP_AT := 1.5 # the cursor becomes a tapping hand
@@ -21,6 +21,8 @@ const ENVELOPE := Vector2(375, 366) # its centre, in the image's pixels
 
 func _ready() -> void:
 	texture_filter = TEXTURE_FILTER_LINEAR
+
+func voice_cues() -> Array: return [[0.2, &"email_open"]]
 
 func _process(delta: float) -> void:
 	super(delta)

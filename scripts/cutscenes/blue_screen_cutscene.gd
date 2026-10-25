@@ -18,6 +18,9 @@ extends AnimatedCutscene
 @onready var _desk: LaptopDesk = $World/LaptopDesk
 @onready var _blue_screen: Control = $World/BlueScreen
 
+# panic through the flood, then the blue screen sinks in
+func voice_cues() -> Array: return [[0.3, &"ads_1"], [7.3, &"ads_2"]]
+
 func _ready() -> void:
 	super()
 	get_viewport().size_changed.connect(_layout) # after the desk's own, it refits first

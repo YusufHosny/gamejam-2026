@@ -6,11 +6,13 @@ const TEXT_CUTSCENE := preload("res://scenes/cutscenes/text_cutscene.tscn")
 @export var scene: PackedScene = TEXT_CUTSCENE # a Cutscene scene
 @export var caption := ""
 @export var duration_s := 0.0 # 0 waits for the player, untimed steps only
+@export var voice: StringName = &"" # a VoiceLines id the placeholder text cutscene says
 
-func _init(_caption := "", _duration_s := 0.0, _timed := true, _scene: PackedScene = TEXT_CUTSCENE) -> void:
+func _init(_caption := "", _duration_s := 0.0, _timed := true, _scene: PackedScene = TEXT_CUTSCENE, _voice: StringName = &"") -> void:
 	caption = _caption
 	duration_s = _duration_s
 	timed = _timed
 	scene = _scene
+	voice = _voice
 
 func length_s() -> float: return duration_s

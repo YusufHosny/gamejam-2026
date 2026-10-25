@@ -16,12 +16,13 @@ const VIRUS_CAP_CENTER := Vector2(96.5, 69)
 const VIRUS_CAP_RADII := Vector2(92, 69)
 const CAP_POINTS := 48
 # timeline in seconds
-const VERIFIED_S := 3.2 # the captcha says you're human before the cursor goes for the button
 const HEADER_AT: Array[float] = [0.1, 0.5, 1.0] # when each header line shows
 const HEADER_POPS: Array[bool] = [false, true, false] # the first two just appear, the last one pops in
 const LINE_POP_S := 0.15
 const BUTTON_IN_AT := 1.8 # after the last line
 const BUTTON_POP_S := 0.15
+const VOICE_AT := BUTTON_IN_AT + BUTTON_POP_S + 0.1 # "gotta submit this fast now!" once the button's there
+const VERIFIED_S := VOICE_AT + 4.65 # the cursor goes for the button once that line's said, the english take is the longer one
 const CLICK_AT := VERIFIED_S + 1.2
 const PEEL_AT := VERIFIED_S + 1.6
 const PEEL_S := 1.8
@@ -39,6 +40,9 @@ const FADE_S := 0.6
 
 func _ready() -> void:
 	texture_filter = TEXTURE_FILTER_LINEAR
+
+# the hurry as the cursor goes for the button, the despair once it's a virus
+func voice_cues() -> Array: return [[VOICE_AT, &"virus_1"], [PEEL_AT + PEEL_S + FLY_S + 0.2, &"virus_2"]]
 
 func _process(delta: float) -> void:
 	super(delta)

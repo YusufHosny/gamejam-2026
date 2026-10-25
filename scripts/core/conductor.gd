@@ -1,6 +1,9 @@
 class_name Conductor
 extends AudioStreamPlayer
 
+const DUCK_DB := -14.0 # the metronome under a voice line, the tutorial's hints would drown otherwise
+const DUCK_DB_PER_S := 60.0
+
 var _latency_s := 0.0
 var _first_beat_s := 0.0
 var _beat_s := 0.5
@@ -11,11 +14,17 @@ var _hold_at := INF
 var _held_s := 0.0 # audio time spent frozen by holds
 var _min_held_s := 0.0 # keeps a moved hold frozen until the next beat
 var _time := 0.0
+var _metronome := false # no music, the click track
+
+func _process(delta: float) -> void:
+	var target := DUCK_DB if _metronome and VoiceTrack.speaking() else 0.0
+	volume_db = move_toward(volume_db, target, DUCK_DB_PER_S * delta)
 
 func start(map: Map) -> void:
 	_beat_s = map.beat_time(1.0)
 	_first_beat_s = 0.0
 	_loop_s = 0.0
+	_metronome = map.music == null
 	if map.music != null:
 		stream = map.music
 		_first_beat_s = map.first_beat_s

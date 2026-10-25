@@ -22,17 +22,26 @@ const SHAKE_S := 0.4
 const CLEAR_S := 0.6 # the wrong password stays filled this long before the fields clear
 
 @export var page: Texture2D
-@export var hint := "Click the circle when the approach circle hits it"
-@export var retry_hint := "Wrong password, try again"
+const HINT := &"tutorial_1" # the voice line, its text is the hint
 
 var _filled := 0 # username, password, sign in, then all three again
 var _failed_ms := -100000 # when the first sign in bounced
 
+var _voice := VoiceTrack.new()
+
 func _ready() -> void:
 	super()
+	add_child(_voice)
+	_voice.say(HINT, false)
+	var guide := InputGuide.new()
+	guide.move = InputGuide.Move.CLICK
+	add_child(guide)
 	mode.judged.connect(func(_r: HitResult):
 		_filled += 1
-		if _filled == 3: _failed_ms = Time.get_ticks_msec())
+		if _filled == 3:
+			_failed_ms = Time.get_ticks_msec()
+			_voice.say(&"oops") # caps lock
+		if _filled == 6: _voice.say(&"ugh")) # signed in, now there's a two-factor check
 
 # the window the intro cutscene opens and this view keeps, `pop` grows it in around its centre.
 # content draws the page inside it, in page.png's rect
@@ -52,7 +61,7 @@ func _draw() -> void:
 	draw_window(self, _draw_page)
 	if _filled >= 6: _draw_two_factor()
 	else: super()
-	TutorialUi.hint(self, retry_hint if _filled >= 3 and _filled < 6 else hint)
+	TutorialUi.hint(self, VoiceLines.text(HINT))
 
 func _draw_page() -> void:
 	var since_fail := (Time.get_ticks_msec() - _failed_ms) / 1000.0

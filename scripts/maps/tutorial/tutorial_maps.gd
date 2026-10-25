@@ -9,7 +9,7 @@ const START_BEAT := 4.0
 const COOLDOWN_BEATS := 4.0
 const NOTIFICATION_LANES: Array[int] = [0, 1, 2, 3, 3, 2, 1, 0]
 const REFRESHES := 4
-const LOGIN_RETRY_BEATS := 8.0 # from the first try's username to the second's
+const LOGIN_RETRY_BEATS := 10.0 # from the first try's username to the second's, a breather after the caps lock fail
 
 # username, password, sign in, but the password's wrong, so all three again
 static func login() -> Map:

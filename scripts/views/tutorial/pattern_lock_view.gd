@@ -8,7 +8,7 @@ const DOT_RADIUS := 10.0
 const SLIDE_S := 1.2
 
 @export var phone: Texture2D
-@export var hint := "Click and hold the slider, then follow the ball"
+const HINT := &"tutorial_2" # the voice line, its text is the hint
 
 static func dot(index: int) -> Vector2:
 	return GRID_CENTER + Vector2(index % 3 - 1, index / 3 - 1) * GRID_STEP
@@ -21,6 +21,12 @@ static func pattern_points() -> PackedVector2Array:
 # the phone is pulled up from below, the backdrop's on its own canvas layer so it stays put
 func _ready() -> void:
 	super()
+	var voice := VoiceTrack.new()
+	add_child(voice)
+	voice.say(HINT, false)
+	var guide := InputGuide.new()
+	guide.move = InputGuide.Move.SLIDER
+	add_child(guide)
 	position.y = get_viewport_rect().size.y
 	create_tween().tween_property(self, "position:y", 0.0, SLIDE_S).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 
@@ -30,7 +36,7 @@ func _draw() -> void:
 	TutorialUi.label(self, TutorialUi.SCREEN.position + Vector2(TutorialUi.SCREEN.size.x / 2, 104), "draw your pattern", 16, Color(1, 1, 1, 0.6))
 	for i in 9: draw_circle(dot(i), DOT_RADIUS, Color(1, 1, 1, 0.5), true, -1, true)
 	super()
-	TutorialUi.hint(self, hint)
+	TutorialUi.hint(self, VoiceLines.text(HINT))
 
 # a pattern line instead of a slider track, lit up to the ball
 func _draw_body(slider: SliderNote, progress: float, alpha: float) -> void:

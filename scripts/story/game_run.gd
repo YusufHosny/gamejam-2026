@@ -3,10 +3,9 @@ extends RefCounted
 
 const COUNTDOWN_S := DeadlineClock.INTRO_S # ends as the clock settles in the corner
 const CUTSCENE_S := 8.0
-const VIRUS_S := 11.2 # CUTSCENE_S plus the ~3.2 s the countdown and the captchas' frozen lead in freed
+const VIRUS_S := 15.7 # CUTSCENE_S plus the ~3.2 s the countdown and the captchas' frozen lead in freed, plus the voice line before the cursor moves, and a second on the ads before the stage
 const BLUE_SCREEN_S := 10.9
-const DODGE_S := 19.0
-const WIN_S := 6.0
+const DODGE_S := 21.6
 const LAUGH_S := 3.8
 const CREDITS_S := 14.0 # about 10 s of rolling and the hold at the end
 const PISSING_TITLE_S := 3.0
@@ -36,6 +35,7 @@ const COUNTDOWN_CUTSCENE := preload("res://scenes/cutscenes/countdown_cutscene.t
 const VIRUS_CUTSCENE := preload("res://scenes/cutscenes/virus_cutscene.tscn")
 const BLUE_SCREEN_CUTSCENE := preload("res://scenes/cutscenes/blue_screen_cutscene.tscn")
 const DODGE_CUTSCENE := preload("res://scenes/cutscenes/dodge_cutscene.tscn")
+const WIN_CUTSCENE := preload("res://scenes/cutscenes/win_cutscene.tscn")
 const LAUGH_CUTSCENE := preload("res://scenes/cutscenes/laugh_cutscene.tscn")
 const CREDITS_CUTSCENE := preload("res://scenes/cutscenes/credits_cutscene.tscn")
 const PISSING_TITLE_CUTSCENE := preload("res://scenes/cutscenes/pissing_title_cutscene.tscn")
@@ -68,7 +68,7 @@ static func _steps(easy: bool) -> Array[RunStep]:
 		CutsceneStep.new("", LAUGH_S, true, LAUGH_CUTSCENE),
 		_boss(easy),
 	]
-	steps.append(CutsceneStep.new("cutscene: submitted as the clock hits 0, you win", WIN_S, false))
+	steps.append(CutsceneStep.new("", WinCutscene.LENGTH_S, false, WIN_CUTSCENE))
 	steps.append(CutsceneStep.new("", CREDITS_S, false, CREDITS_CUTSCENE))
 	steps.append(CutsceneStep.new("", PISSING_TITLE_S, false, PISSING_TITLE_CUTSCENE))
 	steps.append(_urinals())

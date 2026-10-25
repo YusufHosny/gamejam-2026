@@ -4,33 +4,25 @@ extends Cutscene
 # the game's done, sort of. on the desktop the player talks themselves into submitting, opens the jam site and hits
 # submit, which wants a sign in first: the login map carries on in the same window
 
-const LENGTH_S := 14.5
+const LENGTH_S := 19.6
 const FADE_IN_S := 0.8
-# [from, until, line] the player's narration, typed out
-const LINES := [
-	[0.8, 2.8, "Okay. The game is done."],
-	[3.0, 5.2, "Well... it runs. That counts as done."],
-	[5.4, 9.8, "The jam closes in a few minutes. Let's submit it before anything goes wrong."],
-	[11.9, LENGTH_S, "Sign in first? ...Sure. Easy."],
-]
-const TYPE_CPS := 40.0
-const NARRATION_SIZE := 24
-const NARRATION_LIFT := 40.0 # box centre above the taskbar, under the browser window
+# the player's voice lines, VoiceLines ids
+const VOICE := [[0.6, &"intro_1"], [3.4, &"intro_2"], [8.1, &"intro_3"], [14.6, &"intro_4"]]
 const CURSOR_SIZE := 48.0
 const CURSOR_REST := Vector2(700, 380)
 const INTERNET_ICON := Desktop.ICON_START + Vector2(0, 2 * Desktop.ICON_STEP)
 const SUBMIT_BUTTON := LoginView.PAGE_AT + LoginView.PAGE_SIZE * Vector2(0.5, 0.7)
 const SUBMIT_SIZE := Vector2(320, 60)
 # cursor and window timeline
-const TO_ICON_AT := 8.6
+const TO_ICON_AT := 11.6 # as "let's submit it" is said
 const TO_ICON_S := 0.7
-const ICON_CLICKS: Array[float] = [9.35, 9.55] # a double click
-const WINDOW_AT := 9.9
+const ICON_CLICKS: Array[float] = [12.35, 12.55] # a double click
+const WINDOW_AT := 12.9
 const POP_S := 0.15
-const TO_SUBMIT_AT := 10.8
+const TO_SUBMIT_AT := 13.6
 const TO_SUBMIT_S := 0.7
-const SUBMIT_CLICK := 11.55
-const LOGIN_AT := 11.7 # submit wants a sign in first
+const SUBMIT_CLICK := 14.35
+const LOGIN_AT := 14.5 # submit wants a sign in first
 const CLICK_S := 0.1
 const CURSOR_HIDE_S := 0.3 # gone before the end, the game's own cursor takes over
 
@@ -41,6 +33,8 @@ const CURSOR_HIDE_S := 0.3 # gone before the end, the game's own cursor takes ov
 func _ready() -> void:
 	texture_filter = TEXTURE_FILTER_LINEAR
 
+func voice_cues() -> Array: return VOICE
+
 func _process(delta: float) -> void:
 	super(delta)
 	queue_redraw()
@@ -50,7 +44,6 @@ func _draw() -> void:
 	if time >= WINDOW_AT:
 		var pop := 0.6 + 0.4 * clampf((time - WINDOW_AT) / POP_S, 0.0, 1.0)
 		LoginView.draw_window(self, _draw_login if time >= LOGIN_AT else _draw_submit, pop)
-	_draw_narration()
 	if time < LENGTH_S - CURSOR_HIDE_S and cursor != null: _draw_cursor()
 	var fade := 1.0 - clampf(time / FADE_IN_S, 0.0, 1.0)
 	if fade > 0.0: draw_rect(get_viewport_rect(), Color(0, 0, 0, fade))
@@ -68,20 +61,6 @@ func _draw_submit() -> void:
 
 func _draw_login() -> void:
 	if page != null: draw_texture_rect(page, Rect2(LoginView.PAGE_AT, LoginView.PAGE_SIZE), false)
-
-# typed in a box above the taskbar, left aligned to where the whole line will sit so it doesn't shift
-func _draw_narration() -> void:
-	for line: Array in LINES:
-		if time < line[0] or time >= line[1]: continue
-		var text: String = line[2]
-		var font := ThemeDB.fallback_font
-		var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, NARRATION_SIZE).x
-		var screen := get_viewport_rect().size
-		var center := Vector2(screen.x / 2, screen.y - Desktop.TASKBAR_H - NARRATION_LIFT)
-		TutorialUi.box(self, Rect2(center - Vector2(width / 2 + 24, 26), Vector2(width + 48, 52)), Color(0, 0, 0, 0.7), 14)
-		var typed := text.left(floori((time - line[0]) * TYPE_CPS))
-		var lift := (font.get_ascent(NARRATION_SIZE) - font.get_descent(NARRATION_SIZE)) / 2
-		draw_string(font, center + Vector2(-width / 2, lift), typed, HORIZONTAL_ALIGNMENT_LEFT, -1, NARRATION_SIZE, Color.WHITE)
 
 # rests mid screen, double clicks the internet icon, then clicks submit
 func _draw_cursor() -> void:

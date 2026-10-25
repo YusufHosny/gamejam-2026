@@ -21,16 +21,15 @@ const DART := 4.0 # ease out power, like the chase
 # timeline in the cutscene's seconds
 const BOSS_IN_AT := 11.4
 const BOSS_IN_S := 0.8
-const LINE_AT := 12.4
-const TRY_AT: Array[float] = [14.6, 16.6] # the cursor sets off
+const TRY_AT: Array[float] = [14.6, 19.2] # the cursor sets off, the second time after the player's complained
 const TRY_S: Array[float] = [0.8, 0.45] # and gets there, the second try is faster
 const DODGE_LEAD_S := 0.08 # the button goes just before the cursor arrives
 const DODGE_S := 0.25
 const CLICK_S := 0.15
 const TOO_SLOW_AT := 15.6
 const TOO_SLOW_UNTIL := 17.2
-const READY_AT := 17.5
-const READY_UNTIL := 19.0 # the cutscene's end, the boss map starts after
+const READY_AT := 20.1
+const READY_UNTIL := 21.6 # the cutscene's end, the boss map starts after
 
 @export var button: Texture2D
 @export var cursor: Texture2D
@@ -43,7 +42,6 @@ func _process(_delta: float) -> void: queue_redraw()
 func _draw() -> void:
 	if arena > 0.0: BossArena.draw(self, time, arena)
 	if button != null and time >= BOSS_IN_AT: _draw_button()
-	_draw_text("I heard you have been looking for me...", Color.WHITE, LINE_AT, _dodge_at(0))
 	_draw_text("too slow", TOO_SLOW, TOO_SLOW_AT, TOO_SLOW_UNTIL)
 	_draw_text("Ready?", Color.WHITE, READY_AT, READY_UNTIL)
 	if cursor != null and arena > 0.0: _draw_cursor()

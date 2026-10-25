@@ -20,6 +20,9 @@ extends AnimatedCutscene
 @onready var _boot_screen: Control = $World/BootScreen
 @onready var _usb: Sprite2D = $Usb/Frame
 
+# "huh?" lands on the first dodge whatever the language, the complaint follows "too slow"
+func voice_cues() -> Array: return [[DodgeStage.TRY_AT[0] + DodgeStage.TRY_S[0] - DodgeStage.DODGE_LEAD_S, &"dodge_1", 1], [DodgeStage.TOO_SLOW_AT + 0.4, &"dodge_2"]]
+
 func _ready() -> void:
 	super()
 	_usb.position = UsbView.CENTER # the last frame of b1's usb, where it was
