@@ -31,7 +31,7 @@ func _process(_delta: float) -> void:
 
 func _draw() -> void:
 	for grade in BANDS: # widest first so narrower bands paint over
-		var half := _x(GameConfig.hit_windows_ms[grade] / 1000.0) - size.x / 2
+		var half := _x(GameConfig.hit_window_ms(grade) / 1000.0) - size.x / 2
 		draw_rect(Rect2(size.x / 2 - half, size.y * 0.35, half * 2, size.y * 0.3), Color(Judgement.color(grade), 0.5))
 	var now := Time.get_ticks_msec()
 	for tick in _ticks:

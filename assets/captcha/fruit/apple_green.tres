@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="Fruit" format=3]
+[gd_resource type="Resource" script_class="Fruit" format=3 uid="uid://h5c2f72agsia"]
 
-[ext_resource type="Script" path="res://scripts/views/captcha/fruit.gd" id="1_fruit"]
-[ext_resource type="Texture2D" path="res://assets/captcha/fruit/apple_green.svg" id="2_whole"]
-[ext_resource type="Texture2D" path="res://assets/captcha/fruit/apple_green_left.svg" id="3_left"]
-[ext_resource type="Texture2D" path="res://assets/captcha/fruit/apple_green_right.svg" id="4_right"]
+[ext_resource type="Script" uid="uid://bgcwdoivvo4ro" path="res://scripts/views/captcha/fruit.gd" id="1_fruit"]
+[ext_resource type="Texture2D" uid="uid://bwvcafj7tyegr" path="res://assets/captcha/fruit/apple_green.svg" id="2_whole"]
+[ext_resource type="Texture2D" uid="uid://bfbx0t26gfjlw" path="res://assets/captcha/fruit/apple_green_left.svg" id="3_left"]
+[ext_resource type="Texture2D" uid="uid://c2f43t18uo86j" path="res://assets/captcha/fruit/apple_green_right.svg" id="4_right"]
 
 [resource]
 script = ExtResource("1_fruit")

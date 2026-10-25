@@ -4,7 +4,7 @@ extends Control
 signal back_pressed
 
 const MAX_ROWS := 10
-const HEADERS: Array[String] = ["#", "rank", "score", "accuracy", "combo", "when"]
+const HEADERS: Array[String] = ["#", "rank", "score", "accuracy", "combo", "mode", "when"]
 
 @onready var _rows: GridContainer = %Rows
 @onready var _empty: Label = %Empty
@@ -31,6 +31,7 @@ func show_results(results: Array[RunResult]) -> void:
 		_add_cell("%08d" % result.score)
 		_add_cell("%.2f%%" % (result.accuracy * 100.0))
 		_add_cell("%dx" % result.max_combo)
+		_add_cell(Difficulty.label(result.difficulty))
 		_add_cell(result.finished_at)
 
 func _add_cell(text: String, color := Color.WHITE) -> void:

@@ -1,0 +1,253 @@
+[gd_scene format=3 uid="uid://cd0kelto1etp8"]
+
+[ext_resource type="Script" uid="uid://b02eyjqe6m1wx" path="res://scripts/cutscenes/blue_screen_cutscene.gd" id="1_cut"]
+[ext_resource type="Script" uid="uid://dsx7tgvuljmdo" path="res://scripts/cutscenes/blue_screen_flood.gd" id="2_flood"]
+[ext_resource type="PackedScene" path="res://scenes/backgrounds/laptop_desk.tscn" id="3_desk"]
+[ext_resource type="Texture2D" uid="uid://bvkm4x6mb0dcj" path="res://assets/Retro Dekstop/Icons/2X/Icon_Computer.png" id="i29"]
+[ext_resource type="Texture2D" uid="uid://chd7qgdsss7vk" path="res://assets/Retro Dekstop/Icons/2X/Icon_Folder.png" id="i30"]
+[ext_resource type="Texture2D" uid="uid://cgnfl70borfdx" path="res://assets/Retro Dekstop/Icons/2X/Icon_Globe.png" id="i31"]
+[ext_resource type="Texture2D" uid="uid://br8s0n28xnuw8" path="res://assets/Retro Dekstop/Icons/2X/Icon_Notepad.png" id="i32"]
+[ext_resource type="Texture2D" uid="uid://c3wscqlo73qw7" path="res://assets/Retro Dekstop/Icons/2X/Icon_Trash.png" id="i33"]
+[ext_resource type="Texture2D" uid="uid://chcwxhxkc7vg8" path="res://assets/ads/windows/airdrop_ad.png" id="w10"]
+[ext_resource type="Texture2D" uid="uid://cv0bqbu7642i2" path="res://assets/ads/windows/bongo_cat_ad.png" id="w11"]
+[ext_resource type="Texture2D" uid="uid://c0sgoh384umds" path="res://assets/ads/windows/bored_ad.png" id="w12"]
+[ext_resource type="Texture2D" uid="uid://omv5plfwkp56" path="res://assets/ads/windows/car_ad.png" id="w13"]
+[ext_resource type="Texture2D" uid="uid://ckn2puirewqtj" path="res://assets/ads/windows/expensive_ad.png" id="w14"]
+[ext_resource type="Texture2D" uid="uid://dmxlp2s8632ao" path="res://assets/ads/windows/fih_ad.png" id="w15"]
+[ext_resource type="Texture2D" uid="uid://cuvgjafh1q0mn" path="res://assets/ads/windows/free_robux_ad_1.png" id="w16"]
+[ext_resource type="Texture2D" uid="uid://6v5lfyqiyger" path="res://assets/ads/windows/free_robux_ad_2.png" id="w17"]
+[ext_resource type="Texture2D" uid="uid://blwxmdv4ksh01" path="res://assets/ads/windows/hacker_cat_ad.png" id="w18"]
+[ext_resource type="Texture2D" uid="uid://cht2mqlt75vux" path="res://assets/ads/windows/happy_time_ad.png" id="w19"]
+[ext_resource type="Texture2D" uid="uid://dn0rsyu1m820b" path="res://assets/ads/windows/i_love_internet_ad.png" id="w20"]
+[ext_resource type="Texture2D" uid="uid://cmlcr1nffwd6" path="res://assets/ads/windows/japanese_cat_ad.png" id="w21"]
+[ext_resource type="Texture2D" uid="uid://bl7m2rstueta6" path="res://assets/ads/windows/japanese_grabdma_ad.png" id="w22"]
+[ext_resource type="Texture2D" uid="uid://1qfda6wo8tup" path="res://assets/ads/windows/japanese_veggie_ad.png" id="w23"]
+[ext_resource type="Texture2D" uid="uid://qccbu5bkb6nc" path="res://assets/ads/windows/puter_sucks_ad.png" id="w24"]
+[ext_resource type="Texture2D" uid="uid://b081fnkejjqki" path="res://assets/ads/windows/satan_ad.png" id="w25"]
+[ext_resource type="Texture2D" uid="uid://chkmwr7xvf6xe" path="res://assets/ads/windows/subway_surfer_ad.png" id="w26"]
+[ext_resource type="Texture2D" uid="uid://cnujoeix0vkke" path="res://assets/ads/windows/virus_ad.png" id="w27"]
+[ext_resource type="Texture2D" uid="uid://4efmflwvki0c" path="res://assets/ads/windows/white_man_ad.png" id="w28"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_screen"]
+bg_color = Color(0.07, 0.615, 0.85, 1)
+corner_radius_top_left = 27
+corner_radius_top_right = 27
+corner_radius_bottom_right = 27
+corner_radius_bottom_left = 27
+
+[sub_resource type="Animation" id="Animation_cutscene"]
+resource_name = "cutscene"
+length = 10.9
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Flood:ads_shown")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.2, 3),
+"transitions": PackedFloat32Array(2.5, 1, 1),
+"update": 0,
+"values": [0.0, 180.0, 220.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Flood:glitch")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2.2, 3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("World:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2.45, 2.5, 2.75, 2.8, 3),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [false, true, false, true, false, true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Flood:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("World/BlueScreen/Back:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 5.3, 7.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("World/BlueScreen/Margin:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 9.5, 10.9),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:zoom_out")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 5, 7.5),
+"transitions": PackedFloat32Array(1, -2, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".:zoom_side")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 9.5, 10.9),
+"transitions": PackedFloat32Array(1, -2, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Fade:modulate")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 10.133333, 10.9),
+"transitions": PackedFloat32Array(1, 2, 2.0000007),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cutscene"]
+_data = {
+&"cutscene": SubResource("Animation_cutscene")
+}
+
+[node name="BlueScreenCutscene" type="Control" unique_id=217652019]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_cut")
+zoom_out = 1.0
+
+[node name="Flood" type="Node2D" parent="." unique_id=1239275196]
+visible = false
+texture_filter = 2
+script = ExtResource("2_flood")
+ads = Array[Texture2D]([ExtResource("w10"), ExtResource("w11"), ExtResource("w12"), ExtResource("w13"), ExtResource("w14"), ExtResource("w15"), ExtResource("w16"), ExtResource("w17"), ExtResource("w18"), ExtResource("w19"), ExtResource("w20"), ExtResource("w21"), ExtResource("w22"), ExtResource("w23"), ExtResource("w24"), ExtResource("w25"), ExtResource("w26"), ExtResource("w27"), ExtResource("w28")])
+icons = Array[Texture2D]([ExtResource("i29"), ExtResource("i30"), ExtResource("i31"), ExtResource("i32"), ExtResource("i33")])
+ads_shown = 220.0
+glitch = 1.0
+
+[node name="World" type="Node2D" parent="." unique_id=910419276]
+texture_filter = 2
+
+[node name="LaptopDesk" parent="World" unique_id=1593471916 instance=ExtResource("3_desk")]
+
+[node name="BlueScreen" type="Control" parent="World" unique_id=430540840]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 293.2
+offset_top = 97.6
+offset_right = 1625.2
+offset_bottom = 758.6
+scale = Vector2(0.4418, 0.4418)
+mouse_filter = 2
+
+[node name="Back" type="Panel" parent="World/BlueScreen" unique_id=479362263]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_screen")
+
+[node name="Margin" type="MarginContainer" parent="World/BlueScreen" unique_id=80286261]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 240
+theme_override_constants/margin_top = 96
+theme_override_constants/margin_right = 240
+theme_override_constants/margin_bottom = 66
+
+[node name="Lines" type="VBoxContainer" parent="World/BlueScreen/Margin" unique_id=1283048054]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Face" type="Label" parent="World/BlueScreen/Margin/Lines" unique_id=136547350]
+layout_mode = 2
+theme_override_font_sizes/font_size = 110
+text = ":("
+
+[node name="Message" type="Label" parent="World/BlueScreen/Margin/Lines" unique_id=1750646072]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Your files are corrupted. Plug in your backup drive to continue."
+autowrap_mode = 3
+
+[node name="Gap" type="Control" parent="World/BlueScreen/Margin/Lines" unique_id=1053653312]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Info" type="Label" parent="World/BlueScreen/Margin/Lines" unique_id=1383439579]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "If you call a support person, give them this info:
+Stop code: TOO_MANY_POPUPS_BEFORE_DEADLINE"
+
+[node name="Fade" type="ColorRect" parent="." unique_id=1847302915]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.66656864, 0.6665687, 0.66656864, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1231600216]
+libraries/ = SubResource("AnimationLibrary_cutscene")

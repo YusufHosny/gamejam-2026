@@ -9,6 +9,7 @@ signal judged(result: HitResult)
 var conductor: Conductor
 var segment: MapSegment
 var view: ModeView
+var relax := false # judge mode: aim and slash judge on aim alone, see AimClickMode and SlashMode
 var _pending: Array[Note] = [] # unjudged, sorted by time
 
 func _ready() -> void: end()

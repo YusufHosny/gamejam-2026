@@ -35,7 +35,7 @@ func _play() -> void:
 	_show(null)
 	var steps: Array[RunStep] = []
 	if GameConfig.tutorial_enabled: steps.append_array(TutorialRun.steps())
-	steps.append_array(GameRun.steps())
+	steps.append_array(GameRun.steps(Difficulty.map_set(GameConfig.difficulty)))
 	_run = RUN_SCENE.instantiate()
 	_run.run = Run.new(steps)
 	_run.finished.connect(_on_finished)
@@ -43,7 +43,7 @@ func _play() -> void:
 	add_child(_run)
 
 func _on_finished(result: RunResult) -> void:
-	_results.append(result)
+	if Difficulty.on_leaderboard(result.difficulty): _results.append(result)
 	_score_screen.show_result(result)
 	_close_run(_score_screen)
 

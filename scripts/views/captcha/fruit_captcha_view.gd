@@ -74,6 +74,7 @@ func _velocity(note: AimNote, at: float) -> Vector2:
 	return Vector2(_drift[note], _gravity[note] * (at - note.time))
 
 func _draw() -> void:
+	Desktop.draw(self)
 	var now := _now()
 	var ms := Time.get_ticks_msec()
 	CaptchaFrame.draw(self)

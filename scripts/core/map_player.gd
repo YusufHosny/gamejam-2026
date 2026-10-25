@@ -30,33 +30,41 @@ const COMBO_BREAK_MIN := 10
 
 var map: Map # set before entering the tree
 var score := ScoreKeeper.new() # the run's score, handed back on finish
+var pre_roll_s := 0.0 # set before entering the tree, silence before the music starts
+var _pre_roll_left := 0.0
 var _segment: MapSegment = null
 var _view: ModeView = null
 var _checkpoint := ScoreKeeper.new() # checkpointed score
 var _finished := false
+var _relaxed := false # judge mode, see Difficulty
 
 func _ready() -> void:
 	_aim_click.cursor = cursor
 	_slash.cursor = cursor
+	_relaxed = Difficulty.relaxed(GameConfig.difficulty)
 	for handler: ModeHandler in [_four_d, _aim_click, _slash]:
 		handler.conductor = conductor
+		handler.relax = _relaxed and handler != _four_d # 4d only gets wider windows
 		handler.judged.connect(_on_judged)
+	if Difficulty.autoplays(GameConfig.difficulty): _add_autopilot()
 	if hitsound == null: hitsound = SfxUtils.hitsound()
 	_hitsounds.stream = AudioStreamPolyphonic.new()
 	_hitsounds.play()
 	hud.show_score(score)
-	conductor.start(map)
+	_pre_roll_left = pre_roll_s
+	if _pre_roll_left <= 0.0: conductor.start(map)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_count_down_pre_roll(delta)
 	_hold_for_next_note()
-	var now := conductor.song_time()
+	var now := time()
 	var segment := map.segment_at(now)
 	if segment != _segment: _switch_to(segment)
 	if segment == null:
 		_finish()
 		return
 	if now < segment.start_time:
-		hud.show_banner(Modality.hand_pos(segment.kind), fmod(map.time_beat(now), 1.0) < 0.5)
+		hud.show_banner(Modality.hand_pos(segment.kind), fposmod(map.time_beat(now), 1.0) < 0.5) # fposmod, now is negative in the pre roll
 	else:
 		hud.hide_banner()
 
@@ -64,7 +72,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	for action in DEBUG_SEEKS:
 		if event.is_action_pressed(action): _seek_to_segment(_first_segment(DEBUG_SEEKS[action]))
 
-func time() -> float: return conductor.song_time()
+# negative during the pre roll, counting up to the music starting at 0
+func time() -> float: return conductor.song_time() - _pre_roll_left
+
+func active_handler() -> ModeHandler: return null if _segment == null else _handler(_segment.kind)
+
+func _add_autopilot() -> void:
+	var autopilot := Autopilot.new()
+	autopilot.player = self
+	add_child(autopilot)
 
 func load_checkpoint() -> void:
 	var segment := _segment
@@ -92,6 +108,11 @@ func _switch_to(segment: MapSegment) -> void:
 	hud.set_hand_pos(hand_pos)
 	hud.set_tutorial(segment.tutorial)
 
+func _count_down_pre_roll(delta: float) -> void:
+	if _pre_roll_left <= 0.0: return
+	_pre_roll_left = maxf(_pre_roll_left - delta, 0.0)
+	if _pre_roll_left == 0.0: conductor.start(map)
+
 # wait segments freeze the clock on each note until it's hit
 func _hold_for_next_note() -> void:
 	var pending: Array[Note] = []
@@ -116,6 +137,7 @@ func _finish() -> void:
 
 # --- Seeking ---
 func _seek(time: float) -> void:
+	_pre_roll_left = 0.0 # seeking skips what's left of the silence
 	_switch_to(null)
 	conductor.seek_to(time)
 
@@ -128,6 +150,7 @@ func _set_score(keeper: ScoreKeeper) -> void:
 	hud.show_score(score)
 
 func _on_judged(result: HitResult) -> void:
+	if _relaxed and result.is_miss(): result = HitResult.new(result.note, Judgement.Grade.MEH) # judge mode never drops combo
 	hud.show_judgement(result)
 	if not result.is_miss(): _play(hitsound)
 	if _segment.tutorial: return

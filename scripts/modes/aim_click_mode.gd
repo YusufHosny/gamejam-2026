@@ -12,6 +12,7 @@ func end() -> void:
 	_slider = null
 
 func _handle_input(event: InputEvent, now: float) -> void:
+	if relax: return # clicks do nothing in relax
 	if not CLICKS.any(func(action: StringName): return event.is_action_pressed(action)): return
 	var note := _next() as AimNote
 	if not _in_window(note, now): return
@@ -22,6 +23,7 @@ func _handle_input(event: InputEvent, now: float) -> void:
 # letting go or straying from the ball breaks the slider early
 func _process(delta: float) -> void:
 	super(delta)
+	if relax: _relax_hit()
 	if _slider == null: return
 	var progress := _slider.progress_at(conductor.song_time())
 	if progress >= 1.0: _finish_slider(Judgement.Grade.GREAT)
@@ -40,5 +42,13 @@ func _finish_slider(grade: Judgement.Grade) -> void:
 	judged.emit(HitResult.new(_slider, grade))
 	_slider = null
 
+# relax: the next note is hit the moment the cursor is on it while it's due, always a 300
+func _relax_hit() -> void:
+	var note := _next() as AimNote
+	var point := cursor.global_position
+	if _in_window(note, conductor.song_time()) and _is_hit(note, point, point):
+		_resolve(HitResult.new(note, Judgement.Grade.GREAT, 0.0))
+
 func _holding() -> bool:
+	if relax: return true
 	return CLICKS.any(func(action: StringName): return Input.is_action_pressed(action))

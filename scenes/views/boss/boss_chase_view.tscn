@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/views/boss/boss_chase_view.gd" id="1_view"]
+[ext_resource type="Texture2D" path="res://assets/boss/submit_round.png" id="2"]
+
+[ext_resource type="Resource" path="res://assets/skin/mobamba.tres" id="skin"]
+[node name="BossChaseView" type="Node2D"]
+script = ExtResource("1_view")
+button = ExtResource("2")
+skin = ExtResource("skin")

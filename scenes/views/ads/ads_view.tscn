@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/views/ads/ads_view.gd" id="1_view"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/airdrop_ad.png" id="w2"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/bongo_cat_ad.png" id="w3"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/bored_ad.png" id="w4"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/car_ad.png" id="w5"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/expensive_ad.png" id="w6"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/fih_ad.png" id="w7"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/free_robux_ad_1.png" id="w8"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/free_robux_ad_2.png" id="w9"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/hacker_cat_ad.png" id="w10"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/happy_time_ad.png" id="w11"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/i_love_internet_ad.png" id="w12"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/japanese_cat_ad.png" id="w13"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/japanese_grabdma_ad.png" id="w14"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/japanese_veggie_ad.png" id="w15"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/puter_sucks_ad.png" id="w16"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/satan_ad.png" id="w17"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/subway_surfer_ad.png" id="w18"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/virus_ad.png" id="w19"]
+[ext_resource type="Texture2D" path="res://assets/ads/windows/white_man_ad.png" id="w20"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Icons/2X/Icon_Computer.png" id="i21"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Icons/2X/Icon_Folder.png" id="i22"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Icons/2X/Icon_Globe.png" id="i23"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Icons/2X/Icon_Notepad.png" id="i24"]
+[ext_resource type="Texture2D" path="res://assets/Retro Dekstop/Icons/2X/Icon_Trash.png" id="i25"]
+
+[node name="AdsView" type="Node2D"]
+script = ExtResource("1_view")
+windows = Array[Texture2D]([ExtResource("w2"), ExtResource("w3"), ExtResource("w4"), ExtResource("w5"), ExtResource("w6"), ExtResource("w7"), ExtResource("w8"), ExtResource("w9"), ExtResource("w10"), ExtResource("w11"), ExtResource("w12"), ExtResource("w13"), ExtResource("w14"), ExtResource("w15"), ExtResource("w16"), ExtResource("w17"), ExtResource("w18"), ExtResource("w19"), ExtResource("w20")])
+icons = Array[Texture2D]([ExtResource("i21"), ExtResource("i22"), ExtResource("i23"), ExtResource("i24"), ExtResource("i25")])

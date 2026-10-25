@@ -114,7 +114,6 @@ func _input(event: InputEvent) -> void:
 func _build_game_page() -> void:
 	for level: Difficulty.Level in Difficulty.Level.values():
 		_difficulty.add_item(Difficulty.label(level), level)
-		_difficulty.set_item_disabled(_difficulty.get_item_index(level), not Difficulty.is_available(level))
 	_difficulty.select(_difficulty.get_item_index(GameConfig.difficulty))
 	_difficulty.item_selected.connect(func(index: int): GameConfig.difficulty = _difficulty.get_item_id(index))
 	_tutorial.button_pressed = GameConfig.tutorial_enabled

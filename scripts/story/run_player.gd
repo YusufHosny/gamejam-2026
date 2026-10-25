@@ -9,8 +9,10 @@ const MAP_PLAYER_SCENE := preload("res://scenes/map_player.tscn")
 @onready var _stage: Node = $Stage
 @onready var _deadline: DeadlineClock = $Deadline/DeadlineClock
 @onready var _pause_menu: PauseMenu = $PauseMenu
+@onready var _fade: ColorRect = $Fade/Black
 
 var run: Run # set before entering the tree
+var start_step := 0 # set before entering the tree, the stage sandbox starts mid run
 var score := ScoreKeeper.new()
 var _index := -1
 var _cutscene: Cutscene = null
@@ -23,13 +25,15 @@ func _ready() -> void:
 	_pause_menu.checkpointed.connect(_unpause_then.bind(_load_checkpoint))
 	_pause_menu.exited.connect(_unpause_then.bind(exited.emit))
 	_deadline.hide()
-	_play_step(0)
+	_intro_played = start_step > run.first_timed() # starting past it goes straight to the corner clock
+	_play_step(start_step)
 
 func _process(_delta: float) -> void:
+	_fade.modulate.a = _fade_alpha()
 	if _index >= run.steps.size(): return
 	var timed := run.steps[_index].timed
 	_deadline.visible = timed
-	if timed: _deadline.set_time_left(maxf(run.time_left(_index, _step_position()), 0.0))
+	if timed: _deadline.set_time_left(DeadlineClock.SHOWN_S * maxf(run.time_left(_index, _step_position()), 0.0) / maxf(run.deadline_s(), 0.001))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"pause"):
@@ -41,7 +45,7 @@ func _play_step(index: int) -> void:
 	_clear_stage()
 	_index = index
 	if index >= run.steps.size():
-		finished.emit(RunResult.from_score(score))
+		finished.emit(RunResult.from_score(score, GameConfig.difficulty))
 		return
 	var step := run.steps[index]
 	assert(not step.timed or step.length_s() > 0.0, "timed steps need a fixed length")
@@ -63,7 +67,9 @@ func _start_map(step: MapStep) -> void:
 	_map_player = MAP_PLAYER_SCENE.instantiate()
 	_map_player.map = step.map
 	_map_player.score = score
+	_map_player.pre_roll_s = step.pre_roll_s
 	_map_player.finished.connect(_advance)
+	_fade.color = step.fade_color
 	_stage.add_child(_map_player)
 
 func _advance() -> void:
@@ -79,8 +85,17 @@ func _clear_stage() -> void:
 
 func _step_position() -> float:
 	if _cutscene != null: return minf(_cutscene.time, _cutscene.length_s)
-	if _map_player != null: return clampf(_map_player.time(), 0.0, run.steps[_index].length_s())
+	if _map_player != null:
+		var step: MapStep = run.steps[_index]
+		return clampf(_map_player.time() + step.pre_roll_s, 0.0, step.length_s()) # map time is negative during the pre roll
 	return 0.0
+
+# follows the map's clock so pausing and restarts stay exact
+func _fade_alpha() -> float:
+	if _map_player == null: return 0.0
+	var fade_in_s := (run.steps[_index] as MapStep).fade_in_s
+	if fade_in_s <= 0.0: return 0.0
+	return 1.0 - clampf(_step_position() / fade_in_s, 0.0, 1.0)
 
 # --- Pause Menu ---
 func _set_paused(paused: bool) -> void:

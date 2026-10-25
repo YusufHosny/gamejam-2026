@@ -51,6 +51,7 @@ func _on_judged(result: HitResult) -> void:
 	if not result.is_miss(): _refreshes[tile] += 1
 
 func _draw() -> void:
+	Desktop.draw(self)
 	var now := _now()
 	CaptchaFrame.draw(self)
 	CaptchaFrame.draw_header(self, "Select all images with", target, "Click verify once there are none left.")
