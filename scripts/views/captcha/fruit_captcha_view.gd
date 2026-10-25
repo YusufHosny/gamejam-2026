@@ -3,7 +3,7 @@ extends AimView
 
 # c3: apples are thrown up from below the board and peak on their beat, a slash halves them
 
-const FRUIT_SIZE := 80.0
+const FRUIT_SIZE := 80.0 # grown on the standard map set, see Difficulty.size_scale
 const HIT_RADIUS := 42.0
 const ENTRY_MARGIN := 60.0 # apples start this far below the board
 const RING_SCALE := 1.6
@@ -38,7 +38,13 @@ var _slices: Dictionary[AimNote, Slice] = {}
 var _missed: Dictionary[AimNote, bool] = {}
 var _cut_angle: Dictionary[AimNote, float] = {} # from the slash that hit, see is_hit
 
+var _size := FRUIT_SIZE
+var _hit_radius := HIT_RADIUS
+
 func _ready() -> void:
+	var grow := Difficulty.size_scale(GameConfig.difficulty)
+	_size = FRUIT_SIZE * grow
+	_hit_radius = HIT_RADIUS * grow
 	texture_filter = TEXTURE_FILTER_LINEAR
 	var entry_y := CaptchaFrame.content().end.y + ENTRY_MARGIN
 	var approach := GameConfig.approach_time_s
@@ -52,7 +58,7 @@ func _ready() -> void:
 # remembers the slash direction so the halves split along it
 func is_hit(note: AimNote, from: Vector2, to: Vector2) -> bool:
 	var at := _position(note, _now())
-	var hit := Geometry2D.get_closest_point_to_segment(at, to_local(from), to_local(to)).distance_to(at) <= HIT_RADIUS
+	var hit := Geometry2D.get_closest_point_to_segment(at, to_local(from), to_local(to)).distance_to(at) <= _hit_radius
 	if hit: _cut_angle[note] = (to - from).angle()
 	return hit
 
@@ -90,7 +96,7 @@ func _draw() -> void:
 		if until > approach: break
 		var at := _position(note, now)
 		_draw_fruit(_fruit[note].whole, at, 0.0, 1.0)
-		if until > 0: draw_arc(at, HIT_RADIUS * (1.0 + RING_SCALE * until / approach), 0, TAU, 48, Color(1, 1, 1, 1.0 - until / approach), 3, true)
+		if until > 0: draw_arc(at, _hit_radius * (1.0 + RING_SCALE * until / approach), 0, TAU, 48, Color(1, 1, 1, 1.0 - until / approach), 3, true)
 	for note in _slices: _draw_halves(_fruit[note], _slices[note], ms)
 	CaptchaFrame.draw_edges(self) # apples fly in from behind the footer
 	CaptchaFrame.draw_header(self, "Slash all the", target, "Swipe through each one as it peaks.")
@@ -103,7 +109,7 @@ func _draw_board() -> void:
 		draw_line(Vector2(board.position.x, y), Vector2(board.end.x, y), PLANK, 3)
 
 func _draw_fruit(texture: Texture2D, center: Vector2, rotation: float, alpha: float) -> void:
-	CircleSkin.draw_centered(self, texture, center, FRUIT_SIZE, Color(1, 1, 1, alpha), rotation)
+	CircleSkin.draw_centered(self, texture, center, _size, Color(1, 1, 1, alpha), rotation)
 
 # the cut runs along the slash, each half flies off its own side and falls
 func _draw_halves(fruit: Fruit, slice: Slice, ms: int) -> void:
@@ -120,4 +126,4 @@ func _draw_juice(note: AimNote, slice: Slice, ms: int) -> void:
 	var s := (ms - slice.born_ms) / 1000.0
 	if s > JUICE_S or juice == null: return
 	var color := _fruit[note].juice_color
-	CircleSkin.draw_centered(self, juice, slice.position, FRUIT_SIZE * (1.0 + s), Color(color, color.a * (1.0 - s / JUICE_S)), slice.angle)
+	CircleSkin.draw_centered(self, juice, slice.position, _size * (1.0 + s), Color(color, color.a * (1.0 - s / JUICE_S)), slice.angle)

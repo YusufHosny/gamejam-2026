@@ -83,7 +83,9 @@ func _draw() -> void:
 		draw_texture_rect(_window[note], scaled, false)
 		if until > 0:
 			var closing := until / approach
-			draw_rect(rect.grow(APPROACH_GROW * closing), Color(ACCENT, 1.0 - closing * 0.5), false, 4)
+			var ring := rect.grow(APPROACH_GROW * closing)
+			draw_rect(ring, Color(0, 0, 0, 0.6), false, 9) # dark under the yellow so it reads on any window
+			draw_rect(ring, Color(ACCENT, 1.0 - closing * 0.4), false, 5)
 	_draw_cuts()
 
 func _draw_cuts() -> void:

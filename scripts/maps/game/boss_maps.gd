@@ -82,7 +82,14 @@ const FINAL_MAP := [
 # f1's first spot, the dodge cutscene leaves the button there
 static func chase_start() -> Vector2: return CHASE_MAP[0][4][0]
 
-static func fill_chase_mapped(segment: MapSegment, rows := CHASE_MAP, view := CHASE_VIEW) -> void:
+const EASY_SLIDER_BEATS := 2.0 # longest a stream's slider runs
+const EASY_SLIDER_SPEED := 110.0 # px per beat along it
+const EASY_JUMP_SCALE := 0.7 # on beat jumps pulled in toward their middle
+const EASY_GAP_BEATS := 1.0
+
+# easy turns streams into slow sliders along them, stacks into one circle, and runs of jumps into beat long sliders from each spot toward the next
+static func fill_chase_mapped(segment: MapSegment, rows := CHASE_MAP, view := CHASE_VIEW, easy := false) -> void:
+	if easy: rows = _easy_rows(rows)
 	var notes: Array[Note] = []
 	for row: Array in rows:
 		match row[0]:
@@ -98,9 +105,51 @@ static func fill_chase_mapped(segment: MapSegment, rows := CHASE_MAP, view := CH
 				slider.new_combo = true
 				notes.append(slider)
 			_: assert(false, "unhandled chase row %s" % row)
+	if easy: notes = EasyMaps.spaced(notes, EASY_GAP_BEATS)
 	assert(notes[0].beat >= segment.start_beat and notes.back().beat < segment.end_beat, "the chase map runs past its segment")
 	segment.notes = notes
 	segment.view = view
+
+static func _easy_rows(rows: Array) -> Array:
+	var out := []
+	for row: Array in rows:
+		if row[0] == Chase.SLIDER:
+			out.append([Chase.SLIDER, row[1], row[2], maxf(row[3] if row.size() > 3 else CHASE_SLIDER_BEATS, 1.0)])
+			continue
+		var spots := _spread(row[4], row[2])
+		if row[4].size() == 1:
+			out.append([Chase.TAPS, row[1], 1, 0, [spots[0]]])
+		elif row[3] <= 0.25 and row[2] >= 4:
+			var beats := minf((row[2] - 1) * row[3], EASY_SLIDER_BEATS)
+			out.append([Chase.SLIDER, row[1], _cut(spots, beats * EASY_SLIDER_SPEED), beats])
+		else:
+			var kept: Array[Vector2] = []
+			var first := -1.0
+			for i in spots.size():
+				var beat: float = row[1] + i * row[3]
+				if not is_equal_approx(fposmod(beat, 1.0), 0.0): continue
+				if first < 0.0: first = beat
+				kept.append(spots[i])
+			if kept.is_empty(): continue
+			var middle := Vector2.ZERO
+			for spot in kept: middle += spot / kept.size()
+			kept.assign(kept.map(func(spot: Vector2): return middle + (spot - middle) * EASY_JUMP_SCALE))
+			for j in range(0, kept.size() - 1, 2):
+				out.append([Chase.SLIDER, first + j, _cut([kept[j], kept[j + 1]], EASY_SLIDER_SPEED), 1.0])
+			if kept.size() % 2 == 1: out.append([Chase.TAPS, first + kept.size() - 1, 1, 0, [kept.back()]])
+	return out
+
+# the start of a path, `length` px along it
+static func _cut(points: Array[Vector2], length: float) -> Array[Vector2]:
+	var out: Array[Vector2] = [points[0]]
+	for i in points.size() - 1:
+		var step := points[i].distance_to(points[i + 1])
+		if step >= length:
+			out.append(points[i].lerp(points[i + 1], length / step))
+			return out
+		length -= step
+		out.append(points[i + 1])
+	return out
 
 static func _spread(spots: Array, count: int) -> Array[Vector2]:
 	var out: Array[Vector2] = []

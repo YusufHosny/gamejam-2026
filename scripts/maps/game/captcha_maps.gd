@@ -38,6 +38,7 @@ const SUBWAY_MOVES := [ # [beat, direction], checked frame by frame against Yusu
 ]
 
 # c1 on vivaldi, from Yusuf's second take: [first beat, tile, taps, beats apart], corners 0 2 8 6, taps on one tile stack
+const EASY_DOG_GAP_BEATS := 1.5
 const DOG_MAP := [
 	# squares of a single then a half beat double, clockwise then back
 	[4, 0, 1, 0], [5.5, 2, 2, 0.5], [7, 8, 1, 0], [8.5, 6, 2, 0.5],
@@ -58,11 +59,12 @@ const DOG_MAP := [
 	[79, 0, 1, 0], [80, 8, 1, 0], [81, 2, 1, 0], [82, 0, 1, 0], [83, 6, 1, 0],
 ]
 
-# each row starts a combo
-static func fill_dogs_mapped(segment: MapSegment) -> void:
+# each row starts a combo, easy takes one dog per row and spaces them out
+static func fill_dogs_mapped(segment: MapSegment, easy := false) -> void:
 	var notes: Array[Note] = []
 	for row: Array in DOG_MAP:
-		for tap in int(row[2]): notes.append(_dog(row[0] + tap * row[3], row[1], tap == 0))
+		for tap in 1 if easy else int(row[2]): notes.append(_dog(row[0] + tap * row[3], row[1], tap == 0))
+	if easy: notes = EasyMaps.spaced(notes, EASY_DOG_GAP_BEATS)
 	segment.start_beat = minf(segment.start_beat, notes[0].beat)
 	assert(notes.back().beat < segment.end_beat, "the dog map runs past its segment")
 	segment.notes = notes

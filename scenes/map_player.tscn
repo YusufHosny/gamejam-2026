@@ -12,6 +12,7 @@
 
 [ext_resource type="Texture2D" path="res://assets/skin/mobamba/cursor.png" id="cursor_tex"]
 [ext_resource type="AudioStream" path="res://assets/skin/mobamba/normal-hitnormal.wav" id="hitsound"]
+[ext_resource type="Script" path="res://scripts/ui/mode_demo.gd" id="12_demo"]
 [ext_resource type="AudioStream" path="res://assets/skin/mobamba/combobreak.wav" id="combo_break"]
 [node name="MapPlayer" type="Node2D" unique_id=964997430]
 script = ExtResource("1_game")
@@ -120,41 +121,19 @@ layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -96.0
+offset_left = -236.0
 offset_top = 64.0
 offset_right = -16.0
-offset_bottom = 144.0
+offset_bottom = 112.0
 grow_horizontal = 0
 script = ExtResource("9_hand_pos")
 
-[node name="Banner" type="HBoxContainer" parent="Hud" unique_id=898485539]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -70.0
-offset_right = 200.0
-offset_bottom = 70.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 24
-alignment = 1
+[node name="Demo" type="CanvasLayer" parent="."]
+layer = 6
 
-[node name="Left" type="Label" parent="Hud/Banner" unique_id=2129066222]
-layout_mode = 2
-theme_override_font_sizes/font_size = 72
-text = ">>"
-vertical_alignment = 1
-
-[node name="Icon" type="Control" parent="Hud/Banner" unique_id=16086554]
-custom_minimum_size = Vector2(140, 140)
-layout_mode = 2
-script = ExtResource("9_hand_pos")
-
-[node name="Right" type="Label" parent="Hud/Banner" unique_id=1892630219]
-layout_mode = 2
-theme_override_font_sizes/font_size = 72
-text = "<<"
-vertical_alignment = 1
+[node name="ModeDemo" type="Control" parent="Demo"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("12_demo")

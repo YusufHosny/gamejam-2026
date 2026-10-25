@@ -2,7 +2,6 @@ class_name Hud
 extends CanvasLayer
 
 const JUDGEMENT_FADE_S := 0.5
-const BANNER_DIM_ALPHA := 0.15
 
 @onready var _score: Label = $Score
 @onready var _accuracy: Label = $Accuracy
@@ -11,12 +10,9 @@ const BANNER_DIM_ALPHA := 0.15
 @onready var _tutorial: Label = $Tutorial
 @onready var _timing_bar: TimingBar = $TimingBar
 @onready var _hand_pos: HandPosIcon = $HandPos
-@onready var _banner: Control = $Banner
-@onready var _banner_icon: HandPosIcon = $Banner/Icon
 
 func _ready() -> void:
 	reset()
-	hide_banner()
 	set_tutorial(false)
 
 func _process(delta: float) -> void:
@@ -40,11 +36,3 @@ func show_judgement(result: HitResult) -> void:
 func set_hand_pos(hand_pos: Modality.HandPos) -> void: _hand_pos.hand_pos = hand_pos
 
 func set_tutorial(tutorial: bool) -> void: _tutorial.visible = tutorial
-
-# blinks on the beat during a cooldown to warn about the next hand position
-func show_banner(hand_pos: Modality.HandPos, lit: bool) -> void:
-	_banner.show()
-	_banner_icon.hand_pos = hand_pos
-	_banner.modulate.a = 1.0 if lit else BANNER_DIM_ALPHA
-
-func hide_banner() -> void: _banner.hide()

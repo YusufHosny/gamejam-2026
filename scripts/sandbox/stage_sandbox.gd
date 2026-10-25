@@ -1,6 +1,6 @@
 extends Node
 
-# F6 to start a run at any stage, it then carries on through the rest of the run. `-- --autoplay` on the command line watches it, `-- --osu-circles` draws the boss chases as plain circles, `-- --step=N` skips the picker
+# F6 to start a run at any stage, it then carries on through the rest of the run. `-- --autoplay` on the command line watches it, `-- --osu-circles` draws the boss chases as plain circles, `-- --step=N` skips the picker, `-- --difficulty=judge` (or autoplay, standard, hard) picks the difficulty
 
 const RUN_SCENE := preload("res://scenes/run.tscn")
 
@@ -14,7 +14,10 @@ var _steps: Array[RunStep] = []
 var _player: RunPlayer = null
 
 func _ready() -> void:
-	if "--autoplay" in OS.get_cmdline_user_args(): GameConfig.difficulty = Difficulty.Level.AUTOPLAY
+	for arg in OS.get_cmdline_user_args():
+		if arg == "--autoplay": GameConfig.difficulty = Difficulty.Level.AUTOPLAY
+		for level: Difficulty.Level in Difficulty.Level.values():
+			if arg == "--difficulty=" + Difficulty.label(level): GameConfig.difficulty = level
 	# same order as App._play()
 	if include_tutorial: _steps.append_array(TutorialRun.steps())
 	_steps.append_array(GameRun.steps(Difficulty.map_set(GameConfig.difficulty)))
