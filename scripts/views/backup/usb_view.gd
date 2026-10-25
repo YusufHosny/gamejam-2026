@@ -1,7 +1,7 @@
 class_name UsbView
 extends CircleAimView
 
-# b1: sliders push the usb into the port, doubles bump it, arcing sliders flip it
+# b1: sliders push the usb into the port, doubles bump it, arcing sliders flip it, after the last note it goes in
 
 enum Move { PUSH, BUMP, FLIP, FLIP_BACK }
 
@@ -49,3 +49,4 @@ func _on_judged(result: HitResult) -> void:
 	_started[note] = true
 	var index := mode.segment.notes.find(note)
 	for i in CYCLE[index % CYCLE.size()][2]: _usb.advance()
+	if index == mode.segment.notes.size() - 1: _usb.succeed()
