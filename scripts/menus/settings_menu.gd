@@ -1,7 +1,7 @@
 class_name SettingsMenu
 extends Control
 
-# edits GameConfig live, nothing is saved to disk yet
+# edits GameConfig live, number settings are saved to disk
 
 signal back_pressed
 
@@ -21,6 +21,7 @@ class NumberSetting:
 
 static var NUMBER_SETTINGS: Array[NumberSetting] = [
 	NumberSetting.new("audio offset (ms)", &"audio_offset_ms", -300, 300, 1),
+	NumberSetting.new("hitsound volume", &"hitsound_volume", 0.0, 1.0, 0.05),
 	NumberSetting.new("mouse sensitivity", &"mouse_sensitivity", 0.1, 5.0, 0.05),
 	NumberSetting.new("approach time (s)", &"approach_time_s", 0.3, 2.0, 0.05),
 	NumberSetting.new("4d scroll speed (px/s)", &"scroll_speed", 200, 2000, 10),
@@ -44,6 +45,7 @@ const LABEL_WIDTH := 260.0
 @onready var _tutorial: CheckBox = %Tutorial
 @onready var _back: Button = %Back
 
+var _spins: Dictionary[StringName, SpinBox] = {}
 var _rebinding: Button = null # waiting for the next key or mouse press
 var _rebind_action: StringName
 var _rebind_index: int
@@ -51,6 +53,7 @@ var _rebind_index: int
 func _ready() -> void:
 	_back.pressed.connect(back_pressed.emit)
 	for setting in NUMBER_SETTINGS: _add_number_row(setting)
+	_add_calibrate_row()
 	_build_keybinds()
 	_build_game_page()
 	visibility_changed.connect(func(): if visible: _back.grab_focus())
@@ -64,10 +67,29 @@ func _add_number_row(setting: NumberSetting) -> void:
 	spin.max_value = setting.max_value
 	spin.step = setting.step
 	spin.value = GameConfig.get(setting.property)
-	spin.value_changed.connect(func(value: float): GameConfig.set(setting.property, value))
+	spin.value_changed.connect(func(value: float):
+		GameConfig.set(setting.property, value)
+		GameConfig.save_settings())
+	_spins[setting.property] = spin
 	row.add_child(label)
 	row.add_child(spin)
 	_numbers.add_child(row)
+
+# right under the audio offset row
+func _add_calibrate_row() -> void:
+	var row := HBoxContainer.new()
+	var button := Button.new()
+	button.text = "calibrate"
+	button.pressed.connect(_calibrate)
+	row.add_child(_row_label(""))
+	row.add_child(button)
+	_numbers.add_child(row)
+	_numbers.move_child(row, 1)
+
+func _calibrate() -> void:
+	var calibration := OffsetCalibration.new()
+	calibration.finished.connect(func(): _spins[&"audio_offset_ms"].set_value_no_signal(GameConfig.audio_offset_ms))
+	add_child(calibration)
 
 func _build_keybinds() -> void:
 	for child in _keybinds.get_children():

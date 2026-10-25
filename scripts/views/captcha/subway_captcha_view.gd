@@ -42,7 +42,7 @@ func _process(delta: float) -> void:
 	_sync_video()
 
 func _sync_video() -> void:
-	var audio := mode.conductor.get_playback_position()
+	var audio := maxf(mode.conductor.heard_position(), 0.0) # holds on the first frame through the pre roll
 	if absf(_video.stream_position - audio) > RESYNC_S: _video.stream_position = audio
 
 func is_hit(note: AimNote, from: Vector2, to: Vector2) -> bool:

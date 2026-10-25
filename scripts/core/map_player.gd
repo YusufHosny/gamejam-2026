@@ -152,11 +152,12 @@ func _set_score(keeper: ScoreKeeper) -> void:
 func _on_judged(result: HitResult) -> void:
 	if _relaxed and result.is_miss(): result = HitResult.new(result.note, Judgement.Grade.MEH) # judge mode never drops combo
 	hud.show_judgement(result)
-	if not result.is_miss(): _play(hitsound)
+	var volume := 1.0 if Difficulty.autoplays(GameConfig.difficulty) else GameConfig.hitsound_volume # autoplay is for hearing the map
+	if not result.is_miss() and volume > 0.0: _play(hitsound, volume)
 	if _segment.tutorial: return
 	if result.is_miss() and score.combo >= COMBO_BREAK_MIN: _play(combo_break)
 	score.add(result)
 	hud.show_score(score)
 
-func _play(sound: AudioStream) -> void:
-	if sound != null: (_hitsounds.get_stream_playback() as AudioStreamPlaybackPolyphonic).play_stream(sound)
+func _play(sound: AudioStream, volume := 1.0) -> void:
+	if sound != null: (_hitsounds.get_stream_playback() as AudioStreamPlaybackPolyphonic).play_stream(sound, 0, linear_to_db(volume))

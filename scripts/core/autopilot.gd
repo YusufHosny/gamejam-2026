@@ -19,7 +19,7 @@ func _process(delta: float) -> void:
 	var due := now + delta / 2 # act on the frame closest to the beat
 	if handler is FourDMode: _play_lanes(handler, due)
 	elif handler is AimClickMode: _play_clicks(handler as AimClickMode, now, due, delta)
-	elif handler is SlashMode: _play_slashes(handler as SlashMode, due)
+	elif handler is SlashMode: _play_slashes(handler as SlashMode, due + delta) # the stroke lands a frame after it starts
 
 func _play_lanes(handler: ModeHandler, due: float) -> void:
 	for note: LaneNote in handler.pending():
@@ -41,7 +41,8 @@ func _play_clicks(handler: AimClickMode, now: float, due: float, delta: float) -
 	if note.time > due: return
 	cursor.position = note.position
 	Input.action_press(AimClickMode.CLICKS[0])
-	_press(AimClickMode.CLICKS[0])
+	if note is SliderNote: _send(AimClickMode.CLICKS[0], true) # held until the slider ends, a release next frame would break it
+	else: _press(AimClickMode.CLICKS[0])
 
 # a fast stroke through the note on its beat, along the way the view wants it cut
 func _play_slashes(handler: SlashMode, due: float) -> void:

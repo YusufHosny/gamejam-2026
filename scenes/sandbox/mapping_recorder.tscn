@@ -1,6 +1,12 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/sandbox/mapping_recorder.gd" id="1_recorder"]
+[ext_resource type="Resource" path="res://assets/music/moonlight_3rd.tres" id="2_song"]
 
 [node name="MappingRecorder" type="Node2D"]
 script = ExtResource("1_recorder")
+song = ExtResource("2_song")
+start_s = 79.0
+end_s = 110.5
+mode = 0
+guide = 3

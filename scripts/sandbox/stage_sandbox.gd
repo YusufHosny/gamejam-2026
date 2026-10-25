@@ -1,6 +1,6 @@
 extends Node
 
-# F6 to start a run at any stage, it then carries on through the rest of the run
+# F6 to start a run at any stage, it then carries on through the rest of the run. `-- --autoplay` on the command line watches it, `-- --osu-circles` draws the boss chases as plain circles, `-- --step=N` skips the picker
 
 const RUN_SCENE := preload("res://scenes/run.tscn")
 
@@ -14,13 +14,24 @@ var _steps: Array[RunStep] = []
 var _player: RunPlayer = null
 
 func _ready() -> void:
+	if "--autoplay" in OS.get_cmdline_user_args(): GameConfig.difficulty = Difficulty.Level.AUTOPLAY
 	# same order as App._play()
 	if include_tutorial: _steps.append_array(TutorialRun.steps())
 	_steps.append_array(GameRun.steps(Difficulty.map_set(GameConfig.difficulty)))
+	if "--osu-circles" in OS.get_cmdline_user_args(): _plain_chases()
 	for i in _steps.size(): _picker.add_item("%2d   %s" % [i, _label(_steps[i])])
 	_picker.item_activated.connect(_start)
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--step="): start_step = int(arg.trim_prefix("--step="))
 	if start_step >= 0: _start(start_step)
 	else: _show_picker()
+
+# the boss chases drawn as plain osu circles, same notes, to compare readability
+func _plain_chases() -> void:
+	for step in _steps:
+		if not step is MapStep: continue
+		for segment: MapSegment in (step as MapStep).map.segments:
+			if segment.view == BossMaps.CHASE_VIEW: segment.view = null
 
 func _start(index: int) -> void:
 	_menu.hide()

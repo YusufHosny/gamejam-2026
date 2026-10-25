@@ -43,6 +43,9 @@ func hold_at(time: float) -> void:
 	_min_held_s = ceilf(_held_s / _beat_s - 0.001) * _beat_s # resume on the metronome
 	_hold_at = time
 
+# the spot in the stream the player hears right now, for clips that have to match the music
+func heard_position() -> float: return song_time() + _first_beat_s
+
 # audio clock not frame time
 func song_time() -> float:
 	if playing and can_process():
@@ -58,8 +61,6 @@ func _audio_time() -> float:
 	return (
 		_loops * _loop_s
 		+ position
-		+ AudioServer.get_time_since_last_mix()
-		- _latency_s
-		- GameConfig.audio_offset_ms / 1000.0
+		+ (AudioServer.get_time_since_last_mix() - _latency_s - GameConfig.offset_ms() / 1000.0) * pitch_scale # real seconds to song seconds
 		- _first_beat_s
 	)

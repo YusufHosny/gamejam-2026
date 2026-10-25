@@ -9,6 +9,14 @@ const DODGE_S := 19.0
 const WIN_S := 6.0
 const FADE_IN_S := 1.0
 const CAPTCHA_PRE_ROLL_S := 1.5
+const BOSS_PRE_ROLL_S := 2.5 # the first theme starts with the music, the banner shows before it
+const BOSS_SEGMENTS := [ # [kind, start beat, end beat]
+	[Modality.Kind.AIM_CLICK, 0, 56], # first theme, to the fermata
+	[Modality.Kind.SLASH, 60, 124], # transition and second theme, to its climax
+	[Modality.Kind.FOUR_D, 128, 230], # rest of the second theme and the closing theme
+	[Modality.Kind.AIM_CLICK, 232, 324], # codetta and the development's climb to the chord
+]
+const SUBWAY_PRE_ROLL_S := 1.0 # the first move comes just after the music starts, its note needs time to approach
 const VIVALDI := preload("res://assets/music/vivaldi_summer.tres")
 const AD_MUSIC := preload("res://assets/music/ad_music.tres")
 const SCREAM_MIX := preload("res://assets/music/scream_mix.tres")
@@ -46,10 +54,10 @@ static func _standard() -> Array[RunStep]:
 
 # c1 dogs, c2 align, c3 apples
 static func _captchas() -> MapStep:
-	var map := DemoMap.section(VIVALDI, [Modality.Kind.AIM_CLICK, Modality.Kind.FOUR_D, Modality.Kind.SLASH], [26.0, 26.0, 26.0])
-	CaptchaMaps.fill_dogs(map.segments[0], map)
-	CaptchaMaps.fill_align(map.segments[1], map)
-	CaptchaMaps.fill_fruit(map.segments[2], map)
+	var map := DemoMap.section(VIVALDI, [Modality.Kind.AIM_CLICK, Modality.Kind.FOUR_D, Modality.Kind.SLASH], [28.9, 27.0, 27.0])
+	CaptchaMaps.fill_dogs_mapped(map.segments[0])
+	CaptchaMaps.fill_align_mapped(map.segments[1])
+	CaptchaMaps.fill_fruit_mapped(map.segments[2])
 	map.bake()
 	var step := MapStep.new(map)
 	step.fade_in_s = FADE_IN_S
@@ -62,7 +70,10 @@ static func _subway() -> MapStep:
 	var map := DemoMap.section(SUBWAY, [Modality.Kind.SLASH], [24.0])
 	CaptchaMaps.fill_subway(map.segments[0])
 	map.bake()
-	return MapStep.new(map)
+	assert(SUBWAY.fits(map), "the subway map runs past its clip")
+	var step := MapStep.new(map)
+	step.pre_roll_s = SUBWAY_PRE_ROLL_S
+	return step
 
 # a1, popups cut down with slashes
 static func _ads() -> MapStep:
@@ -72,14 +83,20 @@ static func _ads() -> MapStep:
 	return MapStep.new(map)
 
 # f1 chase, f2 shields, f3 lasers, f4 final chase with streams
+# split along the sonata's exposition, ending on the development's big chord at 108.9s
 static func _boss() -> MapStep:
-	var map := DemoMap.section(MOONLIGHT, [Modality.Kind.AIM_CLICK, Modality.Kind.SLASH, Modality.Kind.FOUR_D, Modality.Kind.AIM_CLICK], [14.0, 14.0, 14.0, 14.0])
-	BossMaps.fill_chase(map.segments[0], map)
-	BossMaps.fill_shields(map.segments[1], map)
-	BossMaps.fill_lasers(map.segments[2], map)
-	BossMaps.fill_chase(map.segments[3], map, true, GameConfig.map_seed + 1)
+	var map := Map.new()
+	MOONLIGHT.apply_to(map)
+	for bounds in BOSS_SEGMENTS: map.segments.append(MapSegment.new(bounds[0], bounds[1], bounds[2]))
+	BossMaps.fill_chase_mapped(map.segments[0])
+	BossMaps.fill_shields_mapped(map.segments[1])
+	BossMaps.fill_lasers_mapped(map.segments[2])
+	BossMaps.fill_chase_mapped(map.segments[3], BossMaps.FINAL_MAP, BossMaps.FINAL_VIEW)
 	map.bake()
-	return MapStep.new(map)
+	assert(MOONLIGHT.fits(map), "the boss map runs past its song")
+	var step := MapStep.new(map)
+	step.pre_roll_s = BOSS_PRE_ROLL_S
+	return step
 
 # b1 plug in the usb
 static func _backup() -> MapStep:

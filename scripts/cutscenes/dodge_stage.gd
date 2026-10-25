@@ -7,10 +7,10 @@ extends Node2D
 # the cutscene's animation keyframes arena and time (linear, so it's the cutscene's own clock), the rest is in code.
 # a tool script so scrubbing the animation in the editor shows it
 
-const BUTTON_WIDTH := BossChaseView.RADIUS * 2 # f1's size, so the cut into it doesn't jump
-const BOSS_FROM := Vector2(800, 300)
-const DODGE_TO := Vector2(360, 220)
-const BOSS_TO := BossMaps.CHASE_START # f1's first spot
+const BUTTON_WIDTH := BossChaseView.BUTTON_RADIUS * 2 # f1's size and look, so the cut into it doesn't jump
+const BUTTON_ALPHA := BossChaseView.BUTTON_ALPHA
+const BOSS_FROM := Vector2(600, 330)
+const DODGE_TO := Vector2(880, 260) # the second dodge goes to BossMaps.chase_start()
 const CURSOR_FROM := Vector2(1000, 600)
 const CURSOR_SIZE := 48.0
 const FONT_SIZE := 30
@@ -52,10 +52,10 @@ func _draw() -> void:
 func _draw_button() -> void:
 	var shown := clampf((time - BOSS_IN_AT) / BOSS_IN_S, 0.0, 1.0)
 	var grown := 0.6 + 0.4 * (1.0 - pow(1.0 - shown, 3.0))
-	draw_texture_rect(button, BossArena.button_rect(button, _button_at(), BUTTON_WIDTH * grown), false, Color(1, 1, 1, shown))
+	draw_texture_rect(button, BossArena.button_rect(button, _button_at(), BUTTON_WIDTH * grown), false, Color(1, 1, 1, shown * BUTTON_ALPHA))
 
 func _button_at() -> Vector2:
-	var spots: Array[Vector2] = [BOSS_FROM, DODGE_TO, BOSS_TO]
+	var spots: Array[Vector2] = [BOSS_FROM, DODGE_TO, BossMaps.chase_start()]
 	var at := spots[0]
 	for i in TRY_AT.size():
 		var t := clampf((time - _dodge_at(i)) / DODGE_S, 0.0, 1.0)
