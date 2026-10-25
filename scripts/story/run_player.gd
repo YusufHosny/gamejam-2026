@@ -102,7 +102,7 @@ func _comment(accuracy: float) -> void:
 		if accuracy >= FEEDBACK_TIERS[i]:
 			line = i + 1
 			break
-	var language := "fr" if GameConfig.voice_french else "en"
+	var language := GameConfig.language
 	_voice.stream = load(FEEDBACK % [language, line])
 	_voice.play()
 	var image := 6 - line
