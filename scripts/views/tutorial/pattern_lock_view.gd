@@ -5,7 +5,7 @@ const GRID_CENTER := Vector2(576, 380)
 const GRID_STEP := 80.0
 const PATTERN: Array[int] = [0, 1, 2, 4, 6, 7, 8] # a Z across the 3x3 grid
 const DOT_RADIUS := 10.0
-const SLIDE_S := 0.4
+const SLIDE_S := 1.2
 
 @export var phone: Texture2D
 @export var hint := "Click and hold the slider, then follow the ball"
@@ -18,7 +18,7 @@ static func pattern_points() -> PackedVector2Array:
 	for index in PATTERN: points.append(dot(index))
 	return points
 
-# the phone is pulled up from below
+# the phone is pulled up from below, the backdrop's on its own canvas layer so it stays put
 func _ready() -> void:
 	super()
 	position.y = get_viewport_rect().size.y

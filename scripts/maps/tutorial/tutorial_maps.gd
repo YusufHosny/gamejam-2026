@@ -9,13 +9,17 @@ const START_BEAT := 4.0
 const COOLDOWN_BEATS := 4.0
 const NOTIFICATION_LANES: Array[int] = [0, 1, 2, 3, 3, 2, 1, 0]
 const REFRESHES := 4
+const LOGIN_RETRY_BEATS := 8.0 # from the first try's username to the second's
 
+# username, password, sign in, but the password's wrong, so all three again
 static func login() -> Map:
-	var notes: Array[Note] = [
-		AimNote.new(START_BEAT, LoginView.USERNAME),
-		AimNote.new(START_BEAT + 2, LoginView.PASSWORD),
-		AimNote.new(START_BEAT + 4, LoginView.SIGN_IN),
-	]
+	var notes: Array[Note] = []
+	for attempt in 2:
+		var spots := [LoginView.USERNAME, LoginView.PASSWORD, LoginView.SIGN_IN]
+		for i in spots.size():
+			var note := AimNote.new(START_BEAT + attempt * LOGIN_RETRY_BEATS + i * 2, spots[i])
+			note.new_combo = i == 0
+			notes.append(note)
 	return _map([_segment(Modality.Kind.AIM_CLICK, notes, LOGIN_VIEW, 6.0)])
 
 # pattern unlock, then swipe the notifications away

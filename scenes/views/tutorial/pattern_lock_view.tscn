@@ -3,7 +3,19 @@
 [ext_resource type="Script" path="res://scripts/views/tutorial/pattern_lock_view.gd" id="1_view"]
 
 [ext_resource type="Resource" path="res://assets/skin/mobamba.tres" id="skin"]
+[ext_resource type="Texture2D" uid="uid://bbfn4ev7kicdv" path="res://assets/backdrop.png" id="2_backdrop"]
+[ext_resource type="Script" uid="uid://dl2lxhfa2woak" path="res://scripts/ui/cover_sprite.gd" id="3_cover"]
+
 [node name="PatternLockView" type="Node2D"]
 script = ExtResource("1_view")
 color = Color(0.4, 0.85, 1, 1)
 skin = ExtResource("skin")
+
+[node name="Behind" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Backdrop" type="Sprite2D" parent="Behind"]
+texture_filter = 2
+texture = ExtResource("2_backdrop")
+centered = false
+script = ExtResource("3_cover")
