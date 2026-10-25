@@ -1,7 +1,7 @@
 class_name UsbView
 extends CircleAimView
 
-# b1: short sliders and singles round the port, each note plays the usb's next phase
+# b1: short sliders and singles round the port, each note plays the usb's next phase, after the last it goes in
 
 enum Move { PUSH, BUMP, FLIP, FLIP_BACK }
 
@@ -40,3 +40,4 @@ func _on_judged(result: HitResult) -> void:
 	if _started.has(note): return
 	_started[note] = true
 	_usb.advance()
+	if note == mode.segment.notes.back(): _usb.succeed()

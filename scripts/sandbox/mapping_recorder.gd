@@ -130,7 +130,7 @@ func _reset_usb() -> void:
 	_usb = UsbAnimation.new()
 	_usb.texture = USB_SHEET
 	_usb.hframes = 10
-	_usb.vframes = 15
+	_usb.vframes = 16
 	_usb.speed = 1.6
 	_usb.texture_filter = TEXTURE_FILTER_LINEAR
 	_usb.position = UsbView.CENTER
