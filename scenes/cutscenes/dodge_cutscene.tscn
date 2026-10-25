@@ -1,0 +1,240 @@
+[gd_scene format=3 uid="uid://c3uh6d1sq0od7"]
+
+[ext_resource type="Script" uid="uid://cccad45tpn0ui" path="res://scripts/cutscenes/dodge_cutscene.gd" id="1_cut"]
+[ext_resource type="Script" uid="uid://26f4qldwx2pf" path="res://scripts/cutscenes/dodge_stage.gd" id="2_stage"]
+[ext_resource type="PackedScene" path="res://scenes/backgrounds/laptop_desk.tscn" id="3_desk"]
+[ext_resource type="Texture2D" uid="uid://cmigct8t30fr5" path="res://assets/full_laptop_with_backup.png" id="4_laptop"]
+[ext_resource type="Script" uid="uid://dl2lxhfa2woak" path="res://scripts/ui/cover_sprite.gd" id="5_cover"]
+[ext_resource type="Texture2D" uid="uid://bbfn4ev7kicdv" path="res://assets/backdrop.png" id="6_backdrop"]
+[ext_resource type="Texture2D" uid="uid://di6roo3xoqkvb" path="res://assets/usb_frames/usb_frame_2.png" id="7_usb"]
+[ext_resource type="Texture2D" uid="uid://duwvop88tahs" path="res://assets/boss/submit_round.png" id="8_button"]
+[ext_resource type="Texture2D" uid="uid://deak8jeh4cfae" path="res://assets/Retro Dekstop/Cursor/2X/Cursor_Arrow_Light.png" id="9_cursor"]
+[ext_resource type="Texture2D" uid="uid://by63i7xaw53db" path="res://assets/Retro Dekstop/Cursor/2X/Cursor_Arrow_Light_Click.png" id="10_click"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_track"]
+bg_color = Color(0, 0, 0, 0.35)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_fill"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="Animation" id="Animation_cutscene"]
+resource_name = "cutscene"
+length = 19.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Usb:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("World:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Fade:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 2, 2.4, 2.9),
+"transitions": PackedFloat32Array(1, 2, 0.5, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:zoom_side")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 2.9, 4.3),
+"transitions": PackedFloat32Array(1, -2, 1),
+"update": 0,
+"values": [1.0, 1.0, 0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".:zoom_out")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 5.8, 7.8),
+"transitions": PackedFloat32Array(1, -2, 1),
+"update": 0,
+"values": [1.0, 1.0, 0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("World/BootScreen/Label:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 4, 4.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("World/BootScreen/Bar:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 7.6, 7.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("World/BootScreen/Bar:value")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 7.8, 10.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 100.0]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Stage:arena")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0, 10.8, 11.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.0, 1.0]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Stage:time")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 19),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 19.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cutscene"]
+_data = {
+&"cutscene": SubResource("Animation_cutscene")
+}
+
+[node name="DodgeCutscene" type="Control" unique_id=1413765934]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_cut")
+zoom_out = 0.0
+zoom_side = 0.0
+
+[node name="World" type="Node2D" parent="." unique_id=708779900]
+texture_filter = 2
+
+[node name="LaptopDesk" parent="World" unique_id=1198452442 instance=ExtResource("3_desk")]
+texture = ExtResource("4_laptop")
+
+[node name="BootScreen" type="Control" parent="World" unique_id=510943167]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1332.0
+offset_bottom = 661.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="World/BootScreen" unique_id=863766528]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 220.0
+offset_bottom = 320.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 72
+text = "Booting up ..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Bar" type="ProgressBar" parent="World/BootScreen" unique_id=1285523129]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_right = 0.75
+offset_top = 380.0
+offset_bottom = 420.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBox_track")
+theme_override_styles/fill = SubResource("StyleBox_fill")
+value = 45.67
+show_percentage = false
+
+[node name="Usb" type="Node2D" parent="." unique_id=1379778204]
+visible = false
+texture_filter = 2
+
+[node name="Backdrop" type="Sprite2D" parent="Usb" unique_id=397375528]
+texture = ExtResource("6_backdrop")
+centered = false
+script = ExtResource("5_cover")
+
+[node name="Frame" type="Sprite2D" parent="Usb" unique_id=1305656042]
+texture = ExtResource("7_usb")
+
+[node name="Fade" type="ColorRect" parent="." unique_id=1499578764]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.6666667, 0.6666667, 0.6666667, 1)
+
+[node name="Stage" type="Node2D" parent="." unique_id=1930828230]
+texture_filter = 2
+script = ExtResource("2_stage")
+button = ExtResource("8_button")
+cursor = ExtResource("9_cursor")
+cursor_click = ExtResource("10_click")
+time = 9.170000284910202
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=660396900]
+libraries/ = SubResource("AnimationLibrary_cutscene")

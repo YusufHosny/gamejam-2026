@@ -5,7 +5,7 @@ const COUNTDOWN_S := DeadlineClock.INTRO_S # ends as the clock settles in the co
 const CUTSCENE_S := 8.0
 const VIRUS_S := 11.2 # CUTSCENE_S plus the ~3.2 s the countdown and the captchas' frozen lead in freed
 const BLUE_SCREEN_S := 10.9
-const DODGE_S := 8.0
+const DODGE_S := 19.0
 const WIN_S := 6.0
 const FADE_IN_S := 1.0
 const CAPTCHA_PRE_ROLL_S := 1.5
@@ -17,6 +17,7 @@ const SUBWAY := preload("res://assets/music/subway_surfers.tres")
 const COUNTDOWN_CUTSCENE := preload("res://scenes/cutscenes/countdown_cutscene.tscn")
 const VIRUS_CUTSCENE := preload("res://scenes/cutscenes/virus_cutscene.tscn")
 const BLUE_SCREEN_CUTSCENE := preload("res://scenes/cutscenes/blue_screen_cutscene.tscn")
+const DODGE_CUTSCENE := preload("res://scenes/cutscenes/dodge_cutscene.tscn")
 
 static func steps(maps := Difficulty.MapSet.STANDARD) -> Array[RunStep]:
 	match maps:
@@ -39,7 +40,7 @@ static func _standard() -> Array[RunStep]:
 		_backup(),
 		_boss(),
 	]
-	steps.insert(steps.size() - 1, CutsceneStep.new("cutscene: the submit button dodges", DODGE_S))
+	steps.insert(steps.size() - 1, CutsceneStep.new("", DODGE_S, true, DODGE_CUTSCENE))
 	steps.append(CutsceneStep.new("cutscene: submitted as the clock hits 0, you win", WIN_S, false))
 	return steps
 
@@ -80,11 +81,10 @@ static func _boss() -> MapStep:
 	map.bake()
 	return MapStep.new(map)
 
-# b1 plug in the usb, b2 type the backup password
+# b1 plug in the usb
 static func _backup() -> MapStep:
-	var map := DemoMap.section(SCREAM_MIX, [Modality.Kind.AIM_CLICK, Modality.Kind.FOUR_D], [26.0, 26.0])
+	var map := DemoMap.section(SCREAM_MIX, [Modality.Kind.AIM_CLICK], [26.0])
 	BackupMaps.fill_usb(map.segments[0])
-	BackupMaps.fill_password(map.segments[1], map)
 	map.bake()
 	var step := MapStep.new(map)
 	step.fade_color = Color("aaaaaa") 

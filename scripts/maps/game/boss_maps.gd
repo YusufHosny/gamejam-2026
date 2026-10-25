@@ -6,6 +6,7 @@ const FINAL_VIEW := preload("res://scenes/views/boss/boss_final_view.tscn")
 const SHIELD_VIEW := preload("res://scenes/views/boss/shield_break_view.tscn")
 const LASER_VIEW := preload("res://scenes/views/boss/laser_defend_view.tscn")
 const CHASE_AREA := Rect2(280, 170, 600, 300) # button centres, clear of the hud
+const CHASE_START := Vector2(580, 320) # CHASE_AREA's centre, the first note's there so the dodge cutscene can end on it
 const JUMP := 170.0
 const STREAM_SPACING := 46.0
 const STREAM_CHANCE := 0.5
@@ -18,8 +19,10 @@ static func fill_chase(segment: MapSegment, map: Map, streams := false, rng_seed
 	var rng := FillUtils.rng(rng_seed)
 	var step := FillUtils.step(map)
 	var notes: Array[Note] = []
-	var at := CHASE_AREA.get_center()
+	var at := CHASE_START
 	var beat := segment.start_beat
+	notes.append(FillUtils.aim_note(beat, at, 0))
+	beat += step
 	while beat < segment.end_beat:
 		if streams and rng.randf() < STREAM_CHANCE:
 			var angle := rng.randf() * TAU

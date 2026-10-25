@@ -13,9 +13,14 @@ func _ready() -> void:
 	assert(_animation.has_animation(ANIMATION), "%s needs an animation named '%s'" % [name, ANIMATION])
 	var length := _animation.get_animation(ANIMATION).length
 	assert(waits() or is_equal_approx(length, length_s), "%s animation is %.2f s but its step is %.2f s" % [name, length, length_s])
-	_animation.play(ANIMATION)
-	_animation.seek(time, true) # apply the first frame now, the scene may be saved scrubbed to any point
+	_seek() # apply the first frame now, the scene may be saved scrubbed to any point
 
 func _process(delta: float) -> void:
 	super(delta)
-	if absf(_animation.current_animation_position - time) > RESYNC_S: _animation.seek(time, true)
+	if absf(_animation.current_animation_position - time) > RESYNC_S: _seek()
+
+# always forwards from the start: seeking backwards makes discrete tracks (visible, ...) take their next key's value
+func _seek() -> void:
+	_animation.stop()
+	_animation.play(ANIMATION)
+	_animation.seek(time, true)
