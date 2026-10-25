@@ -27,6 +27,7 @@ const CAPTCHA_AT := SUBMIT_AT + 5.4 # once "let's see..." is said
 const POP_S := 0.15
 const CLOCK_AT := SUBMIT_AT + 7.9 # the taskbar clock catches their eye
 const CLOCK := "23:55"
+const CLOCK_BEEPS_S := 2.0 # it beeps this long, then just flashes
 const DARK_AT := SUBMIT_AT + 13.2 # into the countdown's background
 const DARK_S := 0.6
 const COMPLETE_AT := SUBMIT_AT + 13.8
@@ -49,6 +50,17 @@ func _ready() -> void:
 	_phone.draw.connect(_draw_phone)
 
 func voice_cues() -> Array: return VOICE
+
+# a key per typed character, the clock beeps on its first few red flashes
+func sfx_cues() -> Array:
+	var cues := []
+	for i in CODE.length(): cues.append([TYPE_AT + i * TYPE_STEP_S, &"key", 0.9 + 0.05 * (i % 4)])
+	cues.append_array([[VERIFY_CLICK, &"click"], [SIGNED_IN_AT, &"success"], [CAPTCHA_AT, &"pop"], [DARK_AT, &"whoosh_low"], [COMPLETE_AT, &"fanfare"]])
+	var beep := CLOCK_AT
+	while beep < minf(DARK_AT, CLOCK_AT + CLOCK_BEEPS_S):
+		cues.append([beep, &"error"])
+		beep += 0.5
+	return cues
 
 func _process(delta: float) -> void:
 	super(delta)

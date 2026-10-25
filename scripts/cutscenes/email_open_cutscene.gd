@@ -24,6 +24,8 @@ func _ready() -> void:
 
 func voice_cues() -> Array: return [[0.2, &"email_open"]]
 
+func sfx_cues() -> Array: return [[CLOSE_AT, &"swipe"], [TAP_AT, &"tap"], [OPEN_AT, &"pop"]]
+
 func _process(delta: float) -> void:
 	super(delta)
 	queue_redraw()

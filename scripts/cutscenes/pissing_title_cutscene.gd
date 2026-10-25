@@ -12,6 +12,13 @@ const BACKGROUND := Color(0.08, 0.08, 0.1)
 @export var title := "PISSING GAME"
 @export var text_size := 110
 
+# a tap per letter as it bounces in, climbing
+func sfx_cues() -> Array:
+	var cues := []
+	for i in title.length():
+		if title[i] != " ": cues.append([i * LETTER_S, &"tap", 1.0 + 0.04 * i])
+	return cues
+
 func _process(delta: float) -> void:
 	super(delta)
 	queue_redraw()

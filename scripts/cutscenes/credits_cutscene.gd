@@ -2,7 +2,7 @@ class_name CreditsCutscene
 extends Cutscene
 
 # the end credits roll up over la marseillaise: every role is Louis, then the supporting team side by side. photos come from
-# assets/credits (see its README), missing ones show a placeholder frame
+# assets/french guy, one per role in order, missing ones show a placeholder frame
 
 const ROLES: Array[String] = [
 	"Team Leader", "Lead Voice Actor", "Voice Director", "French Culture Specialist", "French Translation",
@@ -10,8 +10,9 @@ const ROLES: Array[String] = [
 ]
 const STAR := "Louis Anseaume"
 const SUPPORT: Array[String] = ["Yusuf Hussien", "Vivian Tsang"]
-const SUPPORT_PHOTOS: Array[String] = ["yusuf", "vivian"]
-const PHOTOS := "res://assets/credits/%s.png"
+const PHOTOS := "res://assets/french guy/"
+const STAR_PHOTO := "french guy %d.png" # 1 to ROLES.size(), in ROLES' order
+const SUPPORT_PHOTOS: Array[String] = ["yusuf.jpeg", "vivian.jpeg"]
 const PHOTO := 230.0 # square frame
 const SUPPORT_PHOTO := 190.0
 const SUPPORT_GAP := 70.0 # between the two supporting photos
@@ -32,7 +33,7 @@ var _support_photos: Array[Texture2D] = []
 var _player: AudioStreamPlayer
 
 func _ready() -> void:
-	for i in ROLES.size(): _photos.append(_photo("louis_%d" % (i + 1)))
+	for i in ROLES.size(): _photos.append(_photo(STAR_PHOTO % (i + 1)))
 	for name in SUPPORT_PHOTOS: _support_photos.append(_photo(name))
 	_player = AudioStreamPlayer.new()
 	_player.stream = music
@@ -40,7 +41,7 @@ func _ready() -> void:
 	_player.play()
 
 static func _photo(file: String) -> Texture2D:
-	var path := PHOTOS % file
+	var path := PHOTOS + file
 	return load(path) if ResourceLoader.exists(path) else null
 
 func restart() -> void:

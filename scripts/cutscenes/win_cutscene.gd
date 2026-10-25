@@ -46,6 +46,7 @@ var _arena_from := 0.0 # the boss map's clock when it ended, so the grid keeps d
 func _ready() -> void:
 	texture_filter = TEXTURE_FILTER_LINEAR
 	assert(AT == BossMaps.final_spot(), "the win cutscene starts where f4 leaves the button")
+	assert(is_equal_approx(Sfx.CHARGE_S, EXPLODE_AT - BUILD_AT), "the charge sound lasts the build up")
 	var song: Song = GameRun.MOONLIGHT
 	_arena_from = song.first_beat_s + GameRun.BOSS_SEGMENTS.back()[2] * 60.0 / song.bpm
 	var rng := RandomNumberGenerator.new()
@@ -64,6 +65,9 @@ func _ready() -> void:
 			})
 
 func voice_cues() -> Array: return [[VOICE_AT, &"win"]]
+
+# the build up rising into the blast, then the site's good news
+func sfx_cues() -> Array: return [[BUILD_AT, &"charge"], [EXPLODE_AT, &"explosion"], [EXPLODE_AT, &"boom"], [COMPLETE_POP_AT, &"fanfare"]]
 
 func _process(delta: float) -> void:
 	super(delta)

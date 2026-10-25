@@ -44,6 +44,12 @@ func _ready() -> void:
 # the hurry as the cursor goes for the button, the despair once it's a virus
 func voice_cues() -> Array: return [[VOICE_AT, &"virus_1"], [PEEL_AT + PEEL_S + FLY_S + 0.2, &"virus_2"]]
 
+# the header line and the button popping in, the click, the peel in two tugs, the sticker flying off, then each ad
+func sfx_cues() -> Array:
+	var cues := [[HEADER_AT[1], &"pop", 1.3], [BUTTON_IN_AT, &"pop"], [CLICK_AT, &"click"], [PEEL_AT, &"peel"], [PEEL_AT + PEEL_S * 0.5, &"peel", 0.85], [PEEL_AT + PEEL_S, &"whoosh"]]
+	for i in AdsView.INTRO_POPUPS.size(): cues.append([ADS_AT + AdsView.INTRO_POPUPS[i].pop_at, &"pop", 0.9 + 0.08 * i])
+	return cues
+
 func _process(delta: float) -> void:
 	super(delta)
 	queue_redraw()

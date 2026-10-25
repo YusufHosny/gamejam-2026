@@ -35,6 +35,9 @@ func _ready() -> void:
 
 func voice_cues() -> Array: return VOICE
 
+func sfx_cues() -> Array:
+	return [[ICON_CLICKS[0], &"click"], [ICON_CLICKS[1], &"click"], [WINDOW_AT, &"pop"], [SUBMIT_CLICK, &"click"], [LOGIN_AT, &"question"]]
+
 func _process(delta: float) -> void:
 	super(delta)
 	queue_redraw()
