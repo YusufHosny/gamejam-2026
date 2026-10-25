@@ -8,6 +8,13 @@ const BLUE_SCREEN_S := 10.9
 const DODGE_S := 19.0
 const WIN_S := 6.0
 const LAUGH_S := 3.8
+const CREDITS_S := 14.0 # about 10 s of rolling and the hold at the end
+const PISSING_TITLE_S := 3.0
+const THANKS_S := 4.0
+const URINAL_SEGMENTS := [ # [kind, start beat, end beat] on the ad music
+	[Modality.Kind.AIM_CLICK, 8, 56], # pick the urinal furthest away, a round every PICK_EVERY beats
+	[Modality.Kind.SLASH, 60, 74], # all taken, slash them away
+]
 const PUPPETS_PRE_ROLL_S := 1.5 # the first chord comes half a second in, its note needs time to approach
 const PUPPETS_END_BEAT := 69.0
 const FADE_IN_S := 1.0
@@ -30,6 +37,9 @@ const VIRUS_CUTSCENE := preload("res://scenes/cutscenes/virus_cutscene.tscn")
 const BLUE_SCREEN_CUTSCENE := preload("res://scenes/cutscenes/blue_screen_cutscene.tscn")
 const DODGE_CUTSCENE := preload("res://scenes/cutscenes/dodge_cutscene.tscn")
 const LAUGH_CUTSCENE := preload("res://scenes/cutscenes/laugh_cutscene.tscn")
+const CREDITS_CUTSCENE := preload("res://scenes/cutscenes/credits_cutscene.tscn")
+const PISSING_TITLE_CUTSCENE := preload("res://scenes/cutscenes/pissing_title_cutscene.tscn")
+const THANKS_CUTSCENE := preload("res://scenes/cutscenes/thanks_cutscene.tscn")
 const PUPPETS := preload("res://assets/music/master_of_puppets.tres")
 
 # the maps are the hard set, standard thins them
@@ -59,6 +69,10 @@ static func _steps(easy: bool) -> Array[RunStep]:
 		_boss(easy),
 	]
 	steps.append(CutsceneStep.new("cutscene: submitted as the clock hits 0, you win", WIN_S, false))
+	steps.append(CutsceneStep.new("", CREDITS_S, false, CREDITS_CUTSCENE))
+	steps.append(CutsceneStep.new("", PISSING_TITLE_S, false, PISSING_TITLE_CUTSCENE))
+	steps.append(_urinals())
+	steps.append(CutsceneStep.new("", THANKS_S, false, THANKS_CUTSCENE)) # then the score screen
 	return steps
 
 # c1 dogs, c2 align, c3 apples
@@ -122,6 +136,16 @@ static func _puppets(easy: bool) -> MapStep:
 	var step := MapStep.new(map)
 	step.pre_roll_s = PUPPETS_PRE_ROLL_S
 	return step
+
+# the finale after the credits, untimed, the clock's long gone
+static func _urinals() -> MapStep:
+	var map := Map.new()
+	AD_MUSIC.apply_to(map)
+	for bounds in URINAL_SEGMENTS: map.segments.append(MapSegment.new(bounds[0], bounds[1], bounds[2]))
+	UrinalMaps.fill_picks(map.segments[0])
+	UrinalMaps.fill_slashes(map.segments[1])
+	map.bake()
+	return MapStep.new(map, false)
 
 # b1 plug in the usb
 static func _backup(easy: bool) -> MapStep:

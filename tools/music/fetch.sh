@@ -11,6 +11,7 @@ declare -A sources=(
 	[drums]=YHh4QzYJKCM # 100 bpm drum beat
 	[scream]=FgxoZ1qi4JM
 	[master_of_puppets]=6xjJ2XIbGRk # Metallica, Master of Puppets, only the intro is used
+	[marseillaise]=PIQSEq6tEVs # La Marseillaise, for the credits
 )
 for name in "${!sources[@]}"; do
 	uvx yt-dlp -q --no-warnings -f bestaudio -x --audio-format wav -o "$out/$name.%(ext)s" "https://www.youtube.com/watch?v=${sources[$name]}"

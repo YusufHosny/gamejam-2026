@@ -26,6 +26,7 @@ TRIM_DB: dict[str, float] = { # by ear, on top of the loudness match
     "scream_mix": 0.0,
     "subway_surfers": 0.0,
     "master_of_puppets": 0.0,
+    "marseillaise": 0.0,
 }
 LIMIT = 0.95 # quiet tracks get boosted, the limiter keeps their peaks from clipping
 
@@ -184,6 +185,7 @@ BUILDS = {
     "scream_mix": lambda raw, out: scream_mix(raw, out, 90.0),
     "subway_surfers": lambda raw, out: process_music(raw, out, "subway_surfers", None, do_warp=False),
     "master_of_puppets": lambda raw, out: process_music(raw, out, "master_of_puppets", 20.5, do_warp=False), # the intro chords and riff, to the chord before the next section
+    "marseillaise": lambda raw, out: process_music(raw, out, "marseillaise", 75.0, do_warp=False), # under the credits
 }
 
 
