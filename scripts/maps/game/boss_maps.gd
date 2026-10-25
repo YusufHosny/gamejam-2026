@@ -79,6 +79,48 @@ const FINAL_MAP := [
 	[Chase.TAPS, 320, 1, 0, [Vector2(580, 320)]],
 ]
 
+# the master of puppets intro: the big chord, the three after it, then the riff as half beat streams snaking round the arena,
+# each run of it breaking on the chord it rings out on
+const PUPPETS_CHORDS := [[1.0, Vector2(430, 320)], [5.0, Vector2(650, 220)], [6.0, Vector2(760, 330)], [7.0, Vector2(650, 440)]]
+const PUPPETS_RUNS: Array[Vector2] = [Vector2(13, 18.5), Vector2(21, 34.5), Vector2(37.5, 50.5), Vector2(53, 66.5)] # first and last beat of each
+const PUPPETS_RINGS: Array[float] = [19.0, 35.0, 51.0, 67.0] # the chord ending each run, a single for a breather
+const PUPPETS_SPACING := 42.0 # px between stream notes
+const PUPPETS_STEP := 0.5 # beats between stream notes
+const PUPPETS_ROUTE := Vector2(310, 140) # half the snake's width and height
+
+static func fill_puppets(segment: MapSegment) -> void:
+	var notes: Array[Note] = []
+	for chord: Array in PUPPETS_CHORDS: notes.append(_combo_note(chord[0], chord[1]))
+	var route := _puppets_route()
+	var along := 0.0
+	for i in PUPPETS_RUNS.size():
+		var run := PUPPETS_RUNS[i]
+		var beat := run.x
+		while beat <= run.y:
+			var note := AimNote.new(beat, route.sample_baked(fmod(along, route.get_baked_length())))
+			note.new_combo = beat == run.x
+			notes.append(note)
+			along += PUPPETS_SPACING
+			beat += PUPPETS_STEP
+		along += PUPPETS_SPACING * 3.0 # the ring sits a little way past the run
+		notes.append(_combo_note(PUPPETS_RINGS[i], route.sample_baked(fmod(along, route.get_baked_length()))))
+		along += PUPPETS_SPACING * 3.0
+	segment.notes = notes
+	segment.view = CHASE_VIEW
+
+static func _combo_note(beat: float, at: Vector2) -> AimNote:
+	var note := AimNote.new(beat, at)
+	note.new_combo = true
+	return note
+
+# a closed lissajous knot round the arena, the stream laps it
+static func _puppets_route() -> Curve2D:
+	var curve := Curve2D.new()
+	for i in 241:
+		var t := TAU * i / 240.0
+		curve.add_point(CHASE_MIDDLE + Vector2(sin(3.0 * t), sin(2.0 * t)) * PUPPETS_ROUTE)
+	return curve
+
 # f1's first spot, the dodge cutscene leaves the button there
 static func chase_start() -> Vector2: return CHASE_MAP[0][4][0]
 

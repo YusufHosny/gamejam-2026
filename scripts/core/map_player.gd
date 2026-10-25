@@ -195,7 +195,7 @@ func _on_judged(result: HitResult) -> void:
 	var volume := 1.0 if Difficulty.autoplays(GameConfig.difficulty) else GameConfig.hitsound_volume # autoplay is for hearing the map
 	if result.tick: volume *= TICK_VOLUME
 	if not result.is_miss() and volume > 0.0: _play(hitsound, volume)
-	if _segment.tutorial: return
+	if _segment.tutorial or _segment.unscored: return
 	if result.is_miss() and score.combo >= COMBO_BREAK_MIN: _play(combo_break)
 	score.add(result)
 	hud.show_score(score)

@@ -7,6 +7,9 @@ const VIRUS_S := 11.2 # CUTSCENE_S plus the ~3.2 s the countdown and the captcha
 const BLUE_SCREEN_S := 10.9
 const DODGE_S := 19.0
 const WIN_S := 6.0
+const LAUGH_S := 3.8
+const PUPPETS_PRE_ROLL_S := 1.5 # the first chord comes half a second in, its note needs time to approach
+const PUPPETS_END_BEAT := 69.0
 const FADE_IN_S := 1.0
 const CAPTCHA_PRE_ROLL_S := 1.5
 const BOSS_PRE_ROLL_S := 2.5 # the first theme starts with the music, the banner shows before it
@@ -26,6 +29,8 @@ const COUNTDOWN_CUTSCENE := preload("res://scenes/cutscenes/countdown_cutscene.t
 const VIRUS_CUTSCENE := preload("res://scenes/cutscenes/virus_cutscene.tscn")
 const BLUE_SCREEN_CUTSCENE := preload("res://scenes/cutscenes/blue_screen_cutscene.tscn")
 const DODGE_CUTSCENE := preload("res://scenes/cutscenes/dodge_cutscene.tscn")
+const LAUGH_CUTSCENE := preload("res://scenes/cutscenes/laugh_cutscene.tscn")
+const PUPPETS := preload("res://assets/music/master_of_puppets.tres")
 
 # the maps are the hard set, standard thins them
 static func steps(maps := Difficulty.MapSet.STANDARD) -> Array[RunStep]:
@@ -48,9 +53,11 @@ static func _steps(easy: bool) -> Array[RunStep]:
 		_ads(),
 		CutsceneStep.new("", BLUE_SCREEN_S, true, BLUE_SCREEN_CUTSCENE),
 		_backup(easy),
+		CutsceneStep.new("", DODGE_S, true, DODGE_CUTSCENE),
+		_puppets(easy),
+		CutsceneStep.new("", LAUGH_S, true, LAUGH_CUTSCENE),
 		_boss(easy),
 	]
-	steps.insert(steps.size() - 1, CutsceneStep.new("", DODGE_S, true, DODGE_CUTSCENE))
 	steps.append(CutsceneStep.new("cutscene: submitted as the clock hits 0, you win", WIN_S, false))
 	return steps
 
@@ -100,6 +107,20 @@ static func _boss(easy: bool) -> MapStep:
 	assert(MOONLIGHT.fits(map), "the boss map runs past its song")
 	var step := MapStep.new(map)
 	step.pre_roll_s = BOSS_PRE_ROLL_S
+	return step
+
+# the button shows off with master of puppets' intro, the same map on every set. on standard it's a struggle section left out of the score
+static func _puppets(easy: bool) -> MapStep:
+	var map := Map.new()
+	PUPPETS.apply_to(map)
+	var segment := MapSegment.new(Modality.Kind.AIM_CLICK, 0, PUPPETS_END_BEAT)
+	segment.unscored = easy
+	map.segments.append(segment)
+	BossMaps.fill_puppets(segment)
+	map.bake()
+	assert(PUPPETS.fits(map), "the puppets map runs past its song")
+	var step := MapStep.new(map)
+	step.pre_roll_s = PUPPETS_PRE_ROLL_S
 	return step
 
 # b1 plug in the usb

@@ -9,6 +9,7 @@ extends Resource
 @export var view: PackedScene # ModeView scene, null -> default for mode
 @export var tutorial := false
 @export var wait_for_input := false # clock holds on each note, stray clicks ignored
+@export var unscored := false # a struggle section, played and judged but left out of the score
 
 var start_time: float
 var end_time: float

@@ -7,7 +7,8 @@ extends RefCounted
 const MIN_GAP_S := 0.33
 
 static func thin(map: Map) -> void:
-	for segment in map.segments: segment.notes = spaced(segment.notes, MIN_GAP_S, true)
+	for segment in map.segments:
+		if not segment.unscored: segment.notes = spaced(segment.notes, MIN_GAP_S, true) # struggle sections stay as they are
 
 # drops notes that start less than `gap` after the last kept one ends, in seconds or beats. a dropped combo start passes to the next kept note
 static func spaced(notes: Array[Note], gap: float, in_seconds := false) -> Array[Note]:
