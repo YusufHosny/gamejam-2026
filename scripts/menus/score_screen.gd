@@ -11,6 +11,12 @@ signal back_pressed
 @onready var _back: Button = %Back
 
 func _ready() -> void:
+	theme = MenuStyle.theme()
+	MenuStyle.add_background(self)
+	MenuStyle.title(_rank, 180)
+	MenuStyle.title(_score, 56)
+	MenuStyle.baguette_button(_retry, "Retry")
+	MenuStyle.baguette_button(_back, "Menu")
 	_retry.pressed.connect(retry_pressed.emit)
 	_back.pressed.connect(back_pressed.emit)
 	visibility_changed.connect(func(): if visible: _retry.grab_focus())

@@ -3,6 +3,7 @@ extends Node
 # --- Timing ---
 var audio_offset_ms := 0.0 # positive judges notes later
 var hitsound_volume := 0.0 # 0 mutes them, they lag behind on high latency setups
+var voice_french := false # Louis' lines in french instead of english
 var hit_windows_ms := {
 	Judgement.Grade.GREAT: 40.0,
 	Judgement.Grade.OK: 90.0,

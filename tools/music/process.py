@@ -41,8 +41,8 @@ class Track:
     max_drift_ms: float
 
 
-def load(path: Path, max_s: float | None = None) -> np.ndarray:
-    y, _ = librosa.load(path, sr=SR, mono=False, duration=max_s)
+def load(path: Path, max_s: float | None = None, start_s: float = 0.0) -> np.ndarray:
+    y, _ = librosa.load(path, sr=SR, mono=False, offset=start_s, duration=max_s)
     return np.atleast_2d(y)
 
 
@@ -125,8 +125,8 @@ def export(y: np.ndarray, path: Path) -> None:
     wav.unlink()
 
 
-def process_music(raw: Path, out: Path, name: str, max_s: float | None, do_warp: bool) -> Track:
-    y = load(raw / f"{name}.wav", max_s)
+def process_music(raw: Path, out: Path, name: str, max_s: float | None, do_warp: bool, start_s: float = 0.0) -> Track:
+    y = load(raw / f"{name}.wav", max_s, start_s)
     beats = beats_of(y)
     drift = max_drift_ms(beats)
     if do_warp:
@@ -185,7 +185,7 @@ BUILDS = {
     "scream_mix": lambda raw, out: scream_mix(raw, out, 90.0),
     "subway_surfers": lambda raw, out: process_music(raw, out, "subway_surfers", None, do_warp=False),
     "master_of_puppets": lambda raw, out: process_music(raw, out, "master_of_puppets", 20.5, do_warp=False), # the intro chords and riff, to the chord before the next section
-    "marseillaise": lambda raw, out: process_music(raw, out, "marseillaise", 75.0, do_warp=False), # under the credits
+    "marseillaise": lambda raw, out: process_music(raw, out, "marseillaise", 30.0, do_warp=False, start_s=11.2), # under the credits, from its first note
 }
 
 

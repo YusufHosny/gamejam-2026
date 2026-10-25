@@ -5,6 +5,15 @@ signal finished(result: RunResult)
 signal exited
 
 const MAP_PLAYER_SCENE := preload("res://scenes/map_player.tscn")
+const FEEDBACK := "res://assets/voicelines/feedback/%s_%d.ogg" # 1 awesome job .. 5 maybe you can try again
+const FEEDBACK_TIERS: Array[float] = [0.95, 0.9, 0.8, 0.65] # accuracy at least, for lines 1 to 4, under the last one is 5
+const FEEDBACK_IMAGES := "res://assets/feedback/%d.%s" # 1 worst .. 5 best, so line n shows image 6 - n
+const FEEDBACK_IMAGE_TYPES: Array[String] = ["jpg", "png", "jpg", "webp", "png"]
+const FEEDBACK_CAPTIONS := {
+	"en": ["Awesome job!", "Great work!", "Nicely done!", "You made it!", "Maybe you can try again!"],
+	"fr": ["Excellent travail !", "Super boulot !", "Bien joué !", "T'as réussi !", "Peut-être que tu pourrais essayer."],
+}
+const BANNER_LAYER := 7 # over the mode switch card
 
 @onready var _stage: Node = $Stage
 @onready var _deadline: DeadlineClock = $Deadline/DeadlineClock
@@ -18,9 +27,19 @@ var _index := -1
 var _cutscene: Cutscene = null
 var _map_player: MapPlayer = null
 var _intro_played := false
+var _voice: AudioStreamPlayer # here, not on the map, so a line started as a map ends isn't cut off by the next step
+var _banner: FeedbackBanner
 var _last_kind := -1 # mode of the last map played, so the next one only stops for a real switch
 
 func _ready() -> void:
+	_voice = AudioStreamPlayer.new()
+	_voice.process_mode = PROCESS_MODE_ALWAYS
+	add_child(_voice)
+	var layer := CanvasLayer.new()
+	layer.layer = BANNER_LAYER
+	add_child(layer)
+	_banner = FeedbackBanner.new()
+	layer.add_child(_banner)
 	_pause_menu.resumed.connect(_set_paused.bind(false))
 	_pause_menu.restarted.connect(_unpause_then.bind(_restart))
 	_pause_menu.checkpointed.connect(_unpause_then.bind(_load_checkpoint))
@@ -72,8 +91,22 @@ func _start_map(step: MapStep) -> void:
 	_map_player.pre_roll_s = step.pre_roll_s
 	_map_player.previous_kind = _last_kind
 	_map_player.finished.connect(_advance)
+	_map_player.segment_done.connect(_comment)
 	_fade.color = step.fade_color
 	_stage.add_child(_map_player)
+
+# Louis on how that segment went, with a reaction image
+func _comment(accuracy: float) -> void:
+	var line := FEEDBACK_TIERS.size() + 1
+	for i in FEEDBACK_TIERS.size():
+		if accuracy >= FEEDBACK_TIERS[i]:
+			line = i + 1
+			break
+	var language := "fr" if GameConfig.voice_french else "en"
+	_voice.stream = load(FEEDBACK % [language, line])
+	_voice.play()
+	var image := 6 - line
+	_banner.show_feedback(load(FEEDBACK_IMAGES % [image, FEEDBACK_IMAGE_TYPES[image - 1]]), FEEDBACK_CAPTIONS[language][line - 1])
 
 func _advance() -> void:
 	if _map_player != null:

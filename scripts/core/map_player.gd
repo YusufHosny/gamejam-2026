@@ -2,6 +2,7 @@ class_name MapPlayer
 extends Node2D
 
 signal finished
+signal segment_done(accuracy: float) # each played segment as it ends, for Louis to comment on
 
 const DEBUG_SEEKS: Dictionary[StringName, Modality.Kind] = {
 	&"debug_four_d": Modality.Kind.FOUR_D,
@@ -43,6 +44,7 @@ var _finished := false
 var _relaxed := false # judge mode, see Difficulty
 var previous_kind := -1 # set before entering the tree, the mode the run was last in, -1 for none
 var _switches: Array[MapSegment] = [] # segments that change mode, each held for before it starts
+var _segment_score := ScoreKeeper.new() # just the segment being played
 var _holding: MapSegment = null
 var _hold_left := 0.0
 
@@ -73,7 +75,9 @@ func _process(delta: float) -> void:
 	_hold_for_next_note()
 	var now := time()
 	var segment := map.segment_at(now)
-	if segment != _segment: _switch_to(segment)
+	if segment != _segment:
+		_report_segment()
+		_switch_to(segment)
 	if segment == null: _finish()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -107,6 +111,7 @@ func _switch_to(segment: MapSegment) -> void:
 		cursor.enabled = false
 		return
 	_checkpoint = score.copy()
+	_segment_score = ScoreKeeper.new()
 	var view_scene: PackedScene = segment.view if segment.view != null else DEFAULT_VIEWS[segment.kind]
 	_view = view_scene.instantiate()
 	_handler(segment.kind).begin(segment, _view)
@@ -167,6 +172,11 @@ func _handler(kind: Modality.Kind) -> ModeHandler:
 func _first_segment(kind: Modality.Kind) -> MapSegment:
 	return IterUtils.first(map.segments, func(s: MapSegment): return s.kind == kind)
 
+# tutorial segments and ones nothing was judged in pass without a word
+func _report_segment() -> void:
+	if _segment == null or _segment.tutorial or _segment_score.count_judged() == 0: return
+	segment_done.emit(_segment_score.accuracy())
+
 func _finish() -> void:
 	if _finished: return
 	_finished = true
@@ -192,6 +202,7 @@ func _on_judged(result: HitResult) -> void:
 		if result.tick: result = HitResult.slider_tick(result.note, true)
 		else: result = HitResult.new(result.note, Judgement.Grade.MEH)
 	if not result.tick: hud.show_judgement(result)
+	_segment_score.add(result)
 	var volume := 1.0 if Difficulty.autoplays(GameConfig.difficulty) else GameConfig.hitsound_volume # autoplay is for hearing the map
 	if result.tick: volume *= TICK_VOLUME
 	if not result.is_miss() and volume > 0.0: _play(hitsound, volume)

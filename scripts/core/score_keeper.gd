@@ -27,6 +27,8 @@ func add(result: HitResult) -> void:
 
 func count(grade: Judgement.Grade) -> int: return _counts.get(grade, 0)
 
+func count_judged() -> int: return _counts.values().reduce(func(sum: int, n: int): return sum + n, 0)
+
 # checkpoints restore from a snapshot
 func copy() -> ScoreKeeper:
 	var snapshot := ScoreKeeper.new()

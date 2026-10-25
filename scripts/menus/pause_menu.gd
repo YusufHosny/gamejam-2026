@@ -15,6 +15,11 @@ signal exited
 
 func _ready() -> void:
 	hide()
+	var center: Control = $Center
+	center.theme = MenuStyle.theme()
+	MenuStyle.title($Center/Items/Title, 72)
+	$Center/Items/Title.text = "Paused"
+	for pair in [[_resume, "Resume"], [_restart, "Restart"], [_checkpoint, "Checkpoint"], [_exit, "Menu"]]: MenuStyle.baguette_button(pair[0], pair[1])
 	_resume.pressed.connect(resumed.emit)
 	_restart.pressed.connect(restarted.emit)
 	_checkpoint.pressed.connect(checkpointed.emit)

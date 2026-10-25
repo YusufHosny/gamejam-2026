@@ -11,6 +11,11 @@ const HEADERS: Array[String] = ["#", "rank", "score", "accuracy", "combo", "mode
 @onready var _back: Button = %Back
 
 func _ready() -> void:
+	theme = MenuStyle.theme()
+	MenuStyle.add_background(self)
+	$Center/Items/Title.text = "Leaderboard"
+	MenuStyle.title($Center/Items/Title, 72)
+	MenuStyle.baguette_button(_back, "Back")
 	_rows.columns = HEADERS.size()
 	_back.pressed.connect(back_pressed.emit)
 	visibility_changed.connect(func(): if visible: _back.grab_focus())

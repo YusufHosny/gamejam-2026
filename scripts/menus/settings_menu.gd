@@ -52,6 +52,12 @@ var _rebind_action: StringName
 var _rebind_index: int
 
 func _ready() -> void:
+	theme = MenuStyle.theme()
+	MenuStyle.add_background(self)
+	$Margin/Layout/Title.text = "Settings"
+	MenuStyle.title($Margin/Layout/Title, 56)
+	MenuStyle.baguette_button(_back, "Back")
+	_back.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_back.pressed.connect(back_pressed.emit)
 	for setting in NUMBER_SETTINGS: _add_number_row(setting)
 	_add_calibrate_row()
