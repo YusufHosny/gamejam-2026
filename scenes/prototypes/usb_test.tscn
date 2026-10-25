@@ -11,7 +11,7 @@ script = ExtResource("1_test")
 texture_filter = 2
 texture = ExtResource("3_sheet")
 hframes = 10
-vframes = 15
+vframes = 16
 script = ExtResource("2_usb")
 
 [node name="Label" type="Label" parent="."]
