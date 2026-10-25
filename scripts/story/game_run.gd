@@ -1,11 +1,11 @@
 class_name GameRun
 extends RefCounted
 
-const DEADLINE_S := 300.0
 const COUNTDOWN_S := DeadlineClock.INTRO_S # ends as the clock settles in the corner
 const CUTSCENE_S := 8.0
 const VIRUS_S := 11.2 # CUTSCENE_S plus the ~3.2 s the countdown and the captchas' frozen lead in freed
 const BLUE_SCREEN_S := 10.9
+const DODGE_S := 8.0
 const WIN_S := 6.0
 const FADE_IN_S := 1.0
 const CAPTCHA_PRE_ROLL_S := 1.5
@@ -39,10 +39,7 @@ static func _standard() -> Array[RunStep]:
 		_backup(),
 		_boss(),
 	]
-	# the dodge cutscene takes up the slack so the deadline is exactly DEADLINE_S
-	var dodge_s := DEADLINE_S - Run.new(steps).deadline_s()
-	assert(dodge_s > 4.0, "sections run %.1f s over the deadline" % -dodge_s)
-	steps.insert(steps.size() - 1, CutsceneStep.new("cutscene: the submit button dodges", dodge_s))
+	steps.insert(steps.size() - 1, CutsceneStep.new("cutscene: the submit button dodges", DODGE_S))
 	steps.append(CutsceneStep.new("cutscene: submitted as the clock hits 0, you win", WIN_S, false))
 	return steps
 

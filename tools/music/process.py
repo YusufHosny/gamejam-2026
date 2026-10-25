@@ -18,6 +18,15 @@ SMOOTH_BEATS = 9
 DRUMS_GAIN = 0.8
 GLASS_GAIN = 0.9
 SCREAM_UNDER_LU = 1.0 # the scream sits this far under the drums
+LOUDNESS_LUFS = -16.0 # every track is brought to this so sections don't jump in volume
+TRIM_DB: dict[str, float] = { # by ear, on top of the loudness match
+    "vivaldi_summer": 0.0,
+    "moonlight_3rd": 0.0,
+    "ad_music": 0.0,
+    "scream_mix": 0.0,
+    "subway_surfers": 0.0,
+}
+LIMIT = 0.95 # quiet tracks get boosted, the limiter keeps their peaks from clipping
 
 
 @dataclass
@@ -105,10 +114,12 @@ def fade(y: np.ndarray, out_s: float = 2.0) -> np.ndarray:
     return y
 
 
+# loudness matched to LOUDNESS_LUFS plus the track's trim, then limited
 def export(y: np.ndarray, path: Path) -> None:
+    y = y * gain_to(y, LOUDNESS_LUFS + TRIM_DB.get(path.stem, 0.0))
     wav = path.with_suffix(".wav")
-    sf.write(wav, np.clip(y.T, -1, 1), SR)
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", wav, "-c:a", "libvorbis", "-q:a", "5", path], check=True)
+    sf.write(wav, y.T, SR, subtype="FLOAT")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", wav, "-af", f"alimiter=limit={LIMIT}:level=disabled", "-c:a", "libvorbis", "-q:a", "5", path], check=True)
     wav.unlink()
 
 

@@ -1,6 +1,7 @@
 class_name DeadlineClock
 extends Control
 
+const SHOWN_S := 300.0 # always reads 5:00 down to 0:00, stretched over however long the run really is
 const COLOR := Color(1.0, 0.25, 0.25)
 const OVERLAY_ALPHA := 0.25
 const BEATS := 4

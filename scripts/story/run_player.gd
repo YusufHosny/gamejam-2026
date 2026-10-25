@@ -33,7 +33,7 @@ func _process(_delta: float) -> void:
 	if _index >= run.steps.size(): return
 	var timed := run.steps[_index].timed
 	_deadline.visible = timed
-	if timed: _deadline.set_time_left(maxf(run.time_left(_index, _step_position()), 0.0))
+	if timed: _deadline.set_time_left(DeadlineClock.SHOWN_S * maxf(run.time_left(_index, _step_position()), 0.0) / maxf(run.deadline_s(), 0.001))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(&"pause"):
