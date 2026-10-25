@@ -3,7 +3,6 @@ extends Node
 # --- Timing ---
 var audio_offset_ms := 0.0 # positive judges notes later
 var hitsound_volume := 0.0 # 0 mutes them, they lag behind on high latency setups
-var voice_french := false # Louis' lines in french instead of english
 var hit_windows_ms := {
 	Judgement.Grade.GREAT: 40.0,
 	Judgement.Grade.OK: 90.0,
@@ -15,7 +14,8 @@ var scroll_speed := 700.0 # px/s for 4d lanes
 # --- Run ---
 var difficulty := Difficulty.Level.STANDARD
 var tutorial_enabled := true
-var language := "en" # voice lines and their captions, VoiceLines.LANGUAGES
+var language: String: # voice lines and their captions, french mode speaks french
+	get: return Difficulty.language(difficulty)
 
 # --- Map ---
 var bpm := 120.0
@@ -29,7 +29,7 @@ var slash_min_speed := 1200.0 # px/s
 
 # --- Saved ---
 const SETTINGS_FILE := "user://settings.cfg"
-const SAVED: Array[StringName] = [&"audio_offset_ms", &"hitsound_volume", &"mouse_sensitivity", &"approach_time_s", &"scroll_speed", &"slash_min_speed", &"language"]
+const SAVED: Array[StringName] = [&"audio_offset_ms", &"hitsound_volume", &"mouse_sensitivity", &"approach_time_s", &"scroll_speed", &"slash_min_speed"]
 
 # --- Keybinds ---
 var keybinds: Dictionary[StringName, Array] = {

@@ -145,12 +145,7 @@ func _build_game_page() -> void:
 		_difficulty.add_item(Difficulty.label(level), level)
 	_difficulty.select(_difficulty.get_item_index(GameConfig.difficulty))
 	_difficulty.item_selected.connect(func(index: int): GameConfig.difficulty = _difficulty.get_item_id(index))
-	var languages: Array = VoiceLines.LANGUAGES.keys()
-	for code: String in languages: _language.add_item(VoiceLines.LANGUAGES[code])
-	_language.select(languages.find(GameConfig.language))
-	_language.item_selected.connect(func(index: int):
-		GameConfig.language = languages[index]
-		GameConfig.save_settings())
+	$Margin/Layout/Tabs/Game/LanguageRow.hide() # the difficulty picks it, french mode speaks french
 	_tutorial.button_pressed = GameConfig.tutorial_enabled
 	_tutorial.toggled.connect(func(enabled: bool): GameConfig.tutorial_enabled = enabled)
 
