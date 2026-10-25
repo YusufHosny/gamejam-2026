@@ -20,38 +20,48 @@ const USB_CYCLE := [
 	[12, UsbView.Move.PUSH], [12.5, UsbView.Move.BUMP], [13, UsbView.Move.BUMP], [13.5, UsbView.Move.BUMP], [14, UsbView.Move.BUMP], [14.5, UsbView.Move.BUMP], [15, UsbView.Move.BUMP],
 ]
 
+# easy: a beat long slider into two singles a bar
+const EASY_SLIDER_BEATS := 1.0
+const EASY_USB_CYCLE := [
+	[0, UsbView.Move.PUSH], [2, UsbView.Move.BUMP], [3, UsbView.Move.BUMP],
+	[4, UsbView.Move.FLIP], [6, UsbView.Move.BUMP], [7, UsbView.Move.BUMP],
+	[8, UsbView.Move.PUSH], [10, UsbView.Move.BUMP], [11, UsbView.Move.BUMP],
+	[12, UsbView.Move.FLIP_BACK], [14, UsbView.Move.BUMP], [15, UsbView.Move.BUMP],
+]
+
 # USB_CYCLE on repeat until the segment runs out
-static func fill_usb(segment: MapSegment) -> void:
+static func fill_usb(segment: MapSegment, easy := false) -> void:
+	var cycle: Array = EASY_USB_CYCLE if easy else USB_CYCLE
 	var notes: Array[Note] = []
 	var cycle_start := segment.start_beat
 	var last_bump := -INF
 	var stacked := false
 	while cycle_start < segment.end_beat:
-		for step in USB_CYCLE:
+		for step in cycle:
 			var beat: float = cycle_start + step[0]
 			if beat >= segment.end_beat: break
 			var bump: bool = step[1] == UsbView.Move.BUMP
 			stacked = bump and beat - last_bump <= 0.5 and not stacked
 			if bump: last_bump = beat
-			notes.append(_usb_note(step[1], beat, stacked))
+			notes.append(_usb_note(step[1], beat, stacked, EASY_SLIDER_BEATS if easy else SLIDER_BEATS))
 		cycle_start += USB_CYCLE_BEATS
 	segment.notes = notes
 	segment.view = USB_VIEW
 
-static func _usb_note(move: UsbView.Move, beat: float, stacked: bool) -> AimNote:
+static func _usb_note(move: UsbView.Move, beat: float, stacked: bool, slider_beats: float) -> AimNote:
 	var port := UsbView.port()
 	var cable := (UsbView.plug() - port).normalized()
 	match move:
-		UsbView.Move.PUSH: return _slider(beat, _line(port + cable * KICK.x, port + cable * KICK.y))
+		UsbView.Move.PUSH: return _slider(beat, _line(port + cable * KICK.x, port + cable * KICK.y), slider_beats)
 		UsbView.Move.BUMP: return AimNote.new(beat, port + (STACK if stacked else Vector2.ZERO))
-		UsbView.Move.FLIP: return _slider(beat, UsbView.flip_arc(port + FLIP_AT[0], FLIP_RADIUS, false))
-		UsbView.Move.FLIP_BACK: return _slider(beat, UsbView.flip_arc(port + FLIP_AT[1], FLIP_RADIUS, true))
+		UsbView.Move.FLIP: return _slider(beat, UsbView.flip_arc(port + FLIP_AT[0], FLIP_RADIUS, false), slider_beats)
+		UsbView.Move.FLIP_BACK: return _slider(beat, UsbView.flip_arc(port + FLIP_AT[1], FLIP_RADIUS, true), slider_beats)
 	assert(false, "unhandled usb move %s" % move)
 	return null
 
 # sliders start a new combo
-static func _slider(beat: float, points: PackedVector2Array) -> SliderNote:
-	var slider := SliderNote.new(beat, points[0], points.slice(1), SLIDER_BEATS)
+static func _slider(beat: float, points: PackedVector2Array, beats: float) -> SliderNote:
+	var slider := SliderNote.new(beat, points[0], points.slice(1), beats)
 	slider.new_combo = true
 	return slider
 

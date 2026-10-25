@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/cutscenes/laugh_cutscene.gd" id="1_cut"]
+[ext_resource type="Texture2D" path="res://assets/boss/submit_round_angry.png" id="2_button"]
+
+[node name="LaughCutscene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cut")
+button = ExtResource("2_button")

@@ -18,6 +18,7 @@ var _index := -1
 var _cutscene: Cutscene = null
 var _map_player: MapPlayer = null
 var _intro_played := false
+var _last_kind := -1 # mode of the last map played, so the next one only stops for a real switch
 
 func _ready() -> void:
 	_pause_menu.resumed.connect(_set_paused.bind(false))
@@ -68,12 +69,15 @@ func _start_map(step: MapStep) -> void:
 	_map_player.map = step.map
 	_map_player.score = score
 	_map_player.pre_roll_s = step.pre_roll_s
+	_map_player.previous_kind = _last_kind
 	_map_player.finished.connect(_advance)
 	_fade.color = step.fade_color
 	_stage.add_child(_map_player)
 
 func _advance() -> void:
-	if _map_player != null: score = _map_player.score
+	if _map_player != null:
+		score = _map_player.score
+		_last_kind = _map_player.last_kind()
 	_play_step.call_deferred(_index + 1) # steps finish from their own _process
 
 func _clear_stage() -> void:

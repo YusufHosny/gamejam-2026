@@ -6,7 +6,7 @@
 [node name="MappingRecorder" type="Node2D"]
 script = ExtResource("1_recorder")
 song = ExtResource("2_song")
-start_s = 79.0
-end_s = 110.5
+start_s = 0.0
+end_s = 20.0
 mode = 0
 guide = 3

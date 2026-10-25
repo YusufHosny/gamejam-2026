@@ -7,6 +7,9 @@ const VIRUS_S := 11.2 # CUTSCENE_S plus the ~3.2 s the countdown and the captcha
 const BLUE_SCREEN_S := 10.9
 const DODGE_S := 19.0
 const WIN_S := 6.0
+const LAUGH_S := 3.8
+const PUPPETS_PRE_ROLL_S := 1.5 # the first chord comes half a second in, its note needs time to approach
+const PUPPETS_END_BEAT := 69.0
 const FADE_IN_S := 1.0
 const CAPTCHA_PRE_ROLL_S := 1.5
 const BOSS_PRE_ROLL_S := 2.5 # the first theme starts with the music, the banner shows before it
@@ -26,36 +29,42 @@ const COUNTDOWN_CUTSCENE := preload("res://scenes/cutscenes/countdown_cutscene.t
 const VIRUS_CUTSCENE := preload("res://scenes/cutscenes/virus_cutscene.tscn")
 const BLUE_SCREEN_CUTSCENE := preload("res://scenes/cutscenes/blue_screen_cutscene.tscn")
 const DODGE_CUTSCENE := preload("res://scenes/cutscenes/dodge_cutscene.tscn")
+const LAUGH_CUTSCENE := preload("res://scenes/cutscenes/laugh_cutscene.tscn")
+const PUPPETS := preload("res://assets/music/master_of_puppets.tres")
 
+# the maps are the hard set, standard thins them
 static func steps(maps := Difficulty.MapSet.STANDARD) -> Array[RunStep]:
+	var steps := _steps(maps == Difficulty.MapSet.STANDARD)
 	match maps:
-		Difficulty.MapSet.STANDARD: return _standard()
-		Difficulty.MapSet.HARD: return _hard()
-	assert(false, "unhandled map set %s" % maps)
-	return []
+		Difficulty.MapSet.STANDARD:
+			for step in steps:
+				if step is MapStep: EasyMaps.thin((step as MapStep).map)
+		Difficulty.MapSet.HARD: pass
+		_: assert(false, "unhandled map set %s" % maps)
+	return steps
 
-# TODO: the mapping pass gives hard its own maps
-static func _hard() -> Array[RunStep]: return _standard()
-
-static func _standard() -> Array[RunStep]:
+# easy swaps in the slow aim maps
+static func _steps(easy: bool) -> Array[RunStep]:
 	var steps: Array[RunStep] = [
 		CutsceneStep.new("", COUNTDOWN_S, true, COUNTDOWN_CUTSCENE),
-		_captchas(),
+		_captchas(easy),
 		_subway(),
 		CutsceneStep.new("", VIRUS_S, true, VIRUS_CUTSCENE),
 		_ads(),
 		CutsceneStep.new("", BLUE_SCREEN_S, true, BLUE_SCREEN_CUTSCENE),
-		_backup(),
-		_boss(),
+		_backup(easy),
+		CutsceneStep.new("", DODGE_S, true, DODGE_CUTSCENE),
+		_puppets(easy),
+		CutsceneStep.new("", LAUGH_S, true, LAUGH_CUTSCENE),
+		_boss(easy),
 	]
-	steps.insert(steps.size() - 1, CutsceneStep.new("", DODGE_S, true, DODGE_CUTSCENE))
 	steps.append(CutsceneStep.new("cutscene: submitted as the clock hits 0, you win", WIN_S, false))
 	return steps
 
 # c1 dogs, c2 align, c3 apples
-static func _captchas() -> MapStep:
+static func _captchas(easy: bool) -> MapStep:
 	var map := DemoMap.section(VIVALDI, [Modality.Kind.AIM_CLICK, Modality.Kind.FOUR_D, Modality.Kind.SLASH], [28.9, 27.0, 27.0])
-	CaptchaMaps.fill_dogs_mapped(map.segments[0])
+	CaptchaMaps.fill_dogs_mapped(map.segments[0], easy)
 	CaptchaMaps.fill_align_mapped(map.segments[1])
 	CaptchaMaps.fill_fruit_mapped(map.segments[2])
 	map.bake()
@@ -84,24 +93,40 @@ static func _ads() -> MapStep:
 
 # f1 chase, f2 shields, f3 lasers, f4 final chase with streams
 # split along the sonata's exposition, ending on the development's big chord at 108.9s
-static func _boss() -> MapStep:
+static func _boss(easy: bool) -> MapStep:
 	var map := Map.new()
 	MOONLIGHT.apply_to(map)
 	for bounds in BOSS_SEGMENTS: map.segments.append(MapSegment.new(bounds[0], bounds[1], bounds[2]))
-	BossMaps.fill_chase_mapped(map.segments[0])
+	if easy: BossMaps.fill_chase_easy(map.segments[0], 0, 54, BossMaps.CHASE_VIEW) # the fermata chord ends it
+	else: BossMaps.fill_chase_mapped(map.segments[0])
 	BossMaps.fill_shields_mapped(map.segments[1])
 	BossMaps.fill_lasers_mapped(map.segments[2])
-	BossMaps.fill_chase_mapped(map.segments[3], BossMaps.FINAL_MAP, BossMaps.FINAL_VIEW)
+	if easy: BossMaps.fill_chase_easy(map.segments[3], 234, 320, BossMaps.FINAL_VIEW) # the development's chord ends it
+	else: BossMaps.fill_chase_mapped(map.segments[3], BossMaps.FINAL_MAP, BossMaps.FINAL_VIEW)
 	map.bake()
 	assert(MOONLIGHT.fits(map), "the boss map runs past its song")
 	var step := MapStep.new(map)
 	step.pre_roll_s = BOSS_PRE_ROLL_S
 	return step
 
+# the button shows off with master of puppets' intro, the same map on every set. on standard it's a struggle section left out of the score
+static func _puppets(easy: bool) -> MapStep:
+	var map := Map.new()
+	PUPPETS.apply_to(map)
+	var segment := MapSegment.new(Modality.Kind.AIM_CLICK, 0, PUPPETS_END_BEAT)
+	segment.unscored = easy
+	map.segments.append(segment)
+	BossMaps.fill_puppets(segment)
+	map.bake()
+	assert(PUPPETS.fits(map), "the puppets map runs past its song")
+	var step := MapStep.new(map)
+	step.pre_roll_s = PUPPETS_PRE_ROLL_S
+	return step
+
 # b1 plug in the usb
-static func _backup() -> MapStep:
+static func _backup(easy: bool) -> MapStep:
 	var map := DemoMap.section(SCREAM_MIX, [Modality.Kind.AIM_CLICK], [26.0])
-	BackupMaps.fill_usb(map.segments[0])
+	BackupMaps.fill_usb(map.segments[0], easy)
 	map.bake()
 	var step := MapStep.new(map)
 	step.fade_color = Color("aaaaaa") 

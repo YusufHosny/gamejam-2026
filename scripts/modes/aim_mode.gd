@@ -6,8 +6,11 @@ extends ModeHandler
 
 var cursor: VirtualCursor
 
-# the slider currently being held, for views to draw
+# the slider currently running, held or not, for views to draw
 func sliding() -> SliderNote: return null
+
+# whether the running slider is held and followed right now
+func tracking() -> bool: return false
 
 func _is_hit(note: AimNote, from: Vector2, to: Vector2) -> bool:
 	return (view as AimView).is_hit(note, from, to)

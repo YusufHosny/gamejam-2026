@@ -20,6 +20,7 @@ static func runner() -> Vector2:
 static func direction(note: AimNote) -> Vector2: return (note.position - runner()).normalized()
 
 func _ready() -> void:
+	radius = RADIUS * Difficulty.size_scale(GameConfig.difficulty)
 	super()
 	var content := CaptchaFrame.content()
 	_video.position = content.position
