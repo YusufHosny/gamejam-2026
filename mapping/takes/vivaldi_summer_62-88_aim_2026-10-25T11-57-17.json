@@ -1,0 +1,408 @@
+{
+	"beats_per_bar": 3,
+	"bpm": 168.52,
+	"end_s": 87.8,
+	"first_beat_s": 0.1662,
+	"inputs": [
+		{
+			"at": [
+				509,
+				227
+			],
+			"beat": 178.002,
+			"beat_half": 178.0,
+			"beat_quarter": 178.0,
+			"down_s": 63.376,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				652,
+				226
+			],
+			"beat": 180.376,
+			"beat_half": 180.5,
+			"beat_quarter": 180.5,
+			"down_s": 64.221,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				652,
+				226
+			],
+			"beat": 180.816,
+			"beat_half": 181.0,
+			"beat_quarter": 180.75,
+			"down_s": 64.378,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				476,
+				227
+			],
+			"beat": 183.884,
+			"beat_half": 184.0,
+			"beat_quarter": 184.0,
+			"down_s": 65.47,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				633,
+				347
+			],
+			"beat": 186.134,
+			"beat_half": 186.0,
+			"beat_quarter": 186.25,
+			"down_s": 66.271,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				633,
+				346
+			],
+			"beat": 186.618,
+			"beat_half": 186.5,
+			"beat_quarter": 186.5,
+			"down_s": 66.444,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				470,
+				346
+			],
+			"beat": 189.979,
+			"beat_half": 190.0,
+			"beat_quarter": 190.0,
+			"down_s": 67.64,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				653,
+				219
+			],
+			"beat": 192.058,
+			"beat_half": 192.0,
+			"beat_quarter": 192.0,
+			"down_s": 68.38,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				653,
+				219
+			],
+			"beat": 192.521,
+			"beat_half": 192.5,
+			"beat_quarter": 192.5,
+			"down_s": 68.545,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				470,
+				228
+			],
+			"beat": 195.83,
+			"beat_half": 196.0,
+			"beat_quarter": 195.75,
+			"down_s": 69.724,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				684,
+				225
+			],
+			"beat": 198.963,
+			"beat_half": 199.0,
+			"beat_quarter": 199.0,
+			"down_s": 70.839,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				470,
+				337
+			],
+			"beat": 201.929,
+			"beat_half": 202.0,
+			"beat_quarter": 202.0,
+			"down_s": 71.895,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				655,
+				296
+			],
+			"beat": 205.658,
+			"beat_half": 205.5,
+			"beat_quarter": 205.75,
+			"down_s": 73.223,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				457,
+				198
+			],
+			"beat": 210.963,
+			"beat_half": 211.0,
+			"beat_quarter": 211.0,
+			"down_s": 75.111,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				642,
+				175
+			],
+			"beat": 214.226,
+			"beat_half": 214.0,
+			"beat_quarter": 214.25,
+			"down_s": 76.273,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				455,
+				271
+			],
+			"beat": 217.119,
+			"beat_half": 217.0,
+			"beat_quarter": 217.0,
+			"down_s": 77.303,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				666,
+				278
+			],
+			"beat": 220.027,
+			"beat_half": 220.0,
+			"beat_quarter": 220.0,
+			"down_s": 78.339,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				470,
+				210
+			],
+			"beat": 222.199,
+			"beat_half": 222.0,
+			"beat_quarter": 222.25,
+			"down_s": 79.112,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				466,
+				210
+			],
+			"beat": 222.643,
+			"beat_half": 222.5,
+			"beat_quarter": 222.75,
+			"down_s": 79.27,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				676,
+				208
+			],
+			"beat": 225.413,
+			"beat_half": 225.5,
+			"beat_quarter": 225.5,
+			"down_s": 80.256,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				676,
+				208
+			],
+			"beat": 225.86,
+			"beat_half": 226.0,
+			"beat_quarter": 225.75,
+			"down_s": 80.415,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				465,
+				319
+			],
+			"beat": 228.374,
+			"beat_half": 228.5,
+			"beat_quarter": 228.25,
+			"down_s": 81.31,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				465,
+				319
+			],
+			"beat": 228.84,
+			"beat_half": 229.0,
+			"beat_quarter": 228.75,
+			"down_s": 81.476,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				670,
+				314
+			],
+			"beat": 231.212,
+			"beat_half": 231.0,
+			"beat_quarter": 231.25,
+			"down_s": 82.321,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				670,
+				314
+			],
+			"beat": 231.782,
+			"beat_half": 232.0,
+			"beat_quarter": 231.75,
+			"down_s": 82.524,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				654,
+				218
+			],
+			"beat": 234.348,
+			"beat_half": 234.5,
+			"beat_quarter": 234.25,
+			"down_s": 83.437,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				654,
+				218
+			],
+			"beat": 234.81,
+			"beat_half": 235.0,
+			"beat_quarter": 234.75,
+			"down_s": 83.602,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				654,
+				218
+			],
+			"beat": 234.81,
+			"beat_half": 235.0,
+			"beat_quarter": 234.75,
+			"down_s": 83.602,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				447,
+				219
+			],
+			"beat": 237.588,
+			"beat_half": 237.5,
+			"beat_quarter": 237.5,
+			"down_s": 84.591,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				446,
+				219
+			],
+			"beat": 238.03,
+			"beat_half": 238.0,
+			"beat_quarter": 238.0,
+			"down_s": 84.748,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				458,
+				327
+			],
+			"beat": 240.371,
+			"beat_half": 240.5,
+			"beat_quarter": 240.25,
+			"down_s": 85.582,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				458,
+				327
+			],
+			"beat": 240.845,
+			"beat_half": 241.0,
+			"beat_quarter": 240.75,
+			"down_s": 85.751,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				682,
+				191
+			],
+			"beat": 243.566,
+			"beat_half": 243.5,
+			"beat_quarter": 243.5,
+			"down_s": 86.72,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				682,
+				191
+			],
+			"beat": 244.03,
+			"beat_half": 244.0,
+			"beat_quarter": 244.0,
+			"down_s": 86.885,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				661,
+				338
+			],
+			"beat": 246.056,
+			"beat_half": 246.0,
+			"beat_quarter": 246.0,
+			"down_s": 87.606,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				661,
+				338
+			],
+			"beat": 246.568,
+			"beat_half": 246.5,
+			"beat_quarter": 246.5,
+			"down_s": 87.788,
+			"kind": "tap"
+		}
+	],
+	"mode": "aim",
+	"song": "res://assets/music/vivaldi_summer.tres",
+	"speed": 1.0,
+	"start_s": 62.0
+}

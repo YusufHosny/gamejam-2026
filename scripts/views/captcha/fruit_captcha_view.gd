@@ -58,6 +58,9 @@ func is_hit(note: AimNote, from: Vector2, to: Vector2) -> bool:
 
 func is_following(_slider: SliderNote, _point: Vector2, _progress: float) -> bool: return false # no sliders here
 
+# autoplay cuts down then up, each swipe starting below the apples where the last one ended, so it never clips one early
+func slash_direction(note: AimNote) -> Vector2: return Vector2.DOWN if mode.segment.notes.find(note) % 2 == 0 else Vector2.UP
+
 func _on_judged(result: HitResult) -> void:
 	var note := result.note as AimNote
 	if result.is_miss():

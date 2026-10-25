@@ -1,0 +1,720 @@
+{
+	"beats_per_bar": 3,
+	"bpm": 168.52,
+	"end_s": 59.0,
+	"first_beat_s": 0.1662,
+	"inputs": [
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 94.75,
+			"beat_half": 94.5,
+			"beat_quarter": 94.75,
+			"down_s": 33.735,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 96.38,
+			"beat_half": 96.5,
+			"beat_quarter": 96.5,
+			"down_s": 34.315,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 96.798,
+			"beat_half": 97.0,
+			"beat_quarter": 96.75,
+			"down_s": 34.464,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 97.938,
+			"beat_half": 98.0,
+			"beat_quarter": 98.0,
+			"down_s": 34.87,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 99.462,
+			"beat_half": 99.5,
+			"beat_quarter": 99.5,
+			"down_s": 35.412,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 99.887,
+			"beat_half": 100.0,
+			"beat_quarter": 100.0,
+			"down_s": 35.564,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 100.97,
+			"beat_half": 101.0,
+			"beat_quarter": 101.0,
+			"down_s": 35.95,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 102.479,
+			"beat_half": 102.5,
+			"beat_quarter": 102.5,
+			"down_s": 36.487,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 102.902,
+			"beat_half": 103.0,
+			"beat_quarter": 103.0,
+			"down_s": 36.637,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 104.008,
+			"beat_half": 104.0,
+			"beat_quarter": 104.0,
+			"down_s": 37.031,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 105.463,
+			"beat_half": 105.5,
+			"beat_quarter": 105.5,
+			"down_s": 37.549,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 105.882,
+			"beat_half": 106.0,
+			"beat_quarter": 106.0,
+			"down_s": 37.698,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 106.978,
+			"beat_half": 107.0,
+			"beat_quarter": 107.0,
+			"down_s": 38.088,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 108.869,
+			"beat_half": 109.0,
+			"beat_quarter": 108.75,
+			"down_s": 38.762,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 109.962,
+			"beat_half": 110.0,
+			"beat_quarter": 110.0,
+			"down_s": 39.151,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 111.96,
+			"beat_half": 112.0,
+			"beat_quarter": 112.0,
+			"down_s": 39.862,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 112.943,
+			"beat_half": 113.0,
+			"beat_quarter": 113.0,
+			"down_s": 40.212,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 114.671,
+			"beat_half": 114.5,
+			"beat_quarter": 114.75,
+			"down_s": 40.828,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 115.915,
+			"beat_half": 116.0,
+			"beat_quarter": 116.0,
+			"down_s": 41.271,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 123.071,
+			"beat_half": 123.0,
+			"beat_quarter": 123.0,
+			"down_s": 43.818,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 124.08,
+			"beat_half": 124.0,
+			"beat_quarter": 124.0,
+			"down_s": 44.178,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 125.068,
+			"beat_half": 125.0,
+			"beat_quarter": 125.0,
+			"down_s": 44.529,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 126.798,
+			"beat_half": 127.0,
+			"beat_quarter": 126.75,
+			"down_s": 45.145,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 127.74,
+			"beat_half": 127.5,
+			"beat_quarter": 127.75,
+			"down_s": 45.481,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 129.663,
+			"beat_half": 129.5,
+			"beat_quarter": 129.75,
+			"down_s": 46.165,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 130.82,
+			"beat_half": 131.0,
+			"beat_quarter": 130.75,
+			"down_s": 46.577,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 131.906,
+			"beat_half": 132.0,
+			"beat_quarter": 132.0,
+			"down_s": 46.964,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 132.903,
+			"beat_half": 133.0,
+			"beat_quarter": 133.0,
+			"down_s": 47.319,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 133.79,
+			"beat_half": 134.0,
+			"beat_quarter": 133.75,
+			"down_s": 47.635,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 134.899,
+			"beat_half": 135.0,
+			"beat_quarter": 135.0,
+			"down_s": 48.029,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 136.034,
+			"beat_half": 136.0,
+			"beat_quarter": 136.0,
+			"down_s": 48.434,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 138.18,
+			"beat_half": 138.0,
+			"beat_quarter": 138.25,
+			"down_s": 49.198,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 139.176,
+			"beat_half": 139.0,
+			"beat_quarter": 139.25,
+			"down_s": 49.552,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 139.96,
+			"beat_half": 140.0,
+			"beat_quarter": 140.0,
+			"down_s": 49.831,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 140.899,
+			"beat_half": 141.0,
+			"beat_quarter": 141.0,
+			"down_s": 50.166,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 141.932,
+			"beat_half": 142.0,
+			"beat_quarter": 142.0,
+			"down_s": 50.534,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 143.044,
+			"beat_half": 143.0,
+			"beat_quarter": 143.0,
+			"down_s": 50.93,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 143.882,
+			"beat_half": 144.0,
+			"beat_quarter": 144.0,
+			"down_s": 51.228,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 144.923,
+			"beat_half": 145.0,
+			"beat_quarter": 145.0,
+			"down_s": 51.598,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 145.962,
+			"beat_half": 146.0,
+			"beat_quarter": 146.0,
+			"down_s": 51.968,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 147.004,
+			"beat_half": 147.0,
+			"beat_quarter": 147.0,
+			"down_s": 52.34,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 148.01,
+			"beat_half": 148.0,
+			"beat_quarter": 148.0,
+			"down_s": 52.698,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 149.138,
+			"beat_half": 149.0,
+			"beat_quarter": 149.25,
+			"down_s": 53.099,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 150.084,
+			"beat_half": 150.0,
+			"beat_quarter": 150.0,
+			"down_s": 53.436,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 150.977,
+			"beat_half": 151.0,
+			"beat_quarter": 151.0,
+			"down_s": 53.754,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 152.034,
+			"beat_half": 152.0,
+			"beat_quarter": 152.0,
+			"down_s": 54.13,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 152.918,
+			"beat_half": 153.0,
+			"beat_quarter": 153.0,
+			"down_s": 54.445,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 153.862,
+			"beat_half": 154.0,
+			"beat_quarter": 153.75,
+			"down_s": 54.781,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 155.0,
+			"beat_half": 155.0,
+			"beat_quarter": 155.0,
+			"down_s": 55.186,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 155.883,
+			"beat_half": 156.0,
+			"beat_quarter": 156.0,
+			"down_s": 55.501,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 156.878,
+			"beat_half": 157.0,
+			"beat_quarter": 157.0,
+			"down_s": 55.855,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 157.833,
+			"beat_half": 158.0,
+			"beat_quarter": 157.75,
+			"down_s": 56.195,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 158.922,
+			"beat_half": 159.0,
+			"beat_quarter": 159.0,
+			"down_s": 56.583,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 160.03,
+			"beat_half": 160.0,
+			"beat_quarter": 160.0,
+			"down_s": 56.977,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 161.018,
+			"beat_half": 161.0,
+			"beat_quarter": 161.0,
+			"down_s": 57.329,
+			"kind": "tap",
+			"lane": 3
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 162.112,
+			"beat_half": 162.0,
+			"beat_quarter": 162.0,
+			"down_s": 57.719,
+			"kind": "tap",
+			"lane": 2
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 162.895,
+			"beat_half": 163.0,
+			"beat_quarter": 163.0,
+			"down_s": 57.997,
+			"kind": "tap",
+			"lane": 1
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 163.89,
+			"beat_half": 164.0,
+			"beat_quarter": 164.0,
+			"down_s": 58.352,
+			"kind": "tap",
+			"lane": 0
+		},
+		{
+			"at": [
+				578,
+				203
+			],
+			"beat": 164.877,
+			"beat_half": 165.0,
+			"beat_quarter": 165.0,
+			"down_s": 58.703,
+			"kind": "tap",
+			"lane": 1
+		}
+	],
+	"mode": "lanes",
+	"song": "res://assets/music/vivaldi_summer.tres",
+	"speed": 1.0,
+	"start_s": 33.2
+}

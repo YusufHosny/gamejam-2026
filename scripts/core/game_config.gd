@@ -2,6 +2,7 @@ extends Node
 
 # --- Timing ---
 var audio_offset_ms := 0.0 # positive judges notes later
+var hitsound_volume := 0.0 # 0 mutes them, they lag behind on high latency setups
 var hit_windows_ms := {
 	Judgement.Grade.GREAT: 40.0,
 	Judgement.Grade.OK: 90.0,
@@ -21,8 +22,12 @@ var cooldown_bars := 2
 var map_seed := 41
 
 # --- Mouse ---
-var mouse_sensitivity := 1.0
+var mouse_sensitivity := 1.5
 var slash_min_speed := 1200.0 # px/s
+
+# --- Saved ---
+const SETTINGS_FILE := "user://settings.cfg"
+const SAVED: Array[StringName] = [&"audio_offset_ms", &"hitsound_volume", &"mouse_sensitivity", &"approach_time_s", &"scroll_speed", &"slash_min_speed"]
 
 # --- Keybinds ---
 var keybinds: Dictionary[StringName, Array] = {
@@ -41,6 +46,20 @@ var keybinds: Dictionary[StringName, Array] = {
 
 func _ready() -> void:
 	for action in keybinds: _apply_keybind(action)
+	_load_settings()
+
+func save_settings() -> void:
+	var config := ConfigFile.new()
+	for property in SAVED: config.set_value("settings", property, get(property))
+	config.save(SETTINGS_FILE)
+
+func _load_settings() -> void:
+	var config := ConfigFile.new()
+	if config.load(SETTINGS_FILE) != OK: return
+	for property in SAVED: set(property, config.get_value("settings", property, get(property)))
+
+# autoplay ignores it, so its hitsounds share the music's delay and stay in sync
+func offset_ms() -> float: return 0.0 if Difficulty.autoplays(difficulty) else audio_offset_ms
 
 # scaled by the difficulty, judge mode widens them
 func hit_window_ms(grade: Judgement.Grade) -> float: return hit_windows_ms[grade] * Difficulty.window_scale(difficulty)

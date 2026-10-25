@@ -1,7 +1,7 @@
 class_name LaserDefendView
 extends ModeView
 
-# f3: the button fires lasers at four slots in front of the heart, the lightsaber blocks the slot you press.
+# f3: the button fires lasers at four slots in front of the heart, a lightsaber flashes up at each slot you press.
 # slots run left to right like the keys: left outer, left inner, right inner, right outer
 
 const SLOT_X: Array[float] = [-210.0, -80.0, 80.0, 210.0] # from the heart, one per lane
@@ -14,7 +14,7 @@ const LASER_LENGTH := 150.0
 const LASER_WIDTH := 22.0
 const WARN_S := 0.35 # a faint aim line before each shot leaves the button
 const SABER_LENGTH := 150.0
-const FOLLOW := 26.0 # how fast the saber moves to a new slot
+const SABER_S := 0.18 # how long a saber shows after its press
 const SPARK_S := 0.25
 const HURT_S := 0.35
 const BUTTON_SIZE := 120.0
@@ -24,9 +24,6 @@ const SLOT_RADIUS := 26.0
 @export var saber: Texture2D
 @export var button: Texture2D
 
-var _lane := 1
-var _saber_at := Vector2.ZERO
-var _saber_angle := 0.0
 var _lit_ms: Array[int] = [-100000, -100000, -100000, -100000]
 var _spark_ms := -100000
 var _spark_lane := 0
@@ -39,8 +36,6 @@ static func beam(lane: int) -> Vector2: return (slot(lane) - SOURCE).normalized(
 
 func _ready() -> void:
 	texture_filter = TEXTURE_FILTER_LINEAR
-	_saber_at = slot(_lane)
-	_saber_angle = beam(_lane).angle()
 	mode.judged.connect(_on_judged)
 
 func _on_judged(result: HitResult) -> void:
@@ -50,16 +45,11 @@ func _on_judged(result: HitResult) -> void:
 	_spark_ms = Time.get_ticks_msec()
 	_spark_lane = (result.note as LaneNote).lane
 
-# the saber follows the last lane pressed, the mode does the judging
+# every press flashes a saber at its slot, chords show both, the mode does the judging
 func _process(delta: float) -> void:
 	super(delta)
 	for lane in SLOT_X.size():
-		if Input.is_action_just_pressed(FourDMode.LANES[lane]):
-			_lane = lane
-			_lit_ms[lane] = Time.get_ticks_msec()
-	var follow := minf(1.0, FOLLOW * delta)
-	_saber_at = _saber_at.lerp(slot(_lane), follow)
-	_saber_angle = lerp_angle(_saber_angle, beam(_lane).angle(), follow)
+		if Input.is_action_just_pressed(FourDMode.LANES[lane]): _lit_ms[lane] = Time.get_ticks_msec()
 
 func _draw() -> void:
 	var now := _now()
@@ -70,9 +60,18 @@ func _draw() -> void:
 	for note: LaneNote in mode.pending(): _draw_laser(note, now)
 	var hurt := clampf(1.0 - (ms - _hurt_ms) / (HURT_S * 1000), 0.0, 1.0)
 	_draw_heart(Color(0.9, 0.1, 0.15).lerp(Color.WHITE, hurt))
-	_draw_glow(saber, _saber_at, _saber_angle, Vector2(SABER_LENGTH * saber.get_width() / saber.get_height(), SABER_LENGTH))
+	for lane in SLOT_X.size(): _draw_saber(lane, ms)
 	var spark := clampf(1.0 - (ms - _spark_ms) / (SPARK_S * 1000), 0.0, 1.0)
 	if spark > 0.0: draw_circle(slot(_spark_lane), 30.0 * (1.5 - spark), Color(1, 0.9, 0.9, spark * 0.8), true, -1, true)
+
+# across the lane's beam, fading out over SABER_S
+func _draw_saber(lane: int, ms: int) -> void:
+	var left := 1.0 - (ms - _lit_ms[lane]) / (SABER_S * 1000)
+	if left <= 0.0: return
+	draw_set_transform(slot(lane), beam(lane).angle())
+	var size := Vector2(SABER_LENGTH * saber.get_width() / saber.get_height(), SABER_LENGTH)
+	draw_texture_rect(saber, Rect2(-size / 2, size), false, Color(1, 1, 1, left))
+	draw_set_transform(Vector2.ZERO)
 
 # shoots from the button and reaches its slot on the beat, a faint aim line warns first
 func _draw_laser(note: LaneNote, now: float) -> void:

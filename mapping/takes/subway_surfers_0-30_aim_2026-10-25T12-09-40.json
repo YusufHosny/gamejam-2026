@@ -1,0 +1,265 @@
+{
+	"beats_per_bar": 4,
+	"bpm": 120.0,
+	"end_s": 30.0,
+	"first_beat_s": 0.4776,
+	"inputs": [
+		{
+			"at": [
+				425,
+				445
+			],
+			"beat": -0.626,
+			"beat_half": -0.5,
+			"beat_quarter": -0.75,
+			"down_s": -0.313,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				742,
+				421
+			],
+			"beat": 0.835,
+			"beat_half": 1.0,
+			"beat_quarter": 0.75,
+			"down_s": 0.417,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				554,
+				565
+			],
+			"beat": 4.3,
+			"beat_half": 4.5,
+			"beat_quarter": 4.25,
+			"down_s": 2.15,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				358,
+				452
+			],
+			"beat": 7.959,
+			"beat_half": 8.0,
+			"beat_quarter": 8.0,
+			"down_s": 3.979,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				573,
+				567
+			],
+			"beat": 10.084,
+			"beat_half": 10.0,
+			"beat_quarter": 10.0,
+			"down_s": 5.042,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				706,
+				485
+			],
+			"beat": 14.528,
+			"beat_half": 14.5,
+			"beat_quarter": 14.5,
+			"down_s": 7.264,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				371,
+				426
+			],
+			"beat": 15.585,
+			"beat_half": 15.5,
+			"beat_quarter": 15.5,
+			"down_s": 7.792,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				779,
+				465
+			],
+			"beat": 16.884,
+			"beat_half": 17.0,
+			"beat_quarter": 17.0,
+			"down_s": 8.442,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				798,
+				511
+			],
+			"beat": 20.912,
+			"beat_half": 21.0,
+			"beat_quarter": 21.0,
+			"down_s": 10.456,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				370,
+				441
+			],
+			"beat": 24.762,
+			"beat_half": 25.0,
+			"beat_quarter": 24.75,
+			"down_s": 12.381,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				867,
+				508
+			],
+			"beat": 28.79,
+			"beat_half": 29.0,
+			"beat_quarter": 28.75,
+			"down_s": 14.395,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				310,
+				421
+			],
+			"beat": 31.134,
+			"beat_half": 31.0,
+			"beat_quarter": 31.25,
+			"down_s": 15.567,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				596,
+				312
+			],
+			"beat": 33.186,
+			"beat_half": 33.0,
+			"beat_quarter": 33.25,
+			"down_s": 16.593,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				592,
+				276
+			],
+			"beat": 33.591,
+			"beat_half": 33.5,
+			"beat_quarter": 33.5,
+			"down_s": 16.795,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				714,
+				420
+			],
+			"beat": 38.95,
+			"beat_half": 39.0,
+			"beat_quarter": 39.0,
+			"down_s": 19.475,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				596,
+				173
+			],
+			"beat": 41.152,
+			"beat_half": 41.0,
+			"beat_quarter": 41.25,
+			"down_s": 20.576,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				416,
+				313
+			],
+			"beat": 43.174,
+			"beat_half": 43.0,
+			"beat_quarter": 43.25,
+			"down_s": 21.587,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				574,
+				199
+			],
+			"beat": 45.913,
+			"beat_half": 46.0,
+			"beat_quarter": 46.0,
+			"down_s": 22.956,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				574,
+				212
+			],
+			"beat": 47.973,
+			"beat_half": 48.0,
+			"beat_quarter": 48.0,
+			"down_s": 23.986,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				606,
+				213
+			],
+			"beat": 51.651,
+			"beat_half": 51.5,
+			"beat_quarter": 51.75,
+			"down_s": 25.825,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				579,
+				475
+			],
+			"beat": 53.332,
+			"beat_half": 53.5,
+			"beat_quarter": 53.25,
+			"down_s": 26.666,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				428,
+				364
+			],
+			"beat": 54.937,
+			"beat_half": 55.0,
+			"beat_quarter": 55.0,
+			"down_s": 27.468,
+			"kind": "tap"
+		},
+		{
+			"at": [
+				701,
+				374
+			],
+			"beat": 57.433,
+			"beat_half": 57.5,
+			"beat_quarter": 57.5,
+			"down_s": 28.716,
+			"kind": "tap"
+		}
+	],
+	"mode": "aim",
+	"song": "res://assets/music/subway_surfers.tres",
+	"speed": 1.0,
+	"start_s": 0.0
+}
