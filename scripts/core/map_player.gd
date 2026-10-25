@@ -36,13 +36,17 @@ var _segment: MapSegment = null
 var _view: ModeView = null
 var _checkpoint := ScoreKeeper.new() # checkpointed score
 var _finished := false
+var _relaxed := false # judge mode, see Difficulty
 
 func _ready() -> void:
 	_aim_click.cursor = cursor
 	_slash.cursor = cursor
+	_relaxed = Difficulty.relaxed(GameConfig.difficulty)
 	for handler: ModeHandler in [_four_d, _aim_click, _slash]:
 		handler.conductor = conductor
+		handler.relax = _relaxed and handler != _four_d # 4d only gets wider windows
 		handler.judged.connect(_on_judged)
+	if Difficulty.autoplays(GameConfig.difficulty): _add_autopilot()
 	if hitsound == null: hitsound = SfxUtils.hitsound()
 	_hitsounds.stream = AudioStreamPolyphonic.new()
 	_hitsounds.play()
@@ -70,6 +74,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 # negative during the pre roll, counting up to the music starting at 0
 func time() -> float: return conductor.song_time() - _pre_roll_left
+
+func active_handler() -> ModeHandler: return null if _segment == null else _handler(_segment.kind)
+
+func _add_autopilot() -> void:
+	var autopilot := Autopilot.new()
+	autopilot.player = self
+	add_child(autopilot)
 
 func load_checkpoint() -> void:
 	var segment := _segment
@@ -139,6 +150,7 @@ func _set_score(keeper: ScoreKeeper) -> void:
 	hud.show_score(score)
 
 func _on_judged(result: HitResult) -> void:
+	if _relaxed and result.is_miss(): result = HitResult.new(result.note, Judgement.Grade.MEH) # judge mode never drops combo
 	hud.show_judgement(result)
 	if not result.is_miss(): _play(hitsound)
 	if _segment.tutorial: return

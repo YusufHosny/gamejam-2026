@@ -22,4 +22,4 @@ func show_result(result: RunResult) -> void:
 	var hits := " ".join(Judgement.Grade.values().map(
 		func(g: Judgement.Grade): return "%s x%d" % [Judgement.label(g), result.counts[g]]
 	))
-	_details.text = "accuracy %.2f%%\nmax combo %dx\n%s" % [result.accuracy * 100.0, result.max_combo, hits]
+	_details.text = "%s\naccuracy %.2f%%\nmax combo %dx\n%s" % [Difficulty.label(result.difficulty), result.accuracy * 100.0, result.max_combo, hits]

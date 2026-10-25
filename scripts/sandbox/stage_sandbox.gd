@@ -16,7 +16,7 @@ var _player: RunPlayer = null
 func _ready() -> void:
 	# same order as App._play()
 	if include_tutorial: _steps.append_array(TutorialRun.steps())
-	_steps.append_array(GameRun.steps())
+	_steps.append_array(GameRun.steps(Difficulty.map_set(GameConfig.difficulty)))
 	for i in _steps.size(): _picker.add_item("%2d   %s" % [i, _label(_steps[i])])
 	_picker.item_activated.connect(_start)
 	if start_step >= 0: _start(start_step)

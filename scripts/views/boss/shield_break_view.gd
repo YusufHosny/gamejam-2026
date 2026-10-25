@@ -38,7 +38,7 @@ func is_hit(note: AimNote, from: Vector2, to: Vector2) -> bool:
 	var a := to_local(from)
 	var b := to_local(to)
 	var hit := Geometry2D.get_closest_point_to_segment(note.position, a, b).distance_to(note.position) <= HIT_RADIUS
-	if hit: _slash[note] = (b - a).normalized()
+	if hit: _slash[note] = (b - a).normalized() if a != b else Vector2.RIGHT # a relax touch has no direction
 	return hit
 
 func is_following(_slider: SliderNote, _point: Vector2, _progress: float) -> bool: return false # no sliders here

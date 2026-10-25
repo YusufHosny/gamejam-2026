@@ -45,7 +45,7 @@ func _play_step(index: int) -> void:
 	_clear_stage()
 	_index = index
 	if index >= run.steps.size():
-		finished.emit(RunResult.from_score(score))
+		finished.emit(RunResult.from_score(score, GameConfig.difficulty))
 		return
 	var step := run.steps[index]
 	assert(not step.timed or step.length_s() > 0.0, "timed steps need a fixed length")

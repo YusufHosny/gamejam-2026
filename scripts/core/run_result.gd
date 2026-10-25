@@ -9,9 +9,11 @@ var accuracy: float
 var counts: Dictionary[Judgement.Grade, int] = {}
 var rank: Rank
 var finished_at: String
+var difficulty: Difficulty.Level
 
-static func from_score(keeper: ScoreKeeper) -> RunResult:
+static func from_score(keeper: ScoreKeeper, level: Difficulty.Level) -> RunResult:
 	var result := RunResult.new()
+	result.difficulty = level
 	result.score = keeper.score
 	result.max_combo = keeper.max_combo
 	result.accuracy = keeper.accuracy()

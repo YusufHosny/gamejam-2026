@@ -6,7 +6,7 @@ enum Grade { GREAT, OK, MEH, MISS }
 static func grade(error_s: float) -> Grade:
 	var error_ms := absf(error_s) * 1000.0
 	for g: Grade in [Grade.GREAT, Grade.OK, Grade.MEH]:
-		if error_ms <= GameConfig.hit_windows_ms[g]: return g
+		if error_ms <= GameConfig.hit_window_ms(g): return g
 	return Grade.MISS
 
 static func value(g: Grade) -> int:

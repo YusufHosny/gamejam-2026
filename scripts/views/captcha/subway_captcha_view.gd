@@ -46,7 +46,10 @@ func _sync_video() -> void:
 	if absf(_video.stream_position - audio) > RESYNC_S: _video.stream_position = audio
 
 func is_hit(note: AimNote, from: Vector2, to: Vector2) -> bool:
-	return super(note, from, to) and (to - from).normalized().dot(direction(note)) >= MIN_DOT
+	if not super(note, from, to): return false
+	return from == to or (to - from).normalized().dot(direction(note)) >= MIN_DOT # a relax touch has no direction
+
+func slash_direction(note: AimNote) -> Vector2: return direction(note)
 
 func _draw() -> void:
 	CaptchaFrame.draw_edges(self) # the clip shows through the content area

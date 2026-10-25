@@ -7,6 +7,7 @@ const SPREAD := 160.0 # px/s the pieces fly apart
 const FALL := 1500.0
 const SPIN := 2.5
 const LIFETIME_S := 0.8
+const MIN_AREA := 1.0 # clipping can leave slivers the renderer can't triangulate
 
 class Piece:
 	var points: PackedVector2Array # around its own centroid
@@ -40,6 +41,7 @@ static func split(_texture: Texture2D, rect: Rect2, through: Vector2, along: Vec
 			through + along * far + side * flip * far, through - along * far + side * flip * far,
 		])
 		for polygon in Geometry2D.intersect_polygons(corners, half):
+			if not drawable(polygon): continue
 			var centroid := Vector2.ZERO
 			for point in polygon: centroid += point
 			centroid /= polygon.size()
@@ -50,6 +52,12 @@ static func split(_texture: Texture2D, rect: Rect2, through: Vector2, along: Vec
 				uvs.append((point - rect.position) / rect.size)
 			cut.pieces.append(Piece.new(points, uvs, centroid, side * flip, SPIN * flip))
 	return cut
+
+static func drawable(polygon: PackedVector2Array) -> bool:
+	if polygon.size() < 3: return false
+	var twice_area := 0.0
+	for i in polygon.size(): twice_area += polygon[i].cross(polygon[(i + 1) % polygon.size()])
+	return absf(twice_area) / 2 >= MIN_AREA
 
 func alive(ms: int) -> bool: return ms - born_ms < LIFETIME_S * 1000
 

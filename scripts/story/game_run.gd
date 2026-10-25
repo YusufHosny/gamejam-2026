@@ -18,8 +18,17 @@ const COUNTDOWN_CUTSCENE := preload("res://scenes/cutscenes/countdown_cutscene.t
 const VIRUS_CUTSCENE := preload("res://scenes/cutscenes/virus_cutscene.tscn")
 const BLUE_SCREEN_CUTSCENE := preload("res://scenes/cutscenes/blue_screen_cutscene.tscn")
 
-# TODO: placeholder circle views until each situation has its own
-static func steps() -> Array[RunStep]:
+static func steps(maps := Difficulty.MapSet.STANDARD) -> Array[RunStep]:
+	match maps:
+		Difficulty.MapSet.STANDARD: return _standard()
+		Difficulty.MapSet.HARD: return _hard()
+	assert(false, "unhandled map set %s" % maps)
+	return []
+
+# TODO: the mapping pass gives hard its own maps
+static func _hard() -> Array[RunStep]: return _standard()
+
+static func _standard() -> Array[RunStep]:
 	var steps: Array[RunStep] = [
 		CutsceneStep.new("", COUNTDOWN_S, true, COUNTDOWN_CUTSCENE),
 		_captchas(),

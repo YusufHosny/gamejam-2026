@@ -42,7 +42,10 @@ var keybinds: Dictionary[StringName, Array] = {
 func _ready() -> void:
 	for action in keybinds: _apply_keybind(action)
 
-func miss_window_s() -> float: return hit_windows_ms[Judgement.Grade.MEH] / 1000.0
+# scaled by the difficulty, judge mode widens them
+func hit_window_ms(grade: Judgement.Grade) -> float: return hit_windows_ms[grade] * Difficulty.window_scale(difficulty)
+
+func miss_window_s() -> float: return hit_window_ms(Judgement.Grade.MEH) / 1000.0
 
 func rebind(action: StringName, events: Array[InputEvent]) -> void:
 	keybinds[action] = events

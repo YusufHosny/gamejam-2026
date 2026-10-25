@@ -101,9 +101,10 @@ func _draw_sticker() -> void:
 	var outline := _ellipse(cap)
 	if fly == 0.0:
 		for polygon in Geometry2D.intersect_polygons(outline, _half(fold, toward, cap)):
-			draw_colored_polygon(polygon, Color.WHITE, _uvs(polygon, rect), sticker)
+			if PolygonCut.drawable(polygon): draw_colored_polygon(polygon, Color.WHITE, _uvs(polygon, rect), sticker)
 	var lift := toward * 260.0 * fly * fly + Vector2(0, -120) * fly
 	for polygon in Geometry2D.intersect_polygons(outline, _half(fold, -toward, cap)):
+		if not PolygonCut.drawable(polygon): continue
 		var flap := PackedVector2Array()
 		for point in polygon: flap.append(_mirror(point, fold, toward) + lift)
 		draw_colored_polygon(flap, Color(1, 1, 1, 1.0 - fly), _uvs(polygon, rect), sticker_back)
