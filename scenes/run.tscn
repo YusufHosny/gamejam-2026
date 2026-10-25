@@ -1,18 +1,31 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://0qs2r5xbyuji"]
 
-[ext_resource type="Script" path="res://scripts/story/run_player.gd" id="1_run"]
+[ext_resource type="Script" uid="uid://ctsg3hs7m1q7u" path="res://scripts/story/run_player.gd" id="1_run"]
 [ext_resource type="Script" uid="uid://hy2wh4ry7j08" path="res://scripts/ui/deadline_clock.gd" id="2_deadline"]
 [ext_resource type="PackedScene" path="res://scenes/menus/pause_menu.tscn" id="3_pause"]
 
-[node name="RunPlayer" type="Node"]
+[node name="RunPlayer" type="Node" unique_id=1171729977]
 script = ExtResource("1_run")
 
-[node name="Stage" type="Node" parent="."]
+[node name="Stage" type="Node" parent="." unique_id=990237146]
 
-[node name="Deadline" type="CanvasLayer" parent="."]
+[node name="Fade" type="CanvasLayer" parent="." unique_id=771982555]
+layer = 4
+
+[node name="Black" type="ColorRect" parent="Fade" unique_id=325977903]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.728822, 0.728822, 0.728822, 1)
+
+[node name="Deadline" type="CanvasLayer" parent="." unique_id=180370471]
 layer = 5
 
-[node name="DeadlineClock" type="Control" parent="Deadline"]
+[node name="DeadlineClock" type="Control" parent="Deadline" unique_id=183007913]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -22,6 +35,6 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_deadline")
 
-[node name="Alarm" type="AudioStreamPlayer" parent="Deadline/DeadlineClock"]
+[node name="Alarm" type="AudioStreamPlayer" parent="Deadline/DeadlineClock" unique_id=2055047218]
 
-[node name="PauseMenu" parent="." instance=ExtResource("3_pause")]
+[node name="PauseMenu" parent="." unique_id=1968380458 instance=ExtResource("3_pause")]
