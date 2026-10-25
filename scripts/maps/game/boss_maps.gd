@@ -82,14 +82,7 @@ const FINAL_MAP := [
 # f1's first spot, the dodge cutscene leaves the button there
 static func chase_start() -> Vector2: return CHASE_MAP[0][4][0]
 
-const EASY_SLIDER_BEATS := 2.0 # longest a stream's slider runs
-const EASY_SLIDER_SPEED := 110.0 # px per beat along it
-const EASY_JUMP_SCALE := 0.7 # on beat jumps pulled in toward their middle
-const EASY_GAP_BEATS := 1.0
-
-# easy turns streams into slow sliders along them, stacks into one circle, and runs of jumps into beat long sliders from each spot toward the next
-static func fill_chase_mapped(segment: MapSegment, rows := CHASE_MAP, view := CHASE_VIEW, easy := false) -> void:
-	if easy: rows = _easy_rows(rows)
+static func fill_chase_mapped(segment: MapSegment, rows := CHASE_MAP, view := CHASE_VIEW) -> void:
 	var notes: Array[Note] = []
 	for row: Array in rows:
 		match row[0]:
@@ -105,51 +98,74 @@ static func fill_chase_mapped(segment: MapSegment, rows := CHASE_MAP, view := CH
 				slider.new_combo = true
 				notes.append(slider)
 			_: assert(false, "unhandled chase row %s" % row)
-	if easy: notes = EasyMaps.spaced(notes, EASY_GAP_BEATS)
 	assert(notes[0].beat >= segment.start_beat and notes.back().beat < segment.end_beat, "the chase map runs past its segment")
 	segment.notes = notes
 	segment.view = view
 
-static func _easy_rows(rows: Array) -> Array:
-	var out := []
-	for row: Array in rows:
-		if row[0] == Chase.SLIDER:
-			out.append([Chase.SLIDER, row[1], row[2], maxf(row[3] if row.size() > 3 else CHASE_SLIDER_BEATS, 1.0)])
-			continue
-		var spots := _spread(row[4], row[2])
-		if row[4].size() == 1:
-			out.append([Chase.TAPS, row[1], 1, 0, [spots[0]]])
-		elif row[3] <= 0.25 and row[2] >= 4:
-			var beats := minf((row[2] - 1) * row[3], EASY_SLIDER_BEATS)
-			out.append([Chase.SLIDER, row[1], _cut(spots, beats * EASY_SLIDER_SPEED), beats])
-		else:
-			var kept: Array[Vector2] = []
-			var first := -1.0
-			for i in spots.size():
-				var beat: float = row[1] + i * row[3]
-				if not is_equal_approx(fposmod(beat, 1.0), 0.0): continue
-				if first < 0.0: first = beat
-				kept.append(spots[i])
-			if kept.is_empty(): continue
-			var middle := Vector2.ZERO
-			for spot in kept: middle += spot / kept.size()
-			kept.assign(kept.map(func(spot: Vector2): return middle + (spot - middle) * EASY_JUMP_SCALE))
-			for j in range(0, kept.size() - 1, 2):
-				out.append([Chase.SLIDER, first + j, _cut([kept[j], kept[j + 1]], EASY_SLIDER_SPEED), 1.0])
-			if kept.size() % 2 == 1: out.append([Chase.TAPS, first + kept.size() - 1, 1, 0, [kept.back()]])
-	return out
+# the standard chase: long sliders along shapes Yusuf drew in the recorder, the button running ahead, then the big chord as a circle.
+# each shape gets the whole beats its length needs at CHASE_SPEED and is scaled a touch to land on it exactly, starting on the two beat grid.
+# the second time round they're mirrored
+const DRAWN_SHAPES := [
+	[Vector2(314, 412), Vector2(333, 362), Vector2(366, 233), Vector2(455, 386), Vector2(474, 402), Vector2(489, 377), Vector2(531, 248), Vector2(572, 367), Vector2(586, 381), Vector2(603, 369), Vector2(691, 257), Vector2(710, 246), Vector2(720, 250), Vector2(736, 278), Vector2(785, 418)],
+	[Vector2(809, 253), Vector2(710, 244), Vector2(515, 243), Vector2(452, 247), Vector2(400, 262), Vector2(375, 279), Vector2(364, 306), Vector2(375, 326), Vector2(396, 335), Vector2(486, 339), Vector2(616, 323), Vector2(675, 326), Vector2(759, 353), Vector2(780, 368), Vector2(788, 388), Vector2(782, 409), Vector2(770, 421), Vector2(701, 432), Vector2(593, 429), Vector2(428, 407)],
+	[Vector2(315, 425), Vector2(395, 273), Vector2(400, 271), Vector2(412, 284), Vector2(460, 373), Vector2(483, 392), Vector2(498, 376), Vector2(544, 270), Vector2(557, 257), Vector2(564, 259), Vector2(578, 286), Vector2(613, 394), Vector2(708, 263), Vector2(736, 250), Vector2(752, 270), Vector2(763, 307), Vector2(774, 363), Vector2(770, 396)],
+	[Vector2(304, 258), Vector2(707, 259), Vector2(759, 270)],
+	[Vector2(849, 426), Vector2(392, 404)],
+	[Vector2(358, 223), Vector2(377, 352), Vector2(400, 386), Vector2(488, 410), Vector2(584, 417), Vector2(603, 413), Vector2(614, 400), Vector2(587, 250), Vector2(589, 229), Vector2(611, 218), Vector2(654, 214), Vector2(769, 221), Vector2(780, 230), Vector2(791, 258), Vector2(798, 383)],
+	[Vector2(836, 400), Vector2(670, 409), Vector2(626, 403), Vector2(617, 381), Vector2(597, 249), Vector2(585, 232), Vector2(545, 222), Vector2(412, 215), Vector2(389, 221), Vector2(375, 257), Vector2(362, 355)],
+	[Vector2(344, 413), Vector2(502, 319), Vector2(577, 286), Vector2(644, 267), Vector2(726, 253), Vector2(793, 250), Vector2(814, 258), Vector2(827, 273), Vector2(830, 308), Vector2(813, 364), Vector2(791, 399), Vector2(763, 417), Vector2(737, 417), Vector2(646, 378), Vector2(510, 296), Vector2(409, 247), Vector2(377, 235), Vector2(365, 241)],
+	[Vector2(753, 238), Vector2(422, 233), Vector2(405, 238), Vector2(393, 248), Vector2(386, 281), Vector2(396, 354), Vector2(423, 382), Vector2(485, 394), Vector2(725, 405), Vector2(758, 402)],
+]
+const CHASE_SPEED := 195.0 # px per beat along every slider
+const CHASE_CURVE := 0.3 # handle length through each point, of the shorter step beside it
+const CURVE_STEP := 8.0 # px between points along the curve
+const CHASE_MIDDLE := Vector2(576, 320)
+const MIN_SLIDER_BEATS := 2
+const SLIDER_GRID := 2.0 # beats, sliders start on it
+const SLIDER_GAP := 1.0 # beats at least between one slider's end and the next
 
-# the start of a path, `length` px along it
-static func _cut(points: Array[Vector2], length: float) -> Array[Vector2]:
-	var out: Array[Vector2] = [points[0]]
-	for i in points.size() - 1:
-		var step := points[i].distance_to(points[i + 1])
-		if step >= length:
-			out.append(points[i].lerp(points[i + 1], length / step))
-			return out
-		length -= step
-		out.append(points[i + 1])
-	return out
+static func fill_chase_easy(segment: MapSegment, first_beat: float, last_beat: float, view: PackedScene) -> void:
+	var notes: Array[Note] = []
+	var beat := first_beat
+	var shape := 0
+	while true:
+		var mirror := (shape / DRAWN_SHAPES.size()) % 2 == 1
+		var spots: Array[Vector2] = []
+		for spot: Vector2 in DRAWN_SHAPES[shape % DRAWN_SHAPES.size()]: spots.append(Vector2(2.0 * CHASE_MIDDLE.x - spot.x, spot.y) if mirror else spot)
+		var drawn := _length(_curved(spots, 1.0))
+		var beats := maxf(roundf(drawn / CHASE_SPEED), MIN_SLIDER_BEATS)
+		if beat + beats > last_beat - SLIDER_GAP: break
+		var path := _curved(spots, CHASE_SPEED * beats / drawn)
+		var slider := SliderNote.new(beat, path[0], path.slice(1), beats)
+		slider.new_combo = true
+		notes.append(slider)
+		beat = first_beat + ceilf((beat + beats + SLIDER_GAP - first_beat) / SLIDER_GRID) * SLIDER_GRID
+		shape += 1
+	var chord := AimNote.new(last_beat, CHASE_MIDDLE)
+	chord.new_combo = true
+	notes.append(chord)
+	segment.notes = notes
+	segment.view = view
+
+# a smooth curve through the spots, scaled about their middle, each spot rounded with handles along the line between its neighbours
+static func _curved(spots: Array[Vector2], scale: float) -> PackedVector2Array:
+	var middle := Vector2.ZERO
+	for spot in spots: middle += spot / spots.size()
+	var scaled: Array[Vector2] = []
+	for spot in spots: scaled.append(middle + (spot - middle) * scale)
+	var curve := Curve2D.new()
+	for i in scaled.size():
+		var handle := Vector2.ZERO
+		if i > 0 and i < scaled.size() - 1:
+			var reach := minf(scaled[i].distance_to(scaled[i - 1]), scaled[i].distance_to(scaled[i + 1])) * CHASE_CURVE
+			handle = (scaled[i + 1] - scaled[i - 1]).normalized() * reach
+		curve.add_point(scaled[i], -handle, handle)
+	return curve.tessellate_even_length(5, CURVE_STEP)
+
+static func _length(path: PackedVector2Array) -> float:
+	var length := 0.0
+	for i in path.size() - 1: length += path[i].distance_to(path[i + 1])
+	return length
 
 static func _spread(spots: Array, count: int) -> Array[Vector2]:
 	var out: Array[Vector2] = []
@@ -193,7 +209,7 @@ static func fill_chase(segment: MapSegment, map: Map, streams := false, rng_seed
 
 const RIGHT := 1
 const LEFT := -1
-# f2 on the second theme, from Yusuf's left right swipes: [beat, swipe], an arrow flies at the shield the way the swipe goes
+# f2 on the second theme, from Yusuf's left right swipes: [beat, swipe], a bomb drops down the middle, slashed across the way the swipe went
 const SHIELD_MAP := [
 	[60, RIGHT], [61, LEFT], [62, RIGHT], [63, LEFT], [64, RIGHT], [65, LEFT], [66, RIGHT], [66.5, LEFT], [67, RIGHT], [68, LEFT],
 	[69, RIGHT], [70, LEFT], [71, RIGHT], [72, LEFT], [73, RIGHT], [74, LEFT], [74.5, RIGHT], [75, LEFT], [76, RIGHT], [77, LEFT],

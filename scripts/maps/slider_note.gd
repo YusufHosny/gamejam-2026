@@ -4,6 +4,7 @@ extends AimNote
 @export var path: PackedVector2Array
 @export var length_beats := 1.0 # one pass along the path
 @export var repeats := 0
+@export var tick_beats := 1.0 # a tick every this many beats along it, osu's tick rate
 var end_time: float
 
 func _init(_beat := 0.0, _position := Vector2.ZERO, _path := PackedVector2Array(), _length_beats := 1.0, _repeats := 0) -> void:
@@ -17,6 +18,16 @@ func bake(map: Map) -> void:
 	end_time = map.beat_time(end_beat())
 
 func spans() -> int: return repeats + 1
+
+# progress of each tick, none right on the end
+func ticks() -> Array[float]:
+	var out: Array[float] = []
+	var total := length_beats * spans()
+	var beat := tick_beats
+	while beat < total - tick_beats * 0.25:
+		out.append(beat / total)
+		beat += tick_beats
+	return out
 func end_beat() -> float: return beat + length_beats * spans()
 
 func points() -> PackedVector2Array:

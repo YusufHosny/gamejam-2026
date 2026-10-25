@@ -4,6 +4,7 @@ extends RefCounted
 var note: Note
 var grade: Judgement.Grade
 var error_s: float # negative is early, NAN when untimed (misses, slider tails)
+var tick := false # a slider tick, combo and score only
 
 func _init(_note: Note, _grade: Judgement.Grade, _error_s := NAN) -> void:
 	note = _note
@@ -15,6 +16,11 @@ static func hit(_note: Note, _error_s: float) -> HitResult:
 
 static func miss(_note: Note) -> HitResult:
 	return HitResult.new(_note, Judgement.Grade.MISS)
+
+static func slider_tick(slider: Note, held: bool) -> HitResult:
+	var result := HitResult.new(slider, Judgement.Grade.GREAT if held else Judgement.Grade.MISS)
+	result.tick = true
+	return result
 
 func is_miss() -> bool: return grade == Judgement.Grade.MISS
 func is_timed() -> bool: return not is_nan(error_s)

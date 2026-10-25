@@ -1,99 +1,115 @@
 class_name ShieldBreakView
 extends AimView
 
-# f2: the cursor is a shield, the angry button rains arrows down two lanes at the heart, slash the shield through each one as it reaches the guard line
+# f2: the cursor is a shield, the angry button drops a row of bombs down the middle at the heart, slash the shield through each one as it reaches the guard line
 
 const CENTER := Vector2(576, 110)
 const BUTTON_SIZE := 150.0
 const HEART := Vector2(576, 500)
 const HEART_SIZE := 26.0
-const LANE_X: Array[float] = [-110.0, 110.0] # from the middle, left lane then right
-const GUARD_Y := 380.0 # arrows reach this line on their beat
-const HIT_RADIUS := 70.0 # a slash has to pass this close to the arrow's tip
-const ARROW_LEAD_S := 1.1 # arrows drop from the button this long before their beat
-const ARROW_LENGTH := 80.0
-const ARROW_WIDTH := 7.0
-const ARROW_HEAD := 24.0
-const LANE_COLORS: Array[Color] = [Color(0.35, 0.85, 1.0), Color(1.0, 0.6, 0.2)]
+const DROP_Y := 190.0 # bombs drop from under the button
+const GUARD_Y := 400.0 # and reach this line on their beat
+const HIT_RADIUS := 55.0 # a slash has to pass this close to the bomb where it is
+const BOMB_LEAD_S := 0.7 # bombs drop this long before their beat
+const SLASH_GAP_MS := 120 # after a cut the row holds this long, so one slash takes one bomb
+const BOMB_RADIUS := 28.0
+const BOMB := Color(0.13, 0.13, 0.16)
+const FUSE := Color(0.75, 0.6, 0.4)
+const SPARK := Color(1.0, 0.8, 0.3)
+const LANE := Color(1.0, 0.6, 0.2)
 const SHIELD_HEIGHT := 110.0
-const DEFLECT_S := 0.45
+const BURST_S := 0.4
+const BLAST_S := 0.5
 const HURT_S := 0.4
 const MISS := Color(1.0, 0.25, 0.25)
 
 @export var button: Texture2D
 @export var shields: Array[Texture2D] = [] # the first one is the player's shield
 
-var _deflected: Array[Array] = [] # [lane, ms] of blocked arrows spinning away
+var _bursts: Array[int] = [] # ms of slashed bombs popping
+var _blasts: Array[int] = [] # ms of missed bombs going off
 var _hurt_ms := -100000
+var _cut_ms := -100000
 
-# a note sits on its lane's guard line, so the map carries the lane as the swipe's side
-static func note_at(swipe: int) -> Vector2: return Vector2(HEART.x + LANE_X[0 if swipe < 0 else 1], GUARD_Y)
+# a note sits on the guard line a pixel toward its swipe's side, so the map carries the swipe for autoplay
+static func note_at(swipe: int) -> Vector2: return Vector2(HEART.x + swipe, GUARD_Y)
 
-static func lane(note: AimNote) -> int: return 0 if note.position.x < HEART.x else 1
+static func swipe(note: AimNote) -> Vector2: return Vector2(signf(note.position.x - HEART.x), 0)
+
+func _bomb_at(note: AimNote, now: float) -> Vector2:
+	return Vector2(HEART.x, lerpf(DROP_Y, GUARD_Y, 1.0 - maxf(note.time - now, 0.0) / BOMB_LEAD_S))
 
 func _ready() -> void:
 	texture_filter = TEXTURE_FILTER_LINEAR_WITH_MIPMAPS # the shield is drawn well under its size
 	mode.judged.connect(_on_judged)
 
+# only the lowest bomb can be cut, and only one per slash
 func is_hit(note: AimNote, from: Vector2, to: Vector2) -> bool:
-	return Geometry2D.get_closest_point_to_segment(note.position, to_local(from), to_local(to)).distance_to(note.position) <= HIT_RADIUS
+	if note != mode.pending().front() or Time.get_ticks_msec() - _cut_ms < SLASH_GAP_MS: return false
+	var at := _bomb_at(note, _now())
+	var hit := Geometry2D.get_closest_point_to_segment(at, to_local(from), to_local(to)).distance_to(at) <= HIT_RADIUS
+	if hit: _cut_ms = Time.get_ticks_msec()
+	return hit
 
 func is_following(_slider: SliderNote, _point: Vector2, _progress: float) -> bool: return false # no sliders here
 
-# autoplay swipes down then up through the guard line, each swipe starting where the last ended, so it never clips the other lane
-func slash_direction(note: AimNote) -> Vector2: return Vector2.DOWN if mode.segment.notes.find(note) % 2 == 0 else Vector2.UP
+# autoplay swipes across the way the map's swipe went
+func slash_direction(note: AimNote) -> Vector2: return swipe(note)
 
 func _on_judged(result: HitResult) -> void:
 	var ms := Time.get_ticks_msec()
-	if result.is_miss(): _hurt_ms = ms
-	else: _deflected.append([lane(result.note as AimNote), ms])
+	if result.is_miss():
+		_hurt_ms = ms
+		_blasts.append(ms)
+	else: _bursts.append(ms)
 
 func _draw() -> void:
 	var now := _now()
 	var ms := Time.get_ticks_msec()
 	BossArena.draw(self, now)
 	draw_texture_rect(button, BossArena.button_rect(button, CENTER, BUTTON_SIZE), false)
-	for i in LANE_X.size():
-		var x := HEART.x + LANE_X[i]
-		draw_line(Vector2(x, CENTER.y + BUTTON_SIZE / 2), Vector2(x, GUARD_Y), Color(LANE_COLORS[i], 0.12), 2)
-		draw_arc(Vector2(x, GUARD_Y), HIT_RADIUS * 0.5, 0, TAU, 40, Color(LANE_COLORS[i], 0.3), 2, true)
+	draw_line(Vector2(HEART.x, DROP_Y), Vector2(HEART.x, GUARD_Y), Color(LANE, 0.12), 2)
+	draw_line(Vector2(HEART.x - 120, GUARD_Y), Vector2(HEART.x + 120, GUARD_Y), Color(LANE, 0.35), 3) # slash across here
 	var hurt := clampf(1.0 - (ms - _hurt_ms) / (HURT_S * 1000), 0.0, 1.0)
 	_draw_heart(Color(0.9, 0.1, 0.15).lerp(Color.WHITE, hurt))
-	_deflected.assign(_deflected.filter(func(d: Array): return ms - d[1] < DEFLECT_S * 1000))
-	for deflected in _deflected: _draw_deflected(deflected[0], (ms - deflected[1]) / (DEFLECT_S * 1000))
-	for note: AimNote in mode.pending(): _draw_falling(note, now)
-	_draw_missed()
+	_bursts.assign(_bursts.filter(func(b: int): return ms - b < BURST_S * 1000))
+	for burst in _bursts: _draw_burst((ms - burst) / (BURST_S * 1000))
+	_blasts.assign(_blasts.filter(func(b: int): return ms - b < BLAST_S * 1000))
+	for blast in _blasts: _draw_blast((ms - blast) / (BLAST_S * 1000))
+	for note: AimNote in mode.pending(): _draw_falling(note, now, ms)
 	_draw_shield()
 
-# drops from the button to the guard line on the beat
-func _draw_falling(note: AimNote, now: float) -> void:
+# drops down the middle to the guard line on the beat
+func _draw_falling(note: AimNote, now: float, ms: int) -> void:
 	var until := note.time - now
-	if until > ARROW_LEAD_S: return
-	var start := CENTER.y + BUTTON_SIZE / 2
-	var tip := Vector2(note.position.x, lerpf(start, GUARD_Y, 1.0 - maxf(until, 0.0) / ARROW_LEAD_S))
-	_draw_arrow(tip, lane(note), clampf((ARROW_LEAD_S - until) / 0.15, 0.0, 1.0))
+	if until > BOMB_LEAD_S: return
+	_draw_bomb(_bomb_at(note, now), clampf((BOMB_LEAD_S - until) / 0.1, 0.0, 1.0), ms)
 
-# a missed arrow carries on into the heart
-func _draw_missed() -> void:
-	var t := clampf(1.0 - (Time.get_ticks_msec() - _hurt_ms) / (HURT_S * 1000), 0.0, 1.0)
-	if t <= 0.0: return
-	draw_circle(HEART, HEART_SIZE * (2.0 - t), Color(MISS, 0.4 * t), true, -1, true)
+# a round black bomb with a lit fuse
+func _draw_bomb(at: Vector2, alpha: float, ms: int) -> void:
+	draw_circle(at, BOMB_RADIUS, Color(BOMB, alpha), true, -1, true)
+	draw_arc(at, BOMB_RADIUS, 0, TAU, 40, Color(1, 1, 1, 0.35 * alpha), 2, true)
+	draw_circle(at + Vector2(-9, -9), 7, Color(1, 1, 1, 0.18 * alpha), true, -1, true) # shine
+	var cap := at + Vector2(10, -BOMB_RADIUS + 2)
+	draw_rect(Rect2(cap - Vector2(6, 5), Vector2(12, 8)), Color(BOMB.lightened(0.2), alpha))
+	var tip := cap + Vector2(10, -14)
+	draw_polyline(PackedVector2Array([cap, cap + Vector2(8, -6), tip]), Color(FUSE, alpha), 3, true)
+	var flicker := 0.7 + 0.3 * sin(ms * 0.05)
+	draw_circle(tip, 6 * flicker, Color(SPARK, alpha), true, -1, true)
 
-func _draw_arrow(tip: Vector2, lane_index: int, alpha: float) -> void:
-	var color := Color(LANE_COLORS[lane_index], alpha)
-	var back := tip - Vector2(0, ARROW_LENGTH)
-	draw_line(back, tip - Vector2(0, ARROW_HEAD * 0.6), color, ARROW_WIDTH, true)
-	draw_colored_polygon(PackedVector2Array([tip, tip - Vector2(ARROW_HEAD * 0.6, ARROW_HEAD), tip - Vector2(-ARROW_HEAD * 0.6, ARROW_HEAD)]), color)
-	draw_line(back + Vector2(-10, -4), back + Vector2(0, 10), color, 3, true) # fletching
-	draw_line(back + Vector2(10, -4), back + Vector2(0, 10), color, 3, true)
+# a slashed bomb pops in a puff
+func _draw_burst(t: float) -> void:
+	var at := Vector2(HEART.x, GUARD_Y)
+	draw_circle(at, BOMB_RADIUS * (1.0 + 1.5 * t), Color(0.85, 0.85, 0.9, 0.5 * (1.0 - t)), true, -1, true)
+	for i in 6:
+		var dir := Vector2.from_angle(TAU * i / 6.0 + 0.4)
+		draw_circle(at + dir * (BOMB_RADIUS + 70 * t), 5 * (1.0 - t), Color(BOMB, 1.0 - t), true, -1, true)
 
-# knocked back up and out to its side, spinning, fading
-func _draw_deflected(lane_index: int, t: float) -> void:
-	var side := -1.0 if lane_index == 0 else 1.0
-	var at := Vector2(HEART.x + LANE_X[lane_index] + side * 180 * t, GUARD_Y - 160 * t + 120 * t * t)
-	draw_set_transform(at, side * t * TAU)
-	_draw_arrow(Vector2(0, ARROW_LENGTH / 2), lane_index, 1.0 - t)
-	draw_set_transform(Vector2.ZERO)
+# a missed bomb goes off on the guard line
+func _draw_blast(t: float) -> void:
+	var at := Vector2(HEART.x, GUARD_Y)
+	draw_circle(at, BOMB_RADIUS * (1.0 + 3.0 * t), Color(1.0, 0.55, 0.15, 0.8 * (1.0 - t)), true, -1, true)
+	draw_circle(at, BOMB_RADIUS * (0.6 + 2.0 * t), Color(SPARK, 0.9 * (1.0 - t)), true, -1, true)
 
 # the player's shield rides the cursor
 func _draw_shield() -> void:

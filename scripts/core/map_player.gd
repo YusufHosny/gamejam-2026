@@ -15,6 +15,7 @@ const DEFAULT_VIEWS := {
 }
 
 const COMBO_BREAK_MIN := 10
+const TICK_VOLUME := 0.35 # slider ticks are a quieter hitsound
 const SWITCH_HOLD_S := 3.0 # without the tutorial the hold before a mode switch lasts this long
 const SWITCH_LEAD_S := 1.2 # the hold starts this long before the segment, ahead of its first notes showing
 
@@ -187,9 +188,12 @@ func _set_score(keeper: ScoreKeeper) -> void:
 	hud.show_score(score)
 
 func _on_judged(result: HitResult) -> void:
-	if _relaxed and result.is_miss(): result = HitResult.new(result.note, Judgement.Grade.MEH) # judge mode never drops combo
-	hud.show_judgement(result)
+	if _relaxed and result.is_miss(): # judge mode never drops combo
+		if result.tick: result = HitResult.slider_tick(result.note, true)
+		else: result = HitResult.new(result.note, Judgement.Grade.MEH)
+	if not result.tick: hud.show_judgement(result)
 	var volume := 1.0 if Difficulty.autoplays(GameConfig.difficulty) else GameConfig.hitsound_volume # autoplay is for hearing the map
+	if result.tick: volume *= TICK_VOLUME
 	if not result.is_miss() and volume > 0.0: _play(hitsound, volume)
 	if _segment.tutorial: return
 	if result.is_miss() and score.combo >= COMBO_BREAK_MIN: _play(combo_break)

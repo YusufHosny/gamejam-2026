@@ -6,8 +6,17 @@ var combo := 0
 var max_combo := 0
 var _counts: Dictionary[Judgement.Grade, int] = {}
 
-# osu v1 scoring, hitval x combo
+const TICK_VALUE := 10
+
+# osu v1 scoring, hitval x combo. slider ticks score a flat TICK_VALUE and leave accuracy alone
 func add(result: HitResult) -> void:
+	if result.tick:
+		if result.is_miss(): combo = 0
+		else:
+			score += roundi(TICK_VALUE * (1.0 + combo / 25.0))
+			combo += 1
+			max_combo = maxi(max_combo, combo)
+		return
 	_counts[result.grade] = _counts.get(result.grade, 0) + 1
 	if result.is_miss():
 		combo = 0

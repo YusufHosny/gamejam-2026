@@ -8,6 +8,7 @@ const BORDER_WIDTH := 4.0
 const NUMBER_SIZE := 36
 const LINK_WIDTH := 3.0
 const LINK_DASH := 10.0
+const TICK_SIZE := 0.16 # of the radius
 
 @export var color := Color.WHITE # tint when there's no skin
 @export var skin: CircleSkin
@@ -98,6 +99,8 @@ func _draw_body(slider: SliderNote, progress: float, alpha: float) -> void:
 		var outline := polygon.duplicate()
 		outline.append(polygon[0])
 		draw_polyline(outline, border, BORDER_WIDTH, true)
+	for tick in slider.ticks():
+		if tick > progress: draw_circle(slider.ball_at(tick), radius * TICK_SIZE, Color(Color.WHITE, 0.85 * alpha), true, -1, true)
 	if slider.turns_left(progress) > 0: _draw_reverse_arrow(slider, progress, alpha)
 
 # on the end the ball turns back at next, pointing back along the path
@@ -116,11 +119,12 @@ func _draw_reverse_arrow(slider: SliderNote, progress: float, alpha: float) -> v
 
 func _draw_ball(slider: SliderNote, progress: float) -> void:
 	var ball := slider.ball_at(progress)
+	var held := (mode as AimMode).tracking() # the follow circle only shows while it's followed, like osu
 	if skin != null:
-		CircleSkin.draw_centered(self, skin.follow_circle, ball, radius * 2.0 * 2, Color(Color.WHITE, 0.8))
+		if held: CircleSkin.draw_centered(self, skin.follow_circle, ball, radius * 2.0 * 2, Color(Color.WHITE, 0.8))
 		CircleSkin.draw_centered(self, skin.slider_ball, ball, radius * 2 * skin.scale, _tint(slider))
 		return
-	draw_arc(ball, radius * 2.0, 0, TAU, 64, Color(color, 0.5), 3, true)
+	if held: draw_arc(ball, radius * 2.0, 0, TAU, 64, Color(color, 0.5), 3, true)
 	draw_circle(ball, radius * 0.75, color, true, -1, true)
 	draw_arc(ball, radius * 0.75, 0, TAU, 48, Color.WHITE, 3, true)
 

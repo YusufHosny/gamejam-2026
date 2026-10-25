@@ -90,10 +90,12 @@ static func _boss(easy: bool) -> MapStep:
 	var map := Map.new()
 	MOONLIGHT.apply_to(map)
 	for bounds in BOSS_SEGMENTS: map.segments.append(MapSegment.new(bounds[0], bounds[1], bounds[2]))
-	BossMaps.fill_chase_mapped(map.segments[0], BossMaps.CHASE_MAP, BossMaps.CHASE_VIEW, easy)
+	if easy: BossMaps.fill_chase_easy(map.segments[0], 0, 54, BossMaps.CHASE_VIEW) # the fermata chord ends it
+	else: BossMaps.fill_chase_mapped(map.segments[0])
 	BossMaps.fill_shields_mapped(map.segments[1])
 	BossMaps.fill_lasers_mapped(map.segments[2])
-	BossMaps.fill_chase_mapped(map.segments[3], BossMaps.FINAL_MAP, BossMaps.FINAL_VIEW, easy)
+	if easy: BossMaps.fill_chase_easy(map.segments[3], 234, 320, BossMaps.FINAL_VIEW) # the development's chord ends it
+	else: BossMaps.fill_chase_mapped(map.segments[3], BossMaps.FINAL_MAP, BossMaps.FINAL_VIEW)
 	map.bake()
 	assert(MOONLIGHT.fits(map), "the boss map runs past its song")
 	var step := MapStep.new(map)
