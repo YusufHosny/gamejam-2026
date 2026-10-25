@@ -26,6 +26,15 @@ func _ready() -> void:
 	_video.size = content.size
 	_video.play()
 	_sync_video()
+	_add_desktop()
+
+# the clip shows behind the view's drawing so the notes go over it, so the desktop has to go behind the clip
+func _add_desktop() -> void:
+	var desktop := Node2D.new()
+	desktop.show_behind_parent = true
+	desktop.draw.connect(func(): Desktop.draw(desktop))
+	add_child(desktop)
+	move_child(desktop, 0) # before the video, so it draws first
 
 # the clip's audio is the map's music, so the video follows the audio clock
 func _process(delta: float) -> void:

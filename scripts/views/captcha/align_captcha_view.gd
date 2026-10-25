@@ -38,6 +38,7 @@ func _process(delta: float) -> void:
 	_shown = _shown.lerp(Vector2(_offset), minf(1.0, EASE * delta))
 
 func _draw() -> void:
+	Desktop.draw(self)
 	CaptchaFrame.draw(self)
 	CaptchaFrame.draw_header(self, "Slide the puzzle piece", target, "Arrow keys only, no dragging allowed.")
 	_draw_puzzle()

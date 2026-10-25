@@ -10,8 +10,15 @@ const ICON_STEP := 86.0
 const TASKBAR_H := 30.0
 const TASKBAR := Color(0.72, 0.71, 0.73)
 const LABELS: Array[String] = ["my computer", "game_FINAL", "internet", "notes.txt", "trash"]
+const ICONS: Array[Texture2D] = [
+	preload("res://assets/Retro Dekstop/Icons/2X/Icon_Computer.png"),
+	preload("res://assets/Retro Dekstop/Icons/2X/Icon_Folder.png"),
+	preload("res://assets/Retro Dekstop/Icons/2X/Icon_Globe.png"),
+	preload("res://assets/Retro Dekstop/Icons/2X/Icon_Notepad.png"),
+	preload("res://assets/Retro Dekstop/Icons/2X/Icon_Trash.png"),
+]
 
-static func draw(item: CanvasItem, icons: Array[Texture2D], screen := Vector2.ZERO) -> void: # zero -> item's viewport
+static func draw(item: CanvasItem, icons: Array[Texture2D] = ICONS, screen := Vector2.ZERO) -> void: # zero -> item's viewport
 	if screen == Vector2.ZERO: screen = item.get_viewport_rect().size
 	item.draw_rect(Rect2(Vector2.ZERO, screen), WALLPAPER)
 	var font := ThemeDB.fallback_font

@@ -4,6 +4,7 @@ extends RefCounted
 const DEADLINE_S := 300.0
 const COUNTDOWN_S := DeadlineClock.INTRO_S # ends as the clock settles in the corner
 const CUTSCENE_S := 8.0
+const VIRUS_S := 11.2 # CUTSCENE_S plus the ~3.2 s the countdown and the captchas' frozen lead in freed
 const BLUE_SCREEN_S := 10.9
 const WIN_S := 6.0
 const FADE_IN_S := 1.0
@@ -23,7 +24,7 @@ static func steps() -> Array[RunStep]:
 		CutsceneStep.new("", COUNTDOWN_S, true, COUNTDOWN_CUTSCENE),
 		_captchas(),
 		_subway(),
-		CutsceneStep.new("", CUTSCENE_S, true, VIRUS_CUTSCENE),
+		CutsceneStep.new("", VIRUS_S, true, VIRUS_CUTSCENE),
 		_ads(),
 		CutsceneStep.new("", BLUE_SCREEN_S, true, BLUE_SCREEN_CUTSCENE),
 		_backup(),
